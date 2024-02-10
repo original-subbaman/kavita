@@ -1,4 +1,4 @@
-import Header from "./components/Header";
+import Header from "./components/Header/Header";
 import PostFeed from "./components/PostFeed";
 import RootWrapper from "./components/RootWrapper";
 
