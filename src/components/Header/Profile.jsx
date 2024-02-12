@@ -1,20 +1,16 @@
-import { useState } from "react";
-import { Button, Flex, Popover } from "@radix-ui/themes";
+import { Button, Box, Flex, Popover } from "@radix-ui/themes";
 function Profile({ name }) {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const handleClick = (event) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-  };
-  const open = Boolean(anchorEl);
   return (
     <Popover.Root>
       <div className="flex items-center gap-2 rounded cursor-pointer p-2">
-        <p className="text-3xl">{name}</p>
+        <p className="text-2xl">{name}</p>
         <Popover.Trigger>
-          <button
-            className="rounded-full border-4 border-white w-12 h-12"
-            onClick={handleClick}
-          ></button>
+          <Box
+            color="green"
+            height="7"
+            width="7"
+            className="rounded-full border-2 border-radix-green bg-radix-grass bg-opacity-30"
+          ></Box>
         </Popover.Trigger>
       </div>
       <Popover.Content>

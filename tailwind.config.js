@@ -6,6 +6,8 @@ export default {
       colors: {
       "dark": "#222222", 
       "dark-light": "#191919",
+      "radix-green": "#30a46c",
+      "radix-grass": "#46a758"
       },
       fontFamily: {
         primary: ["Roboto"],
