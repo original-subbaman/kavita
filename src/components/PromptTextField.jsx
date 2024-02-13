@@ -11,23 +11,24 @@ import { Pencil1Icon } from "@radix-ui/react-icons";
 
 function PromptTextField(props) {
   return (
-    <Flex
-      direction="column"
-      gap="4"
-      style={{ minWidth: 800, marginTop: "8px", marginBottom: "8px" }}
-    >
-      <Text align="center" highContrast={true} size="8" color="grass">
+    <Flex direction="column" gap="4" className="md:w-[800px] my-8">
+      <Text
+        align="center"
+        highContrast={true}
+        size={{ xs: "4", md: "8" }}
+        color="grass"
+      >
         <Strong>The quick brown fox jumps over the lazy dog...</Strong>
       </Text>
       <AlertDialog.Trigger>
         <Button
-          size="3"
+          size={{ xs: "1", md: "3" }}
           variant="soft"
           radius="large"
-          style={{ width: 800, height: "50px" }}
+          className="h-14 rounded-lg"
         >
-          <Pencil1Icon width="25" height="25" />
-          <Text size="6">Free write...</Text>
+          <Pencil1Icon className="w-5 h-5 md:w-6 md:h-6 mr-[2px]" />
+          <Text className="text-xl md:text-2xl">Free write...</Text>
         </Button>
       </AlertDialog.Trigger>
       <AlertDialog.Content className="w-[250px]">
