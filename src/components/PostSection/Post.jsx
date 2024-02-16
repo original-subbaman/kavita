@@ -23,9 +23,9 @@ function Post(props) {
           aspernatur maiores, voluptates eos eligendi sint aperiam quod.
         </Text>
       </Box>
-      <Box className="bg-white bg-opacity-0 absolute inset-0 opacity-0 hover:opacity-100 rounded-b-lg text-white z-10">
+      <Box className="bg-white bg-opacity-0 absolute inset-0 opacity-0 hover:opacity-100 duration-500 trasition-all rounded-b-lg text-white z-10">
         <Flex
-          className="bg-radix-green/50 bottom-0 absolute inset-x-0"
+          className="bg-radix-green/65 bottom-0 absolute inset-x-0"
           justify="between"
           align="center"
         >
