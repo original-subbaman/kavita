@@ -1,12 +1,14 @@
 import Header from "./components/Header/Header";
-import PostFeed from "./components/PostFeed";
+import PostSection from "./components/PostSection/PostSection";
+import PromptSection from "./components/PromptSection/PromptSection";
 import RootWrapper from "./components/RootWrapper";
 
 function App() {
   return (
     <RootWrapper>
       <Header />
-      <PostFeed />
+      <PromptSection />
+      <PostSection />
     </RootWrapper>
   );
 }
