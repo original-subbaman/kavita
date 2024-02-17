@@ -8,7 +8,7 @@ function PromptTextField(props) {
     <Flex direction="column" gap="4" className="md:w-[800px]">
       <AlertDialog.Trigger>
         <Button
-          size={{ xs: "1", md: "3" }}
+          size="4"
           variant="soft"
           radius="large"
           className="h-14 rounded-lg"
