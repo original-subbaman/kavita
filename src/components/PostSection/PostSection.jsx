@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Post from "./Post";
 import { AlertDialog, Button, Container, Grid, Flex } from "@radix-ui/themes";
 const ExampleData = {
@@ -7,6 +7,13 @@ const ExampleData = {
   author: "John Doe",
 };
 function PostSection(props) {
+  const [selectedText, setSelectedText] = useState("");
+  function getSelectionText() {
+    const selection = window.getSelection().toString();
+    if (selection.length > 0) {
+      setSelectedText(selectedText);
+    }
+  }
   return (
     <Container>
       <AlertDialog.Root>
@@ -18,7 +25,6 @@ function PostSection(props) {
           className="px-2 md:px-0"
         >
           <Post content={ExampleData.content} author={ExampleData.author} />
-
           <Post content={ExampleData.content} author={ExampleData.author} />
           <Post content={ExampleData.content} author={ExampleData.author} />
           <Post content={ExampleData.content} author={ExampleData.author} />
@@ -26,7 +32,11 @@ function PostSection(props) {
         </Grid>
         <AlertDialog.Content>
           <AlertDialog.Title>By: {ExampleData.author}</AlertDialog.Title>
-          <AlertDialog.Description>
+          <AlertDialog.Description
+            onMouseUp={(event) => {
+              getSelectionText();
+            }}
+          >
             {ExampleData.content}
           </AlertDialog.Description>
           <Flex gap="3" mt="4" justify="end">
