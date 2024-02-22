@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Post from "./Post";
+import { HeartIcon } from "@radix-ui/react-icons";
 import { AlertDialog, Button, Container, Grid, Flex } from "@radix-ui/themes";
 const ExampleData = {
   content:
@@ -7,12 +8,15 @@ const ExampleData = {
   author: "John Doe",
 };
 function PostSection(props) {
-  const [selectedText, setSelectedText] = useState("");
+  const [selectedText, setSelectedText] = useState();
   function getSelectionText() {
     const selection = window.getSelection().toString();
-    if (selection.length > 0) {
-      setSelectedText(selectedText);
+    console.log(selection);
+    if (selection) {
+      setSelectedText(selection);
     }
+
+    console.log("selectedText", selectedText);
   }
   return (
     <Container>
@@ -32,13 +36,34 @@ function PostSection(props) {
         </Grid>
         <AlertDialog.Content>
           <AlertDialog.Title>By: {ExampleData.author}</AlertDialog.Title>
-          <AlertDialog.Description
+          <div
+            onMouseDown={(event) => {
+              console.log(window.getSelection().toString());
+            }}
+            onMouseMove={(event) =>
+              setSelectedText(window.getSelection().toString())
+            }
             onMouseUp={(event) => {
               getSelectionText();
             }}
           >
+            <div className="flex items-center  text-white bg-radix-grass/80 my-4 backdrop-blur-lg rounded-lg text-center py-2">
+              <span className="flex-1">
+                {selectedText || "Highlight text to capture language"}
+              </span>
+              <Button
+                variant="ghost"
+                style={{
+                  color: "white",
+                  marginRight: "8px",
+                  borderRadius: "100%",
+                }}
+              >
+                <HeartIcon />
+              </Button>
+            </div>
             {ExampleData.content}
-          </AlertDialog.Description>
+          </div>
           <Flex gap="3" mt="4" justify="end">
             <AlertDialog.Cancel>
               <Button variant="soft" color="gray">
