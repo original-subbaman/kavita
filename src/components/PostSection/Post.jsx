@@ -40,10 +40,7 @@ function Post({ content, author }) {
             onClick={(event) => console.log(event)}
             onMouseUp={(event) => console.log(event.type)}
           >
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Consequuntur, fuga? Architecto, eveniet quo? Libero unde, quidem
-            excepturi voluptatibus distinctio blanditiis, officiis nostrum
-            aspernatur maiores, voluptates eos eligendi sint aperiam quod. Good
+            {content}
           </Text>
         </Box>
         <Box className="bg-white bg-opacity-0 absolute inset-0 opacity-0 hover:opacity-100 duration-500 trasition-all rounded-b-lg text-white z-10">
