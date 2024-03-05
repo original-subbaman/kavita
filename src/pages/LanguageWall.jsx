@@ -1,10 +1,45 @@
 import React from "react";
 import RootWrapper from "../components/RootWrapper";
-
+import { Container, Grid } from "@radix-ui/themes";
+import { Text, Quote } from "@radix-ui/themes";
+import QuoteSearchBox from "../components/QuoteSearchBox";
+import Masonry from "react-responsive-masonry";
+const exampleQuotes = [
+  {
+    quote:
+      "All we have to decide is what to do with the time that is given us.",
+  },
+  {
+    quote:
+      "A man, after he has brushed off the dust and chips of his life, will have left only the hard, clean questions: Was it good or was it evil? Have I done well — or ill?",
+  },
+  {
+    quote: "The only way out of the labyrinth of suffering is to forgive.",
+  },
+  {
+    quote:
+      "I took a deep breath and listened to the old brag of my heart: I am, I am, I am.",
+  },
+  {
+    quote: "We accept the love we think we deserve.",
+  },
+  {
+    quote: "We accept the love we think we deserve.",
+  },
+];
 function LanguageWall(props) {
   return (
     <RootWrapper>
-      <h1>Search Box</h1>
+      <Container className="mt-8" size={"2"}>
+        <QuoteSearchBox />
+        <Container className="text-white" py={{ sm: "8" }} columnsCount={4}>
+          {exampleQuotes.map((quote, index) => (
+            <Quote className="m-10 hover:text-2xl hover:bg-radix-green/20 duration-500 transition-all cursor-pointer tracking-wider">
+              {quote.quote}
+            </Quote>
+          ))}
+        </Container>
+      </Container>
     </RootWrapper>
   );
 }
