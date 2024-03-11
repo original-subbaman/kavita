@@ -32,11 +32,17 @@ function LanguageWall(props) {
     <RootWrapper>
       <Container className="mt-8" size={"2"}>
         <QuoteSearchBox />
-        <Container className="text-white" py={{ sm: "8" }} columnsCount={4}>
+        <Container className="text-white font-madimiOne" py={{ sm: "8" }}>
           {exampleQuotes.map((quote, index) => (
-            <Quote className="m-10 hover:text-2xl hover:bg-radix-green/20 duration-500 transition-all cursor-pointer tracking-wider">
+            <Text
+              key={`quote.quote_${index}`}
+              className={`font-lora m-10 mr-10  ${
+                index % 3 === 0 ? "text-3xl" : "text-lg"
+              }  hover:bg-radix-green/20 hover:px-[2px] duration-500 transition-all cursor-pointer tracking-wider`}
+            >
               {quote.quote}
-            </Quote>
+              {"  "}
+            </Text>
           ))}
         </Container>
       </Container>

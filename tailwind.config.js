@@ -11,6 +11,7 @@ export default {
       },
       fontFamily: {
         primary: ["Roboto"],
+        lora: ["lora", "serif"],
       },
     },
   },

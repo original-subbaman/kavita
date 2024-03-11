@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import Post from "./Post";
 import { HeartIcon } from "@radix-ui/react-icons";
-import { AlertDialog, Button, Container, Grid, Flex } from "@radix-ui/themes";
+import {
+  AlertDialog,
+  Button,
+  Container,
+  Grid,
+  Flex,
+  Box,
+} from "@radix-ui/themes";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 const ExampleData = {
   content:
@@ -43,28 +50,30 @@ function PostSection(props) {
           </Masonry>
         </ResponsiveMasonry>
         <AlertDialog.Content>
-          <AlertDialog.Title>By: {ExampleData.author}</AlertDialog.Title>
-          <div
-            onMouseMove={(event) => getSelectionText()}
-            onMouseUp={(event) => window.getSelection().removeAllRanges()}
-          >
-            <div className="flex items-center  text-white bg-radix-grass/80 my-4 backdrop-blur-lg rounded-lg text-center py-2">
-              <span className="flex-1">
-                {selectedText || "Highlight text to capture language"}
-              </span>
-              <Button
-                variant="ghost"
-                style={{
-                  color: "white",
-                  marginRight: "8px",
-                  borderRadius: "100%",
-                }}
-              >
-                <HeartIcon />
-              </Button>
+          <AlertDialog.Title>By: {ExampleData2.author}</AlertDialog.Title>
+          <Box>
+            <div
+              onMouseMove={(event) => getSelectionText()}
+              onMouseUp={(event) => window.getSelection().removeAllRanges()}
+            >
+              <div className="flex items-center  text-white bg-radix-grass/80 my-4 backdrop-blur-lg rounded-lg text-center py-2">
+                <span className="flex-1">
+                  {selectedText || "Highlight text to capture language"}
+                </span>
+                <Button
+                  variant="ghost"
+                  style={{
+                    color: "white",
+                    marginRight: "8px",
+                    borderRadius: "100%",
+                  }}
+                >
+                  <HeartIcon />
+                </Button>
+              </div>
+              {ExampleData2.content}
             </div>
-            {ExampleData.content}
-          </div>
+          </Box>
           <Flex gap="3" mt="4" justify="end">
             <AlertDialog.Cancel>
               <Button variant="soft" color="gray">
