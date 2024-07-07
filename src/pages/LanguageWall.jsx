@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import RootWrapper from "../components/RootWrapper";
 import { Container, Grid } from "@radix-ui/themes";
 import { Text, Quote } from "@radix-ui/themes";
 import QuoteSearchBox from "../components/QuoteSearchBox";
-import Masonry from "react-responsive-masonry";
+import useDebounceSearch from "../hooks/useDebounceSearch";
 const exampleQuotes = [
   {
     quote:
@@ -28,12 +28,22 @@ const exampleQuotes = [
   },
 ];
 function LanguageWall(props) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const debounceSearch = useDebounceSearch(searchTerm);  
+
+  const handleSearchChange = (event) => setSearchTerm(event.target.value); 
+  
+  const filteredList = useMemo(() => {
+  return exampleQuotes.filter(({quote}) => quote.toLowerCase().includes(debounceSearch.toLowerCase()));
+  }, [debounceSearch]);
+
+
   return (
     <RootWrapper>
       <Container className="mt-8" size={"2"}>
-        <QuoteSearchBox />
+        <QuoteSearchBox  handleSearchChange={handleSearchChange}/>
         <Container className="text-white font-madimiOne" py={{ sm: "8" }}>
-          {exampleQuotes.map((quote, index) => (
+          {filteredList.map((quote, index) => (
             <Text
               key={`quote.quote_${index}`}
               className={`font-lora m-10 mr-10  ${
@@ -41,7 +51,6 @@ function LanguageWall(props) {
               }  hover:bg-radix-green/20 hover:px-[2px] duration-500 transition-all cursor-pointer tracking-wider`}
             >
               {quote.quote}
-              {"  "}
             </Text>
           ))}
         </Container>
