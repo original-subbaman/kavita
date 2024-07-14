@@ -7,12 +7,17 @@ import { Theme } from "@radix-ui/themes";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LanguageWall from "./pages/LanguageWall.jsx";
 import Home from "./pages/Home.jsx";
+import PostDetail from "./pages/PostDetail.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
   },
+  {
+    path: "/post/:id", 
+    element: <PostDetail />
+  }, 
   {
     path: "/languagewall",
     element: <LanguageWall />,

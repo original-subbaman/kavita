@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Text, Flex, Box, Button, AlertDialog } from "@radix-ui/themes";
+import { Card, Text, Flex, Box, } from "@radix-ui/themes";
 import { HeartIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 function PostButton({ children }) {
   return (
@@ -27,18 +27,18 @@ function Post({ content, author }) {
   }
 
   return (
-    <AlertDialog.Trigger>
       <Card
         onMouseUp={(event) => console.log(event.type)}
         className="relative 
       md:max-w-[300px] max-h-[340px] text-white cursor-pointer drop-shadow-lg decoration-slate-200 hover:border-2 hover:border-radix-green hover:scale-105 duration-300 transition-all"
         style={{ backgroundColor: "#191919" }}
       >
-        <Box className="bg-dark-light p-4 z-0">
+        <Box className="bg-dark-light p-4 z-0 max-h-[300px]">
           <Text
             className="cursor-pointer"
             onClick={(event) => console.log(event)}
             onMouseUp={(event) => console.log(event.type)}
+            wrap={"wrap"} 
           >
             {content}
           </Text>
@@ -63,7 +63,6 @@ function Post({ content, author }) {
           </Flex>
         </Box>
       </Card>
-    </AlertDialog.Trigger>
   );
 }
 

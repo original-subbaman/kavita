@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Post from "./Post";
 import { HeartIcon } from "@radix-ui/react-icons";
+import { NavLink} from "react-router-dom";
 import {
   AlertDialog,
   Button,
   Container,
-  Grid,
   Flex,
   Box,
 } from "@radix-ui/themes";
@@ -33,20 +33,20 @@ function PostSection(props) {
     <Container>
       <AlertDialog.Root>
         <ResponsiveMasonry
-          className="px-2 md:px-0"
+          className="px-4 sm:px-2 md:px-0"
           columnsCountBreakPoints={{ 350: 1, 750: 3, 900: 4 }}
         >
           <Masonry gutter="20px" columnsCount={4}>
-            <Post content={ExampleData.content} author={ExampleData.author} />
-            <Post content={ExampleData2.content} author={ExampleData2.author} />
-            <Post content={ExampleData.content} author={ExampleData.author} />
-            <Post content={ExampleData2.content} author={ExampleData2.author} />
-            <Post content={ExampleData2.content} author={ExampleData2.author} />
-            <Post content={ExampleData.content} author={ExampleData.author} />
-            <Post content={ExampleData.content} author={ExampleData.author} />
-            <Post content={ExampleData2.content} author={ExampleData2.author} />
-            <Post content={ExampleData.content} author={ExampleData.author} />
-            <Post content={ExampleData2.content} author={ExampleData2.author} />
+            <NavLink to="/post/1"><Post content={ExampleData.content} author={ExampleData.author} /></NavLink>
+            <NavLink to="/post/2"><Post content={ExampleData2.content} author={ExampleData2.author} /></NavLink>
+            <NavLink to="/post/3"><Post content={ExampleData.content} author={ExampleData.author} /></NavLink>
+            <NavLink to="/post/4"><Post content={ExampleData2.content} author={ExampleData2.author} /></NavLink>
+            <NavLink to="/post/5"><Post content={ExampleData2.content} author={ExampleData2.author} /></NavLink>
+            <NavLink to="/post/6"><Post content={ExampleData.content} author={ExampleData.author} /></NavLink>
+            <NavLink to="/post/7"><Post content={ExampleData.content} author={ExampleData.author} /></NavLink>
+            <NavLink to="/post/8"><Post content={ExampleData2.content} author={ExampleData2.author} /></NavLink>
+            <NavLink to="/post/9"><Post content={ExampleData.content} author={ExampleData.author} /></NavLink>
+            <NavLink to="/post/10"><Post content={ExampleData2.content} author={ExampleData2.author} /></NavLink>
           </Masonry>
         </ResponsiveMasonry>
         <AlertDialog.Content>
