@@ -1,11 +1,15 @@
-import React from 'react'; 
-import { Button } from '@radix-ui/themes';
-import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
+import React from "react";
+import { Button } from "@radix-ui/themes";
+import { HeartFilledIcon, HeartIcon } from "@radix-ui/react-icons";
 
-export default function LikeButton({like}) {
+export default function LikeButton({ like }) {
   return (
-    <Button className='bg-transparent'>
-        { like ? <HeartFilledIcon color='red'/> :  < HeartIcon />  }
+    <Button variant={"ghost"} size={"4"} className="bg-red ">
+      {like ? (
+        <HeartFilledIcon color="red" className="w-16 h-16" />
+      ) : (
+        <HeartIcon className="w-8 h-8" />
+      )}
     </Button>
-  )
+  );
 }

@@ -1,32 +1,55 @@
-import React from 'react'
-import { Container, Heading, Section, Text } from '@radix-ui/themes';
-import { useParams } from 'react-router-dom'
-import RootWrapper from '../components/RootWrapper';
-import LikeButton from '../components/PostDetail/LikeButton';
+import React from "react";
+import {
+  Button,
+  Container,
+  Heading,
+  Section,
+  Text,
+  TextArea,
+} from "@radix-ui/themes";
+import { useParams } from "react-router-dom";
+import RootWrapper from "../components/RootWrapper";
+import LikeButton from "../components/PostDetail/LikeButton";
 
 export default function PostDetail() {
-  let {id} = useParams(); 
+  let { id } = useParams();
+  let message = `There was once a ship thatThere once was a ship that put to sea 
+The name of the ship was the Billy O' Tea The winds blew up, her bow
+            dipped down Oh blow, my bully boys, blow (huh) Soon may the
+            Wellerman come To bring us sugar and tea and rum One day, when the
+            tonguing is done We'll take our leave and go`;
   return (
     <RootWrapper>
       <Container>
-        <Section size={"1"} className=' mt-5 pl-8 rounded-t-md border bg-dark'>
-          <Heading className='text-white'>John Doe</Heading>
-          <Text className='text-gray-500'>Posted On: 14-07-2024</Text>
+        <Section size={"1"} className="text-center">
+          <Heading className="text-white">John Doe</Heading>
+          <Text className="text-gray-500">Posted On: 14-07-2024</Text>
         </Section>
-        <Section className='bg-slate-50  px-4'>
-        <Text size={"7"} className='text-black text-justify'>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Suscipit praesentium vel, pariatur quas natus dolores consectetur nulla id magnam quae totam cum a
-       officiis officia culpa at! Totam, incidunt enim.</Text>
+        <Section className="rounded-md px-8 bg-gray-50 bg-opacity-5 mb-0">
+          <Text
+            size={"6"}
+            className="text-white text-left font-primary font-extralight whitespace-pre-line"
+          >
+            {message}
+          </Text>
         </Section>
-       <Section size={"1"} className='border-t-4 bg-white flex align-top px-4'>  
-          <LikeButton like={false}/>   
+        <Section className="flex flex-col gap-2">
+          <Text size={"4"} className="text-white ">
+            Leave a comment
+          </Text>
+          <TextArea
+            variant="soft"
+            color="green"
+            size={"3"}
+            placeholder="Add a comment..."
+          />
+          <div className="flex justify-end">
+            <Button variant="soft" size={"3"}>
+              Post
+            </Button>
+          </div>
         </Section>
-        <Section>
-          Comments
-        </Section>  
- 
       </Container>
-
     </RootWrapper>
- )
+  );
 }
