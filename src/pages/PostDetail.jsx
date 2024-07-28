@@ -26,7 +26,6 @@ The name of the ship was the Billy O' Tea The winds blew up, her bow
             {message}
           </Text>
         </Section>
-        <CommentForm />
         <CommentSection />
       </Container>
     </RootWrapper>

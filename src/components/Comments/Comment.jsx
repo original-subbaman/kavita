@@ -1,13 +1,13 @@
 import { Text, Box, Button } from "@radix-ui/themes";
 import { convertISOTimeToIST } from "../../utils/Date";
-const Comment = ({ comment }) => {
+const Comment = ({ comment, replies }) => {
   return (
-    <Box className="bg-white opacity-90 my-2 rounded-md p-4">
+    <Box className="text-white my-2 rounded-md p-4 bg-slate-500/40">
       <Box className="mb-4">
         <Text weight={"medium"} className="block" size={"4"}>
           {comment.username}
         </Text>
-        <Text className="" color="gray" size={"2"}>
+        <Text className="text-white" size={"2"}>
           {convertISOTimeToIST(comment.createdAt)}
         </Text>
       </Box>
@@ -19,6 +19,13 @@ const Comment = ({ comment }) => {
         <Button variant="ghost">Edit</Button>
         <Button variant="ghost">Delete</Button>
       </Box>
+      {replies.length > 0 && (
+        <div>
+          {replies.map((reply) => (
+            <Comment key={reply.id} comment={reply} replies={[]} />
+          ))}
+        </div>
+      )}
     </Box>
   );
 };

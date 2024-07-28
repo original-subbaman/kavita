@@ -1,6 +1,7 @@
 import { Box, Heading, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import Comment from "./Comment";
+import CommentForm from "./CommentForm";
 
 const CommentSection = () => {
   const [comments, setComments] = useState([
@@ -38,14 +39,26 @@ const CommentSection = () => {
     },
   ]);
   const rootComments = comments.filter((comment) => comments.parentId == null);
+
+  const addComment = (text, parentId) => {
+    console.log("add comment", text, parentId);
+  };
+
+  // Get replies for a parent comment and sort the replies with oldest replies last
+  const getReplies = (commentId) => {
+    return comments
+      .filter((comment) => comment.parentId === commentId)
+      .sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+  };
   return (
     <Box>
-      <Heading as="h3" color="green">
-        Comments
-      </Heading>
+      <CommentForm submitLabel="Post" handleSubmit={addComment} />
       <Box as="div">
         {rootComments.map((rootComment) => (
-          <Comment comment={rootComment} />
+          <Comment comment={rootComment} replies={getReplies(rootComment.id)} />
         ))}
       </Box>
     </Box>
