@@ -38,10 +38,19 @@ const CommentSection = () => {
       createdAt: "2021-08-16T23:00:33.010+02:00",
     },
   ]);
+  const [activeComment, setActiveComment] = useState(null);
   const rootComments = comments.filter((comment) => comments.parentId == null);
 
   const addComment = (text, parentId) => {
     console.log("add comment", text, parentId);
+    // call add comment api
+    // after success call back
+    setActiveComment(null);
+  };
+
+  const deleteComment = (commentId) => {
+    console.log("delete");
+    // call delete comment api
   };
 
   // Get replies for a parent comment and sort the replies with oldest replies last
@@ -58,7 +67,15 @@ const CommentSection = () => {
       <CommentForm submitLabel="Post" handleSubmit={addComment} />
       <Box as="div">
         {rootComments.map((rootComment) => (
-          <Comment comment={rootComment} replies={getReplies(rootComment.id)} />
+          <Comment
+            comment={rootComment}
+            replies={getReplies(rootComment.id)}
+            currentUserId={1}
+            deleteComment={deleteComment}
+            activeComment={activeComment}
+            setActiveComment={setActiveComment}
+            addComment={addComment}
+          />
         ))}
       </Box>
     </Box>
