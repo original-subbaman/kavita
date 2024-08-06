@@ -8,6 +8,7 @@ const Comment = ({
   deleteComment,
   activeComment,
   setActiveComment,
+  updateComment,
   addComment,
   parentId = null,
 }) => {
@@ -41,7 +42,18 @@ const Comment = ({
           {convertISOTimeToIST(comment.createdAt)}
         </Text>
       </Box>
-      <Text>{comment.body}</Text>
+      {!isEditing && <Text>{comment.body}</Text>}
+      {isEditing && (
+        <CommentForm
+          submitLabel={"Update"}
+          hasCancelButton
+          intialText={comment.body}
+          handleSubmit={(text) => {
+            // update comment function like updateComment(text, comment.id)
+          }}
+          handleCancel={() => setActiveComment(null)}
+        />
+      )}
       <Box className="flex gap-8 align-bottom mt-8">
         {canReply && (
           <Button
@@ -89,6 +101,7 @@ const Comment = ({
               setActiveComment={setActiveComment}
               currentUserId={currentUserId}
               deleteComment={deleteComment}
+              updateComment={updateComment}
               parentId={comment.id}
               addComment={addComment}
             />

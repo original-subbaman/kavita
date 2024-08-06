@@ -1,7 +1,13 @@
 import { Flex, TextArea, Button, Text, Theme } from "@radix-ui/themes";
 import { useState } from "react";
-const CommentForm = ({ handleSubmit, submitLabel }) => {
-  const [text, setText] = useState("");
+const CommentForm = ({
+  handleSubmit,
+  submitLabel,
+  hasCancelButton = false,
+  initialText = "",
+  handleCancel,
+}) => {
+  const [text, setText] = useState(initialText);
   const isTextAreaDisabled = text.length === 0;
 
   const onSubmit = (event) => {
@@ -33,6 +39,16 @@ const CommentForm = ({ handleSubmit, submitLabel }) => {
           >
             {submitLabel}
           </Button>
+          {hasCancelButton && (
+            <Button
+              variant="soft"
+              size={"3"}
+              type="submit"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+          )}
         </div>
       </form>
     </Theme>

@@ -53,6 +53,11 @@ const CommentSection = () => {
     // call delete comment api
   };
 
+  const updateComment = (text, commentId) => {
+    console.log("call api for update");
+    setActiveComment(null);
+  };
+
   // Get replies for a parent comment and sort the replies with oldest replies last
   const getReplies = (commentId) => {
     return comments
@@ -72,6 +77,7 @@ const CommentSection = () => {
             replies={getReplies(rootComment.id)}
             currentUserId={1}
             deleteComment={deleteComment}
+            updateComment={updateComment}
             activeComment={activeComment}
             setActiveComment={setActiveComment}
             addComment={addComment}
