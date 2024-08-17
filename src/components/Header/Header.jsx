@@ -1,5 +1,5 @@
 import React from "react";
-import Profile from "./Profile";
+import PopupMenu from "./PopupMenu";
 import { Text } from "@radix-ui/themes";
 import { Link } from "@radix-ui/themes";
 import { NavLink } from "react-router-dom";
@@ -19,7 +19,7 @@ function Header(props) {
           </Link>
         </NavLink>
       </nav>
-      <Profile name="John Doe" />
+      <PopupMenu name="John Doe" />
     </header>
   );
 }

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Container, Button, Heading, Section, Text } from "@radix-ui/themes";
+import { Container, Heading, Section, Text } from "@radix-ui/themes";
 import { useParams } from "react-router-dom";
 import RootWrapper from "../components/RootWrapper";
 import CommentSection from "../components/Comments/CommentSection";
-import { HeartIcon } from "@radix-ui/react-icons";
 import SelectedText from "../components/SelectedText";
 export default function PostDetail() {
   let { id } = useParams();
