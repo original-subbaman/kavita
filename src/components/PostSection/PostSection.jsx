@@ -1,44 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Post from "./Post";
-import { HeartIcon } from "@radix-ui/react-icons";
 import { NavLink } from "react-router-dom";
-import { AlertDialog, Button, Container, Flex, Box } from "@radix-ui/themes";
+import { Box, Container, Heading } from "@radix-ui/themes";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { fetchPosts } from "../../api/post.api";
+import useGetPosts from "../../hooks/post/useGetPosts";
 
 function PostSection(props) {
-  const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    const fetchPostData = async () => {
-      try {
-        const data = await fetchPosts();
-        if (data) {
-          setPosts(data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchPostData();
-  }, []);
+  const { data: posts } = useGetPosts({ keys: [] });
 
   return (
     <Container>
-      <AlertDialog.Root>
+      {posts && posts.length === 0 && (
+        <Box className="flex justify-center items-center text-gray-500 w-full h-full">
+          <Heading as="h1">
+            No posts to show. Maybe you should contribute one writing piece...
+          </Heading>
+        </Box>
+      )}
+      {posts && posts.length > 0 && (
         <ResponsiveMasonry
           className="px-4 sm:px-2 md:px-0"
           columnsCountBreakPoints={{ 350: 1, 750: 3, 900: 4 }}
         >
           <Masonry gutter="20px" columnsCount={4}>
             {posts.map((post) => (
-              <NavLink to={`/post/${post.id}`}>
-                <Post content={post.post} author={post.user_id} />
+              <NavLink to={`/post/${post.id}`} key={post.id}>
+                <Post content={post.post} author={post.user.name} />
               </NavLink>
             ))}
           </Masonry>
         </ResponsiveMasonry>
-      </AlertDialog.Root>
+      )}
     </Container>
   );
 }

@@ -1,10 +1,38 @@
-import React from "react";
-import { AlertDialog, TextArea, Flex, Button } from "@radix-ui/themes";
+import React, { useState } from "react";
+import {
+  AlertDialog,
+  TextArea,
+  Flex,
+  Button,
+  AlertDialogDescription,
+} from "@radix-ui/themes";
+import { addPost } from "../../api/post.api";
 function InputAlertDialog(props) {
+  const [loading, setLoading] = useState(false);
+  const [post, setPost] = useState("");
+
+  const handleOnPostClick = async () => {
+    setLoading(true);
+    const newPost = { post: post };
+    const res = await addPost(newPost);
+    if (res) {
+      console.log(res);
+    }
+    setLoading(false);
+  };
+
+  // Think about debounce later
+  const onPostChange = (event) => setPost(event.target.value);
+
   return (
-    <AlertDialog.Content className="w-[250px]">
+    <AlertDialog.Content
+      className="w-[250px]"
+      aria-labelledby="Add your writing piece"
+    >
       <AlertDialog.Title>Today's Prompt: Once upon a time...</AlertDialog.Title>
       <TextArea
+        onChange={onPostChange}
+        value={post}
         size={{
           xs: "1",
           sm: "2",
@@ -20,7 +48,9 @@ function InputAlertDialog(props) {
           </Button>
         </AlertDialog.Cancel>
         <AlertDialog.Action>
-          <Button variant="solid">Post</Button>
+          <Button variant="solid" onClick={handleOnPostClick} loading={loading}>
+            Post
+          </Button>
         </AlertDialog.Action>
       </Flex>
     </AlertDialog.Content>
