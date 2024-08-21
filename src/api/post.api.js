@@ -14,7 +14,7 @@ export async function fetchPosts() {
 export async function addPost(post) {
   const { data, errors } = await supabase.from("post").insert([
     {
-      post: post.post,
+      post: post,
       user_id: "1feebd99-74d7-4b2d-9692-9742e6d7dd2d",
     },
   ]);

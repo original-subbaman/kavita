@@ -3,7 +3,7 @@ import { Flex, Button, Text, AlertDialog } from "@radix-ui/themes";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import InputAlertDialog from "./InputAlertDialog";
 
-function PromptTextField(props) {
+function PromptTextField({ closeAlert }) {
   return (
     <Flex direction="column" gap="4" className="md:w-[800px]">
       <AlertDialog.Trigger>
@@ -17,7 +17,7 @@ function PromptTextField(props) {
           <Text className="text-xl md:text-2xl">Submit your piece</Text>
         </Button>
       </AlertDialog.Trigger>
-      <InputAlertDialog />
+      <InputAlertDialog closeAlert={closeAlert} />
     </Flex>
   );
 }

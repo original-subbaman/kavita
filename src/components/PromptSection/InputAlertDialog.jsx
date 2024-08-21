@@ -1,24 +1,34 @@
 import React, { useState } from "react";
-import {
-  AlertDialog,
-  TextArea,
-  Flex,
-  Button,
-  AlertDialogDescription,
-} from "@radix-ui/themes";
-import { addPost } from "../../api/post.api";
-function InputAlertDialog(props) {
-  const [loading, setLoading] = useState(false);
+import { AlertDialog, TextArea, Flex, Button } from "@radix-ui/themes";
+import useAddPost from "../../hooks/post/useAddPost";
+import ResponseSnackbar from "../ResponseSnackbar";
+function InputAlertDialog({ closeAlert }) {
   const [post, setPost] = useState("");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+  });
+
+  const { mutate: addPost, isPending: isPosting } = useAddPost({
+    onSuccess: () => {
+      closeAlert();
+      setPost("");
+    },
+  });
+
+  const isPostEmpty = () => {
+    if (post.length === 0 || /^\s*$/.test(post)) {
+      return true;
+    }
+    return false;
+  };
 
   const handleOnPostClick = async () => {
-    setLoading(true);
-    const newPost = { post: post };
-    const res = await addPost(newPost);
-    if (res) {
-      console.log(res);
+    if (isPostEmpty()) {
+      setSnackbar({ open: true, message: "Empty text field" });
+    } else {
+      addPost({ post: post });
     }
-    setLoading(false);
   };
 
   // Think about debounce later
@@ -29,6 +39,15 @@ function InputAlertDialog(props) {
       className="w-[250px]"
       aria-labelledby="Add your writing piece"
     >
+      {snackbar.open && (
+        <ResponseSnackbar
+          open={true}
+          severity={"error"}
+          onClose={() => setSnackbar({ open: false, message: "" })}
+          autoHideDuration={3000}
+          message={snackbar.message}
+        />
+      )}
       <AlertDialog.Title>Today's Prompt: Once upon a time...</AlertDialog.Title>
       <TextArea
         onChange={onPostChange}
@@ -38,7 +57,9 @@ function InputAlertDialog(props) {
           sm: "2",
           md: "3",
         }}
-        className="h-[350px] p-2 rounded-md"
+        autoFocus={true}
+        required
+        className={`h-[550px] p-2 rounded-md`}
         placeholder="Once upon a time..."
       />
       <Flex gap="3" mt="4" justify="end">
@@ -47,11 +68,9 @@ function InputAlertDialog(props) {
             Cancel
           </Button>
         </AlertDialog.Cancel>
-        <AlertDialog.Action>
-          <Button variant="solid" onClick={handleOnPostClick} loading={loading}>
-            Post
-          </Button>
-        </AlertDialog.Action>
+        <Button variant="solid" onClick={handleOnPostClick} loading={isPosting}>
+          Post
+        </Button>
       </Flex>
     </AlertDialog.Content>
   );
