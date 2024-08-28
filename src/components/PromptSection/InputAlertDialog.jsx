@@ -1,19 +1,11 @@
 import React, { useState } from "react";
 import { AlertDialog, TextArea, Flex, Button } from "@radix-ui/themes";
-import useAddPost from "../../hooks/post/useAddPost";
 import ResponseSnackbar from "../ResponseSnackbar";
-function InputAlertDialog({ closeAlert }) {
-  const [post, setPost] = useState("");
+function InputAlertDialog({ addPost, mutationState, prompt }) {
+  const [post, setPost] = useState(prompt);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
-  });
-
-  const { mutate: addPost, isPending: isPosting } = useAddPost({
-    onSuccess: () => {
-      closeAlert();
-      setPost("");
-    },
   });
 
   const isPostEmpty = () => {
@@ -37,7 +29,7 @@ function InputAlertDialog({ closeAlert }) {
   return (
     <AlertDialog.Content
       className="w-[250px]"
-      aria-labelledby="Add your writing piece"
+      aria-describedby="Add your writing piece"
     >
       {snackbar.open && (
         <ResponseSnackbar
@@ -49,6 +41,9 @@ function InputAlertDialog({ closeAlert }) {
         />
       )}
       <AlertDialog.Title>Today's Prompt: Once upon a time...</AlertDialog.Title>
+      <AlertDialog.Description className=" text-gray-500">
+        Add your writing piece below
+      </AlertDialog.Description>
       <TextArea
         onChange={onPostChange}
         value={post}
@@ -59,7 +54,7 @@ function InputAlertDialog({ closeAlert }) {
         }}
         autoFocus={true}
         required
-        className={`h-[550px] p-2 rounded-md`}
+        className={`h-[550px]  rounded-md mt-2`}
         placeholder="Once upon a time..."
       />
       <Flex gap="3" mt="4" justify="end">
@@ -68,7 +63,11 @@ function InputAlertDialog({ closeAlert }) {
             Cancel
           </Button>
         </AlertDialog.Cancel>
-        <Button variant="solid" onClick={handleOnPostClick} loading={isPosting}>
+        <Button
+          variant="solid"
+          onClick={handleOnPostClick}
+          loading={mutationState}
+        >
           Post
         </Button>
       </Flex>

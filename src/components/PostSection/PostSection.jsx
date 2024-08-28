@@ -3,17 +3,14 @@ import Post from "./Post";
 import { NavLink } from "react-router-dom";
 import { Box, Container, Heading } from "@radix-ui/themes";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import useGetPosts from "../../hooks/post/useGetPosts";
 
-function PostSection(props) {
-  const { data: posts } = useGetPosts({ keys: [] });
-
+function PostSection({ posts }) {
   return (
     <Container>
       {posts && posts.length === 0 && (
         <Box className="flex justify-center items-center text-gray-500 w-full h-full">
           <Heading as="h1">
-            No posts to show. Maybe you should contribute one writing piece...
+            No posts to show. Maybe you should contribute a writing piece...
           </Heading>
         </Box>
       )}
