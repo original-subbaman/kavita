@@ -6,7 +6,7 @@ import useAddPost from "../hooks/post/useAddPost";
 import PromptText from "../components/PromptSection/PromptText";
 import AddPostButton from "../components/PromptSection/AddPostButton";
 import InputAlertDialog from "../components/PromptSection/InputAlertDialog";
-import { AlertDialog } from "@radix-ui/themes";
+import { Root as AlertDialogRoot } from "@radix-ui/react-alert-dialog";
 import { useState } from "react";
 function Home() {
   const [addPostDialog, setAddPostDialog] = useState(false);
@@ -24,14 +24,14 @@ function Home() {
     <RootWrapper>
       <PromptSection>
         <PromptText />
-        <AlertDialog.Root open={addPostDialog} onOpenChange={setAddPostDialog}>
+        <AlertDialogRoot open={addPostDialog} onOpenChange={setAddPostDialog}>
           <AddPostButton />
           <InputAlertDialog
             addPost={addPost}
             prompt={"A quick brown fox jumped over the lazy dog"} // Replace with actual prompt from the backend
             mutationState={isPosting}
           />
-        </AlertDialog.Root>
+        </AlertDialogRoot>
       </PromptSection>
       <PostSection posts={posts} />
     </RootWrapper>

@@ -4,27 +4,30 @@ import { useParams } from "react-router-dom";
 import RootWrapper from "../components/RootWrapper";
 import CommentSection from "../components/Comments/CommentSection";
 import SelectedText from "../components/SelectedText";
+import useGetPost from "../hooks/post/useGetPost";
+import { convertISOTimestamp } from "../utils/Date";
 export default function PostDetail() {
   let { id } = useParams();
+
   const [selectedText, setSelectedText] = useState();
+  const { data: post } = useGetPost({ id });
+  console.log("🚀 ~ PostDetail ~ post:", post);
 
   function getSelectionText() {
     const selection = window.getSelection().toString();
     if (selection) {
-      console.log("captured");
       setSelectedText(selection);
     }
   }
 
-  let message = `There was once a ship that There once was a ship that put to sea The name of the ship was the Billy O' Tea The winds blew up, her bow
-            dipped down Oh blow, my bully boys, blow (huh) Soon may the Wellerman come To bring us sugar and tea and rum One day, when the
-            tonguing is done We'll take our leave and go`;
   return (
     <RootWrapper>
       <Container>
         <Section size={"1"} className="text-center">
-          <Heading className="text-white">John Doe</Heading>
-          <Text className="text-gray-500">Posted On: 14-07-2024</Text>
+          <Heading className="text-white">{post?.user?.name}</Heading>
+          <Text className="text-gray-500">
+            Posted On: {convertISOTimestamp(post?.created_at)}
+          </Text>
         </Section>
         <Section className="rounded-md px-8 bg-gray-50 bg-opacity-5 mb-2">
           <SelectedText selectedText={selectedText} />
@@ -34,7 +37,7 @@ export default function PostDetail() {
             size={"6"}
             className="text-white text-start font-primary font-extralight whitespace-pre-line"
           >
-            {message}
+            {post?.post}
           </Text>
         </Section>
         <CommentSection />

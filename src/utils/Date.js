@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, parse, parseISO } from "date-fns";
 export function getDateToday() {
   const currentDate = new Date();
   const day = currentDate.getDate();
@@ -18,5 +18,14 @@ export function convertISOTimeToIST(isoTimeStamp) {
     timeZone: "Asia/Kolkata",
   });
 
+  return formattedDate;
+}
+
+export function convertISOTimestamp(timestamp) {
+  let formattedDate;
+  if (timestamp) {
+    const date = parseISO(timestamp);
+    formattedDate = format(date, "dd-MM-yyyy");
+  }
   return formattedDate;
 }

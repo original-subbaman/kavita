@@ -11,6 +11,14 @@ export async function fetchPosts() {
   return data;
 }
 
+export async function fetchAPost(id) {
+  const { data } = await supabase
+    .from("post")
+    .select("*, user (id, name)")
+    .eq("id", id);
+  return data[0];
+}
+
 export async function addPost(post) {
   const { data, errors } = await supabase.from("post").insert([
     {

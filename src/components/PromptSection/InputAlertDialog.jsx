@@ -28,7 +28,7 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
 
   return (
     <AlertDialog.Content
-      className="w-[250px]"
+      className="w-[600px]"
       aria-describedby="Add your writing piece"
     >
       {snackbar.open && (
@@ -40,8 +40,10 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
           message={snackbar.message}
         />
       )}
-      <AlertDialog.Title>Today's Prompt: Once upon a time...</AlertDialog.Title>
-      <AlertDialog.Description className=" text-gray-500">
+      <AlertDialog.Title className="text-white text-xl font-bold">
+        Today's Prompt: Once upon a time...
+      </AlertDialog.Title>
+      <AlertDialog.Description className=" text-gray-500 my-2">
         Add your writing piece below
       </AlertDialog.Description>
       <TextArea
@@ -54,7 +56,7 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
         }}
         autoFocus={true}
         required
-        className={`h-[550px]  rounded-md mt-2`}
+        className={`h-[550px] rounded-md mt-2 border `}
         placeholder="Once upon a time..."
       />
       <Flex gap="3" mt="4" justify="end">
@@ -66,7 +68,7 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
         <Button
           variant="solid"
           onClick={handleOnPostClick}
-          loading={mutationState}
+          loading={mutationState.toString()}
         >
           Post
         </Button>
