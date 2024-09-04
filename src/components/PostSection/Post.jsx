@@ -31,17 +31,9 @@ function Post({ content, author }) {
           justify="between"
           align="center"
         >
-          <Text size="3" className="pl-4">
-            {author}
+          <Text size="4" className="pl-4 py-2">
+            {`@${author}`}
           </Text>
-          <Box className="flex p-0">
-            <PostButton>
-              <QuestionMarkCircledIcon className="w-6 h-6" />
-            </PostButton>
-            <PostButton>
-              <HeartIcon className="w-6 h-6" />
-            </PostButton>
-          </Box>
         </Flex>
       </Box>
     </Card>

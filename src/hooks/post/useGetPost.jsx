@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchAPost } from "../../api/post.api";
+import { fetchPostAndLikeStatus } from "../../api/post.api";
 
-const useGetPost = ({ id }) => {
+const useGetPost = ({ postId, userId, isUpdating }) => {
   return useQuery({
-    queryKey: ["get_post", id],
-    queryFn: () => fetchAPost(id),
+    queryKey: ["get_post", postId, userId, isUpdating],
+    queryFn: () => fetchPostAndLikeStatus(postId, userId),
   });
 };
 

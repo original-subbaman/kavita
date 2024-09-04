@@ -22,7 +22,7 @@ function PostSection({ posts }) {
           <Masonry gutter="20px" columnsCount={4}>
             {posts.map((post) => (
               <NavLink to={`/post/${post.id}`} key={post.id}>
-                <Post content={post.post} author={post.user.name} />
+                <Post content={post.post} author={post.user.user_name} />
               </NavLink>
             ))}
           </Masonry>
