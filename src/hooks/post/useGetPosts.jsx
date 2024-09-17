@@ -4,6 +4,7 @@ const useGetPosts = ({ keys = [] }) => {
   return useQuery({
     queryKey: ["get_latest_posts", ...keys],
     queryFn: () => fetchPosts(),
+    staleTime: 30000,
   });
 };
 

@@ -6,7 +6,7 @@ const useFilterLanguage = (quotes, searchTerm) => {
     return quotes.filter(({ language }) =>
       language.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm]);
+  }, [quotes, searchTerm]);
 };
 
 export default useFilterLanguage;
