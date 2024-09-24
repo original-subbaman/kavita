@@ -9,9 +9,7 @@ function PostSection({ posts }) {
     <Container>
       {posts && posts.length === 0 && (
         <Box className="flex justify-center items-center text-gray-500 w-full h-full mt-48">
-          <Heading as="h1">
-            No posts to show. Maybe you should contribute a writing piece...
-          </Heading>
+          <Heading as="h1">No posts to show</Heading>
         </Box>
       )}
       {posts && posts.length > 0 && (

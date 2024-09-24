@@ -1,13 +1,13 @@
 import supabase from "../client/create_client";
 import { startOfDay, endOfDay, formatISO } from "date-fns";
 
-export async function fetchPosts() {
-  const now = new Date();
+export async function fetchPosts({ date }) {
+  console.log("🚀 ~ fetchPosts ~ date:", date);
   const { data } = await supabase
     .from("post")
     .select("*, user (id, name, user_name)")
-    .gte("created_at", formatISO(startOfDay(now)))
-    .lte("created_at", formatISO(endOfDay(now)));
+    .gte("created_at", formatISO(startOfDay(date)))
+    .lte("created_at", formatISO(endOfDay(date)));
   return data;
 }
 

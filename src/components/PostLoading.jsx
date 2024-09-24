@@ -134,6 +134,30 @@ const PostLoading = () => {
             height={150}
           />
         </Grid>
+        <Grid item>
+          <Skeleton
+            animation="wave"
+            variant="rounded"
+            width={100}
+            height={190}
+          />
+        </Grid>
+        <Grid item>
+          <Skeleton
+            animation="wave"
+            variant="rounded"
+            width={120}
+            height={100}
+          />
+        </Grid>
+        <Grid item>
+          <Skeleton
+            animation="wave"
+            variant="rounded"
+            width={120}
+            height={150}
+          />
+        </Grid>
       </Grid>
     </Box>
   );
