@@ -65,6 +65,7 @@ function Home() {
       <Flex display={"flex"} gap={"2"} className="min-h-screen">
         {/** suggest prompt section */}
         <Box className="flex-1"></Box>
+        {/** Posts Section */}
         <Box className="flex-1">
           <PromptSection>
             <PromptText />
