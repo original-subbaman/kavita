@@ -4,7 +4,6 @@ import { Root as AlertDialogRoot } from "@radix-ui/react-alert-dialog";
 import { Box, Flex } from "@radix-ui/themes";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { CircularProgress } from "@mui/material";
 import PostSection from "../components/PostSection/PostSection";
 import AddPostButton from "../components/PromptSection/AddPostButton";
 import InputAlertDialog from "../components/PromptSection/InputAlertDialog";
@@ -41,7 +40,9 @@ const StaticDatePickerStyle = {
 
 function Home() {
   const [addPostDialog, setAddPostDialog] = useState(false);
-  const [date, setDate] = useState(dayjs(new Date()));
+  const today = dayjs(new Date());
+  const [date, setDate] = useState(today);
+  const isToday = date.isSame(today, "day");
 
   const { mutate: addPost, isPending: isPosting } = useAddPost({
     onSuccess: () => {
@@ -71,7 +72,7 @@ function Home() {
               open={addPostDialog}
               onOpenChange={setAddPostDialog}
             >
-              <AddPostButton />
+              {isToday && <AddPostButton />}
               <InputAlertDialog
                 addPost={addPost}
                 prompt={"A quick brown fox jumped over the lazy dog"} // Replace with actual prompt from the backend

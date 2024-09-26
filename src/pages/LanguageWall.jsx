@@ -23,8 +23,6 @@ function LanguageWall(props) {
 
   const filteredList = useFilterLanguage(quotes, debounceSearch);
 
-  console.log(filteredList);
-
   return (
     <RootWrapper>
       <Container className="mt-8" size={"2"}>
