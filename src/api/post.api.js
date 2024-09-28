@@ -51,7 +51,7 @@ export async function addPost(post) {
   ]);
 
   if (errors) {
-    console.log("Error inserting data", error);
+    console.log("Error inserting data", errors);
     return;
   }
   return data;

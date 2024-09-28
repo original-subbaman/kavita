@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Text, Flex, Box } from "@radix-ui/themes";
 import { HeartIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
+import { getRandomDimensions } from "../../utils/Helper";
 function PostButton({ children }) {
   return (
     <button className="bg-transparent duration-300 transition-all hover:bg-radix-grass flex items-center justify-center w-12 h-12">
@@ -8,11 +9,12 @@ function PostButton({ children }) {
     </button>
   );
 }
-function Post({ content, author }) {
+function Post({ content, author, width, height }) {
   return (
     <Card
-      className="relative 
-      md:max-w-[300px] max-h-[340px] text-white cursor-pointer drop-shadow-lg decoration-slate-200 hover:border-2 hover:border-radix-green hover:scale-105 duration-300 transition-all"
+      className={`relative block
+      w-[${width}] h-[${height}]
+       text-white cursor-pointer drop-shadow-lg decoration-slate-200 hover:border-2 hover:border-radix-green hover:scale-105 duration-300 transition-all`}
       style={{ backgroundColor: "#191919" }}
     >
       <Box className="bg-dark-light p-4 z-0 max-h-[300px]">

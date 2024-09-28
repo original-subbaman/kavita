@@ -2,29 +2,32 @@ import React from "react";
 import Post from "./Post";
 import { NavLink } from "react-router-dom";
 import { Box, Container, Heading } from "@radix-ui/themes";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import Masonry from "react-responsive-masonry";
+import { getRandomDimensions } from "../../utils/Helper";
 
 function PostSection({ posts }) {
+  const dimensions = getRandomDimensions(posts.length);
+  const isSmallScreen = window.matchMedia("(max-width: 639px)").matches;
   return (
-    <Container>
+    <Container className="px-3 sm:p-0">
       {posts && posts.length === 0 && (
         <Box className="flex justify-center items-center text-gray-500 w-full h-full mt-48">
           <Heading as="h1">No posts to show</Heading>
         </Box>
       )}
       {posts && posts.length > 0 && (
-        <ResponsiveMasonry
-          className="px-4 sm:px-2 md:px-0"
-          columnsCountBreakPoints={{ 350: 1, 750: 3, 900: 4 }}
-        >
-          <Masonry gutter="20px" columnsCount={4}>
-            {posts.map((post) => (
-              <NavLink to={`/post/${post.id}`} key={post.id}>
-                <Post content={post.post} author={post.user.user_name} />
-              </NavLink>
-            ))}
-          </Masonry>
-        </ResponsiveMasonry>
+        <Masonry gutter="20px" columnsCount={isSmallScreen ? 1 : 2}>
+          {posts.map((post, index) => (
+            <NavLink to={`/post/${post.id}`} key={post.id}>
+              <Post
+                content={post.post}
+                author={post.user.user_name}
+                width={dimensions[index].width}
+                height={dimensions[index].height}
+              />
+            </NavLink>
+          ))}
+        </Masonry>
       )}
     </Container>
   );

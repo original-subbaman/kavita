@@ -12,6 +12,7 @@ import PromptText from "../components/PromptSection/PromptText";
 import RootWrapper from "../components/RootWrapper";
 import useAddPost from "../hooks/post/useAddPost";
 import useGetPosts from "../hooks/post/useGetPosts";
+import { useQueryClient } from "@tanstack/react-query";
 
 const StaticDatePickerStyle = {
   backgroundColor: "#1e1e1e",
@@ -43,11 +44,17 @@ function Home() {
   const today = dayjs(new Date());
   const [date, setDate] = useState(today);
   const isToday = date.isSame(today, "day");
+  const queryClient = useQueryClient();
 
-  const { mutate: addPost, isPending: isPosting } = useAddPost({
+  const {
+    data: newPost,
+    mutate: addPost,
+    isPending: isPosting,
+  } = useAddPost({
     onSuccess: () => {
       setAddPostDialog(false);
       setPost("");
+      queryClient.invalidateQueries({ queryKey: "get_latest_posts" });
     },
   });
 
@@ -64,7 +71,7 @@ function Home() {
     <RootWrapper>
       <Flex display={"flex"} gap={"2"} className="min-h-screen">
         {/** suggest prompt section */}
-        <Box className="flex-1"></Box>
+        <Box className="flex-1 hidden sm:block"></Box>
         {/** Posts Section */}
         <Box className="flex-1">
           <PromptSection>
@@ -84,7 +91,7 @@ function Home() {
           {isPostsFetched && <PostSection posts={posts} />}
         </Box>
         {/** filter */}
-        <Box className="flex-1 my-8 color-white flex flex-col items-center ">
+        <Box className="flex-1 my-8 color-white hidden sm:flex flex-col items-center  ">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <StaticDatePicker
               value={date}
