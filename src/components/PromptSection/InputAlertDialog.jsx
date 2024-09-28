@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import { AlertDialog, TextArea, Flex, Button, Text } from "@radix-ui/themes";
 import ResponseSnackbar from "../ResponseSnackbar";
+import QuillEditor from "../Editor/QuillEditor";
 function InputAlertDialog({ addPost, mutationState, prompt }) {
-  const textAreaRef = useRef();
   const [post, setPost] = useState(prompt);
   const [error, setError] = useState({
     lowWordCount: false,
@@ -30,18 +30,17 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
         lowWordCount: true,
         message: "Your post must have at least 50 words before submitting",
       }));
-      textAreaRef.current.focus();
     } else {
       addPost({ post: post });
     }
   };
 
   // Think about debounce later
-  const onPostChange = (event) => {
+  const onPostChange = (value) => {
     if (post.split(" ").length > 50) {
       setError((prev) => ({ ...prev, lowWordCount: false, message: "" }));
     }
-    setPost(event.target.value);
+    setPost(value);
   };
 
   return (
@@ -69,21 +68,7 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
       )}
       {error.lowWordCount && <Text color="red">{error.message}</Text>}
       {/* Text Area */}
-      <TextArea
-        ref={textAreaRef}
-        onChange={onPostChange}
-        value={post}
-        size={{
-          xs: "1",
-          sm: "2",
-          md: "3",
-        }}
-        color={error.lowWordCount ? "red" : ""}
-        autoFocus={true}
-        required
-        className={`h-[550px] rounded-md mt-2 border `}
-        placeholder="Once upon a time..."
-      />
+      <QuillEditor value={post} onChange={onPostChange} />
       <Flex gap="3" mt="4" justify="end">
         <AlertDialog.Cancel>
           <Button variant="soft" color="gray">

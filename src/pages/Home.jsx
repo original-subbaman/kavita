@@ -54,7 +54,7 @@ function Home() {
     onSuccess: () => {
       setAddPostDialog(false);
       setPost("");
-      queryClient.invalidateQueries({ queryKey: "get_latest_posts" });
+      queryClient.invalidateQueries({ queryKey: ["get_latest_posts", date] });
     },
   });
 
@@ -64,7 +64,7 @@ function Home() {
     isFetched: isPostsFetched,
   } = useGetPosts({
     date: date.toDate(),
-    keys: [isPosting],
+    keys: [],
   });
 
   return (

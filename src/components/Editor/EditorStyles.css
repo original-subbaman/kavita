@@ -1,0 +1,27 @@
+.ql-container {
+  height: 400px;
+  border-radius: 10px;
+  border-top: 1 solid white;
+}
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
+  border-top: 1px solid white;
+}
+
+.ql-toolbar {
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.quill {
+  margin-top: 10px;
+}
+
+input,
+.ql-editor {
+  height: 100%;
+  font-size: 14px;
+}
+
+#editor {
+  height: 500px;
+}

@@ -3,7 +3,10 @@ import { addPost } from "../../api/post.api";
 
 const useAddPost = ({ onSuccess }) => {
   return useMutation({
-    mutationFn: (params) => addPost(params.post),
+    mutationFn: async (params) => {
+      const newPost = await addPost(params.post);
+      return newPost[0];
+    },
     onSuccess: onSuccess,
   });
 };

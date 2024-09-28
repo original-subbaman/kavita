@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Text, Flex, Box } from "@radix-ui/themes";
 import { HeartIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { getRandomDimensions } from "../../utils/Helper";
+import DOMPurify from "dompurify";
 function PostButton({ children }) {
   return (
     <button className="bg-transparent duration-300 transition-all hover:bg-radix-grass flex items-center justify-center w-12 h-12">
@@ -10,6 +11,7 @@ function PostButton({ children }) {
   );
 }
 function Post({ content, author, width, height }) {
+  const sanitizedPost = DOMPurify.sanitize(content);
   return (
     <Card
       className={`relative block
@@ -18,14 +20,12 @@ function Post({ content, author, width, height }) {
       style={{ backgroundColor: "#191919" }}
     >
       <Box className="bg-dark-light p-4 z-0 max-h-[300px]">
-        <Text
-          className="cursor-pointer"
-          onClick={(event) => console.log(event)}
+        <Box
+          dangerouslySetInnerHTML={{ __html: sanitizedPost }}
           onMouseUp={(event) => console.log(event.type)}
+          className="cursor-pointer"
           wrap={"wrap"}
-        >
-          {content}
-        </Text>
+        />
       </Box>
       <Box className="bg-white bg-opacity-0 absolute inset-0 opacity-0 hover:opacity-100 duration-500 trasition-all rounded-b-lg text-white z-10">
         <Flex

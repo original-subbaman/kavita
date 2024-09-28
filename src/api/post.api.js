@@ -43,12 +43,16 @@ export async function fetchPostAndLikeStatus(postId, userId) {
 }
 
 export async function addPost(post) {
-  const { data, errors } = await supabase.from("post").insert([
-    {
-      post: post,
-      user_id: "1feebd99-74d7-4b2d-9692-9742e6d7dd2d",
-    },
-  ]);
+  const { data, errors } = await supabase
+    .from("post")
+    .insert([
+      {
+        post: post,
+        user_id: "1feebd99-74d7-4b2d-9692-9742e6d7dd2d",
+      },
+    ])
+    .select("*");
+  console.log("🚀 ~ addPost ~ data:", data);
 
   if (errors) {
     console.log("Error inserting data", errors);

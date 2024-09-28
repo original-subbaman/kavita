@@ -23,9 +23,11 @@
     "@uiw/react-heat-map": "^2.2.2",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
+    "dompurify": "^3.1.7",
     "dotenv": "^16.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-quill-new": "^3.3.2",
     "react-responsive-masonry": "^2.2.0",
     "react-router-dom": "^6.22.2"
   },

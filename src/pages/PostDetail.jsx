@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import DOMPurify from "dompurify";
 import {
   Button,
   Box,
@@ -82,7 +83,7 @@ export default function PostDetail() {
 
   const author = data?.post.user.name;
   const createdAt = data?.post.created_at;
-  const post = data?.post.post;
+  const post = DOMPurify.sanitize(data?.post.post);
   const hasLiked = data?.hasLiked;
 
   return (
@@ -115,14 +116,13 @@ export default function PostDetail() {
               selectedText={selectedText}
               captureLanguage={handleCaptureLanguage}
             />
-            <Text
+
+            <Box
+              dangerouslySetInnerHTML={{ __html: post }}
               onMouseMove={(event) => getSelectionText()}
               onMouseUp={(event) => window.getSelection().removeAllRanges()}
-              size={"6"}
               className="text-white text-start font-primary font-extralight whitespace-pre-line"
-            >
-              {post}
-            </Text>
+            />
           </Section>
           <Box className="flex items-end justify-end   gap-4 my-0  max-h-['10px']">
             <Button
