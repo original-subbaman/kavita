@@ -6,6 +6,7 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
   const [post, setPost] = useState(prompt);
   const [error, setError] = useState({
     lowWordCount: false,
+    invalidPrompt: false,
     message: "",
   });
   const [snackbar, setSnackbar] = useState({
@@ -29,6 +30,12 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
         ...prev,
         lowWordCount: true,
         message: "Your post must have at least 50 words before submitting",
+      }));
+    } else if (!post.includes(prompt)) {
+      setError((prev) => ({
+        ...prev,
+        invalidPrompt: true,
+        message: "Your writing piece must include the prompt",
       }));
     } else {
       addPost({ post: post });
@@ -61,12 +68,16 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
         Today's Prompt: Once upon a time...
       </AlertDialog.Title>
       {/* Error Messages */}
-      {!error.lowWordCount && (
-        <AlertDialog.Description className=" text-gray-500 my-2">
-          Add your writing piece below
-        </AlertDialog.Description>
+      {!error.lowWordCount ||
+        (!error.invalidPrompt && (
+          <AlertDialog.Description className=" text-gray-500 my-2">
+            Add your writing piece below
+          </AlertDialog.Description>
+        ))}
+      {/* Error messages */}
+      {(error.lowWordCount || error.invalidPrompt) && (
+        <Text color="red">{error.message}</Text>
       )}
-      {error.lowWordCount && <Text color="red">{error.message}</Text>}
       {/* Text Area */}
       <QuillEditor value={post} onChange={onPostChange} />
       <Flex gap="3" mt="4" justify="end">
