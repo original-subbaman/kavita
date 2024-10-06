@@ -2,7 +2,6 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import "./EditorStyles.css";
 const QuillEditor = ({ value, onChange }) => {
-  console.log("🚀 ~ QuillEditor ~ value:", value);
   const toolbarOptions = [
     [{ font: [] }],
     [{ size: ["small", false, "large", "huge"] }],

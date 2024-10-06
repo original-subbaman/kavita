@@ -6,7 +6,7 @@ import Masonry from "react-responsive-masonry";
 import { getRandomDimensions } from "../../utils/Helper";
 
 function PostSection({ posts }) {
-  const dimensions = getRandomDimensions(posts.length);
+  const dimensions = getRandomDimensions(posts ? posts.length : 0);
   const isSmallScreen = window.matchMedia("(max-width: 639px)").matches;
   return (
     <Container className="px-3 sm:p-0">

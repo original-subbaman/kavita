@@ -2,12 +2,20 @@ import supabase from "../client/create_client";
 import { startOfDay, endOfDay, formatISO } from "date-fns";
 
 export async function fetchPosts({ date }) {
-  console.log("🚀 ~ fetchPosts ~ date:", date);
   const { data } = await supabase
     .from("post")
     .select("*, user (id, name, user_name)")
     .gte("created_at", formatISO(startOfDay(date)))
     .lte("created_at", formatISO(endOfDay(date)));
+  return data;
+}
+
+export async function getPostById(id) {
+  const { data } = await supabase
+    .from("post")
+    .select("*, user (id, name, user_name)")
+    .eq("id", id)
+    .single();
   return data;
 }
 

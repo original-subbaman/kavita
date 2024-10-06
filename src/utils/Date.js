@@ -12,6 +12,8 @@ export function getDateToday() {
 }
 
 export function convertISOTimeToIST(isoTimeStamp) {
+  if (!isoTimeStamp) return "";
+
   const date = new Date(isoTimeStamp);
 
   const formattedDate = format(date, "dd MMM yyyy, HH:mm:ss", {
