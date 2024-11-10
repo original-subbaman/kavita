@@ -10,6 +10,14 @@ export async function fetchPosts({ date }) {
   return data;
 }
 
+export async function fetchPostsById({ id }) {
+  const { data } = await supabase
+    .from("post")
+    .select("*, user (id, name, user_name)")
+    .eq("user_id", id);
+  return data;
+}
+
 export async function getPostById(id) {
   const { data } = await supabase
     .from("post")
