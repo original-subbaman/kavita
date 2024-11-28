@@ -31,3 +31,28 @@ export function convertISOTimestamp(timestamp) {
   }
   return formattedDate;
 }
+
+export const StaticDatePickerStyle = {
+  backgroundColor: "#1e1e1e",
+  color: "white",
+  "& .MuiDayCalendar-weekDayLabel": { color: "#15803d" },
+  ".MuiButtonBase-root": {
+    color: "white",
+  },
+  ".MuiDayPicker-daySelected": {
+    backgroundColor: "#15803d", // Background color for selected date
+    color: "#fff", // Text color for selected date
+    borderRadius: "8px", // Rounded corners for selected date
+  },
+  ".MuiPickersDay-root:hover": {
+    backgroundColor: "#444",
+  },
+  ".MuiButtonBase-root.Mui-selected": {
+    backgroundColor: "#15803d", // Background color for selected date
+  },
+  ".MuiPickersToolbar-root": {
+    color: "white",
+    backgroundColor: "#1e1e1e", // Dark mode calendar background
+    borderRadius: "12px", // Rounded corners for the calendar
+  },
+};

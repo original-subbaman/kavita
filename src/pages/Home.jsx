@@ -13,31 +13,7 @@ import RootWrapper from "../components/RootWrapper";
 import useAddPost from "../hooks/post/useAddPost";
 import useGetPosts from "../hooks/post/useGetPosts";
 import { useQueryClient } from "@tanstack/react-query";
-
-const StaticDatePickerStyle = {
-  backgroundColor: "#1e1e1e",
-  color: "white",
-  "& .MuiDayCalendar-weekDayLabel": { color: "#15803d" },
-  ".MuiButtonBase-root": {
-    color: "white",
-  },
-  ".MuiDayPicker-daySelected": {
-    backgroundColor: "#15803d", // Background color for selected date
-    color: "#fff", // Text color for selected date
-    borderRadius: "8px", // Rounded corners for selected date
-  },
-  ".MuiPickersDay-root:hover": {
-    backgroundColor: "#444",
-  },
-  ".MuiButtonBase-root.Mui-selected": {
-    backgroundColor: "#15803d", // Background color for selected date
-  },
-  ".MuiPickersToolbar-root": {
-    color: "white",
-    backgroundColor: "#1e1e1e", // Dark mode calendar background
-    borderRadius: "12px", // Rounded corners for the calendar
-  },
-};
+import { StaticDatePickerStyle } from "../utils/Date";
 
 function Home() {
   const [addPostDialog, setAddPostDialog] = useState(false);
