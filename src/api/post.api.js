@@ -10,12 +10,12 @@ export async function fetchPosts({ date }) {
   return data;
 }
 
-export async function fetchPostsById({ id, from, to }) {
-  console.log("🚀 ~ fetchPostsById ~ r:", from);
+export async function fetchPostsById({ id, from, to, search }) {
   const { data } = await supabase
     .from("post")
     .select("*, user (id, name, user_name)")
     .eq("user_id", id)
+    .ilike("post", `%${search}%`)
     .gte("created_at", from)
     .lte("created_at", to);
   return data;
