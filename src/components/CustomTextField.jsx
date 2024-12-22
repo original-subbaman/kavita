@@ -19,7 +19,6 @@ const CustomTextField = ({
         type={type}
         placeholder={placeholder}
         onChange={onChange}
-        inputVariant={inputVariant}
         className={inputClass}
       />
       {endIcon && (

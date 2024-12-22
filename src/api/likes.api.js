@@ -1,4 +1,4 @@
-import supabase from "../client/create_client";
+import supabase from "../supabase_client/create_client";
 
 export const getLikes = async ({ postId }) => {
   const data = await supabase.from("likes").select("*").eq("post_id", postId);

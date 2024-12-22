@@ -1,4 +1,4 @@
-import supabase from "../client/create_client";
+import supabase from "../supabase_client/create_client";
 
 export const recordLanguage = async ({ language, userId, postId }) => {
   const { data, errors } = await supabase.from("language").insert([

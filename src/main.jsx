@@ -8,6 +8,7 @@ import CreateRouter from "./router/Router";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ThemeProvider } from "@mui/material";
 import MuiTheme from "./utils/MuiTheme";
+import { AuthProvider } from "./hooks/auth/AuthProvider.jsx";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
       <ThemeProvider theme={MuiTheme}>
         <Theme appearance="dark" accentColor="green">
-          <RouterProvider router={CreateRouter()} />
+          <AuthProvider>
+            <RouterProvider router={CreateRouter()} />
+          </AuthProvider>
         </Theme>
       </ThemeProvider>
     </React.StrictMode>

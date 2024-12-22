@@ -1,4 +1,4 @@
-import supabase from "../client/create_client";
+import supabase from "../supabase_client/create_client";
 import { startOfDay, endOfDay, formatISO } from "date-fns";
 
 export async function fetchPosts({ date }) {

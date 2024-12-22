@@ -1,26 +1,11 @@
-import RootWrapper from "../components/RootWrapper";
-import {
-  Container,
-  Card,
-  Text,
-  Box,
-  TextField,
-  Flex,
-  Button,
-  IconButton,
-} from "@radix-ui/themes";
-import {
-  EnvelopeClosedIcon,
-  DotsHorizontalIcon,
-  EyeClosedIcon,
-  EyeOpenIcon,
-} from "@radix-ui/react-icons";
-import CustomTextField from "../components/CustomTextField";
+import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
+import { Button, Flex, Text } from "@radix-ui/themes";
 import { useState } from "react";
-import LoginWrapper from "../components/Login_Signup/LoginWrapper";
-import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
-import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import { useNavigate } from "react-router-dom";
+import CustomTextField from "../components/CustomTextField";
+import LoginWrapper from "../components/Login_Signup/LoginWrapper";
+import PasswordTextField from "../components/Login_Signup/PasswordTextField";
+import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 
 const Login = () => {
   const navigate = useNavigate();
