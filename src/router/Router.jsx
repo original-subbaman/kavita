@@ -7,6 +7,7 @@ import MyPosts from "../pages/MyPosts.jsx";
 import Login from "../pages/Login.jsx";
 import Signup from "../pages/Signup.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import PageNotFound from "../pages/PageNotFound.jsx";
 function CreateRouter() {
   return createBrowserRouter([
     {
@@ -25,6 +26,7 @@ function CreateRouter() {
     { path: "/profile", element: <ProtectedRoute element={<Profile />} /> },
     { path: "/login", element: <Login /> },
     { path: "/signup", element: <Signup /> },
+    { path: "*", element: <PageNotFound /> },
   ]);
 }
 

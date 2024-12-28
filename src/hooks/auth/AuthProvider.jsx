@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-} from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
 
@@ -34,7 +28,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
   };
 
-  // Provide auth state and methods to the app
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
