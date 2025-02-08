@@ -13,28 +13,129 @@ import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import CustomSelect from "../components/Select";
 import { GenderOptions } from "../utils/Constants";
+import ResponseSnackbar from "../components/ResponseSnackbar";
+import { signUpWithEmail, updateProfileData } from "../api/auth.api";
+import { info } from "autoprefixer";
+import LoadingButton from "../components/LoadingButton";
+import { PenLine } from "lucide-react";
+
 const REQUIRED_NAME_ERROR = "Name is required";
 const REQUIRED_EMAIL_ERROR = "Email is required";
 const REQUIRED_ADDRESS_ERROR = "Address is required";
+const REQUIRED_USER_NAME_ERROR = "User name is required";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [gender, setGender] = useState("Male");
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState({
+    success: false,
+    error: false,
+    info: false,
+    message: "",
+  });
+
+  const handleResponseClose = () =>
+    setResponse({ success: false, error: false, message: "" });
+
   const {
     handleSubmit,
     control,
     formState: { errors },
+    getValues,
   } = useForm();
   const formRef = useRef(null);
 
-  const [gender, setGender] = useState("Male");
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
 
-  const onSubmit = (data) => {
-    const newUser = { ...data, gender: gender };
-    console.log("~ gender ~", newUser);
+      // Sign up user
+      const { data: authData, error } = await signUpWithEmail(
+        data.email,
+        data.password,
+        data.name
+      );
+
+      if (error) {
+        setResponse({
+          error: true,
+          success: false,
+          info: false,
+          message: error.message,
+        });
+        return;
+      }
+
+      console.log("🚀 ~ onSubmit ~ authData:", authData);
+      delete data["email"];
+      delete data["password"];
+      // Update profile data
+      const newUser = {
+        id: authData.user.id,
+        name: data.name,
+        userName: data.user_name,
+        address: data.address,
+        gender,
+      };
+
+      const { error: profileError } = await updateProfileData(newUser);
+
+      if (profileError) {
+        setResponse({
+          error: true,
+          success: false,
+          info: false,
+          message: "Profile update failed. Please try again.",
+        });
+        return;
+      }
+
+      // Success case
+      setResponse({
+        error: false,
+        success: true,
+        info: true,
+        message: "Please check your email for verification link",
+      });
+    } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error);
+      setResponse({
+        error: true,
+        success: false,
+        info: false,
+        message: "Cannot sign up user at the moment",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <LoginWrapper title={"Signup"}>
+      {/* Success Snackbar */}
+      <ResponseSnackbar
+        open={response.success}
+        onClose={handleResponseClose}
+        message={response.message}
+        severity={"success"}
+      />
+      {/* Info snackbar */}
+      <ResponseSnackbar
+        open={response.info}
+        onClose={handleResponseClose}
+        message={response.message}
+        severity={"info"}
+        autoHideDuration={5000}
+      />
+      {/* Error Snackbar */}
+      <ResponseSnackbar
+        open={response.error}
+        onClose={handleResponseClose}
+        message={response.message}
+        severity={"error"}
+      />
+      {/* Sign Up form */}
       <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
         <Flex direction={"column"} gap={"4"}>
           <Flex direction={"column"} gap={"4"}>
@@ -47,6 +148,16 @@ const Signup = () => {
               startIcon={<PersonIcon />}
               rules={{ required: REQUIRED_NAME_ERROR }}
               error={errors?.name?.message}
+            />
+            <CustomTextField
+              control={control}
+              name={"user_name"}
+              placeholder="Enter User Name"
+              inputVariant={TextFieldProps.inputVariant}
+              size={TextFieldProps.size}
+              startIcon={<PenLine />}
+              rules={{ required: REQUIRED_USER_NAME_ERROR }}
+              error={errors?.user_name?.message}
             />
             <CustomTextField
               control={control}
@@ -86,9 +197,15 @@ const Signup = () => {
             control={control}
             error={errors?.password?.message}
           />
-          <Button type="submit" className="w-full" size={"3"} my={"3"}>
-            Login
-          </Button>
+          <LoadingButton
+            loading={loading}
+            type={"submit"}
+            className="w-full"
+            size={"3"}
+            my={"3"}
+          >
+            Sign Up
+          </LoadingButton>
           <Text as="p" align={"center"}>
             Already have an account?{" "}
             <Text

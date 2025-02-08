@@ -1,7 +1,7 @@
 import { Snackbar, Alert } from "@mui/material";
 const ResponseSnackbar = ({
   open,
-  autoHideDuration,
+  autoHideDuration = 2000,
   onClose,
   severity,
   message,
