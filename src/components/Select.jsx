@@ -1,9 +1,21 @@
 import { Select } from "@radix-ui/themes";
-const CustomSelect = ({ defaultValue, label, size, values, triggerClass }) => {
+const CustomSelect = ({
+  defaultValue,
+  label,
+  size,
+  onValueChange,
+  value,
+  values,
+  triggerClass,
+}) => {
   return (
-    <Select.Root defaultValue={defaultValue} size={size}>
+    <Select.Root
+      onValueChange={onValueChange}
+      size={size}
+      defaultValue={defaultValue}
+    >
       <Select.Trigger className={triggerClass} />
-      <Select.Content className="h-[40px]">
+      <Select.Content className="">
         <Select.Group>
           {label && <Select.Label>{label}</Select.Label>}
           {values.map((value) => (

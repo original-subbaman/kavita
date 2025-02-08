@@ -1,6 +1,9 @@
-import { TextField } from "@radix-ui/themes";
+import { Box, Text, TextField } from "@radix-ui/themes";
+import { Controller } from "react-hook-form";
 const CustomTextField = ({
+  name,
   placeholder,
+  control,
   inputVariant = "soft",
   size,
   startIcon,
@@ -8,23 +11,43 @@ const CustomTextField = ({
   onChange,
   inputClass,
   rootClass,
+  rules,
   type,
+  error,
 }) => {
   return (
-    <TextField.Root variant={inputVariant} size={size} className={rootClass}>
-      {startIcon && (
-        <TextField.Slot className="cursor-pointer">{startIcon}</TextField.Slot>
-      )}
-      <TextField.Input
-        type={type}
-        placeholder={placeholder}
-        onChange={onChange}
-        className={inputClass}
-      />
-      {endIcon && (
-        <TextField.Slot className="cursor-pointer">{endIcon}</TextField.Slot>
-      )}
-    </TextField.Root>
+    <Controller
+      control={control}
+      name={name}
+      rules={rules}
+      render={({ field: { onChange, onBlur, value } }) => {
+        return (
+          <Box className={rootClass}>
+            <TextField.Root variant={inputVariant} size={size}>
+              {startIcon && (
+                <TextField.Slot className="cursor-pointer">
+                  {startIcon}
+                </TextField.Slot>
+              )}
+              <TextField.Input
+                type={type}
+                placeholder={placeholder}
+                onChange={onChange}
+                value={value}
+                onBlur={onBlur}
+                className={inputClass}
+              />
+              {endIcon && (
+                <TextField.Slot className="cursor-pointer">
+                  {endIcon}
+                </TextField.Slot>
+              )}
+            </TextField.Root>
+            {error && <Text className="text-red-500 text-sm">{error}</Text>}
+          </Box>
+        );
+      }}
+    />
   );
 };
 

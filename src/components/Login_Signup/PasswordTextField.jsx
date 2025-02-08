@@ -6,31 +6,41 @@ import {
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
 import { TextFieldProps } from "./TextFieldProps";
-const PasswordTextField = ({ isVisible, togglePasswordVisibility }) => {
+import { useState } from "react";
+import { PasswordRules } from "../../utils/Constants";
+const PasswordTextField = ({ name, control, error }) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const togglePasswordVisibility = () => setIsPasswordVisible((prev) => !prev);
   return (
     <CustomTextField
+      name={name}
+      control={control}
       placeholder="Enter Password"
       inputVariant={TextFieldProps.inputVariant}
       size={TextFieldProps.size}
-      type={isVisible ? "text" : "password"}
+      type={isPasswordVisible ? "text" : "password"}
+      rules={PasswordRules}
+      error={error}
       startIcon={<DotsHorizontalIcon />}
       endIcon={
-        isVisible ? (
+        isPasswordVisible ? (
           <IconButton
             onClick={togglePasswordVisibility}
             variant="ghost"
+            type="button"
             size={"3"}
           >
-            <EyeClosedIcon height={"16"} width={"16"} />
+            <EyeOpenIcon height={"16"} width={"16"} />
           </IconButton>
         ) : (
           <IconButton
             onClick={togglePasswordVisibility}
             variant="ghost"
+            type="button"
             size={"3"}
             className="p-2"
           >
-            <EyeOpenIcon height={"16"} width={"16"} />
+            <EyeClosedIcon height={"16"} width={"16"} />
           </IconButton>
         )
       }

@@ -10,9 +10,7 @@ const LoginWrapper = ({ title, children }) => {
             {title}
           </Text>
           <hr className="my-4"></hr>
-          <Flex direction={"column"} gap={"4"}>
-            {children}
-          </Flex>
+          {children}
         </Box>
       </Flex>
     </RootWrapper>
