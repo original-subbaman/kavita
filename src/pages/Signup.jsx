@@ -3,22 +3,21 @@ import {
   HomeIcon,
   PersonIcon,
 } from "@radix-ui/react-icons";
-import { Button, Flex, Text } from "@radix-ui/themes";
+import { Flex, Text } from "@radix-ui/themes";
+import { PenLine } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { signUpWithEmail, updateProfileData } from "../api/auth.api";
+import { isUserNameAvailable } from "../api/user.api";
 import CustomTextField from "../components/CustomTextField";
+import LoadingButton from "../components/LoadingButton";
 import LoginWrapper from "../components/Login_Signup/LoginWrapper";
 import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
+import ResponseSnackbar from "../components/ResponseSnackbar";
 import CustomSelect from "../components/Select";
 import { GenderOptions } from "../utils/Constants";
-import ResponseSnackbar from "../components/ResponseSnackbar";
-import { signUpWithEmail, updateProfileData } from "../api/auth.api";
-import { info } from "autoprefixer";
-import LoadingButton from "../components/LoadingButton";
-import { PenLine } from "lucide-react";
-
 const REQUIRED_NAME_ERROR = "Name is required";
 const REQUIRED_EMAIL_ERROR = "Email is required";
 const REQUIRED_ADDRESS_ERROR = "Address is required";
@@ -67,7 +66,6 @@ const Signup = () => {
         return;
       }
 
-      console.log("🚀 ~ onSubmit ~ authData:", authData);
       delete data["email"];
       delete data["password"];
       // Update profile data
@@ -156,7 +154,15 @@ const Signup = () => {
               inputVariant={TextFieldProps.inputVariant}
               size={TextFieldProps.size}
               startIcon={<PenLine />}
-              rules={{ required: REQUIRED_USER_NAME_ERROR }}
+              rules={{
+                required: REQUIRED_USER_NAME_ERROR,
+                validate: async (value) => {
+                  const available = await isUserNameAvailable({
+                    username: value,
+                  });
+                  return available || "Username is already taken";
+                },
+              }}
               error={errors?.user_name?.message}
             />
             <CustomTextField

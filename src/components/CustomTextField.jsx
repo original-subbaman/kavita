@@ -9,6 +9,7 @@ const CustomTextField = ({
   startIcon,
   endIcon,
   onChange,
+  onBlur: onFocusLoss,
   inputClass,
   rootClass,
   rules,
@@ -19,6 +20,7 @@ const CustomTextField = ({
     <Controller
       control={control}
       name={name}
+      defaultValue={""}
       rules={rules}
       render={({ field: { onChange, onBlur, value } }) => {
         return (
