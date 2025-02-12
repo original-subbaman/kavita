@@ -51,7 +51,7 @@ const Login = () => {
         <Text
           as="span"
           className="text-blue-500 cursor-pointer"
-          onClick={() => navigate("/signup")}
+          onClick={() => navigate("/signup", { replace: true })}
         >
           Register here
         </Text>

@@ -9,7 +9,7 @@ export async function isUserNameAvailable({ username }) {
 
   if (error) {
     console.error("Error checking username:", error);
-    return false;
+    return true;
   }
 
   return !data;

@@ -8,6 +8,7 @@ import Login from "../pages/Login.jsx";
 import Signup from "../pages/Signup.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import PageNotFound from "../pages/PageNotFound.jsx";
+import LoginRedirect from "../pages/LoginRedirect.jsx";
 function CreateRouter() {
   return createBrowserRouter([
     {
@@ -24,6 +25,7 @@ function CreateRouter() {
     },
     { path: "/my-posts", element: <ProtectedRoute element={<MyPosts />} /> },
     { path: "/profile", element: <ProtectedRoute element={<Profile />} /> },
+    { path: "/login-redirect", element: <LoginRedirect /> },
     { path: "/login", element: <Login /> },
     { path: "/signup", element: <Signup /> },
     { path: "*", element: <PageNotFound /> },

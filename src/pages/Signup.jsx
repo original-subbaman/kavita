@@ -41,7 +41,6 @@ const Signup = () => {
     handleSubmit,
     control,
     formState: { errors },
-    getValues,
   } = useForm();
   const formRef = useRef(null);
 
@@ -80,12 +79,21 @@ const Signup = () => {
       const { error: profileError } = await updateProfileData(newUser);
 
       if (profileError) {
-        setResponse({
-          error: true,
-          success: false,
-          info: false,
-          message: "Profile update failed. Please try again.",
-        });
+        if (profileError.code === "23505") {
+          setResponse({
+            error: true,
+            success: false,
+            info: false,
+            message: "User with this email already exists",
+          });
+        } else {
+          setResponse({
+            error: true,
+            success: false,
+            info: false,
+            message: "Creating profile failed. Please try again",
+          });
+        }
         return;
       }
 
@@ -96,8 +104,8 @@ const Signup = () => {
         info: true,
         message: "Please check your email for verification link",
       });
+      navigate("/login-redirect", { replace: true });
     } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error:", error);
       setResponse({
         error: true,
         success: false,
