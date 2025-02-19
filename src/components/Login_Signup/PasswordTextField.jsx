@@ -8,7 +8,7 @@ import {
 import { TextFieldProps } from "./TextFieldProps";
 import { useState } from "react";
 import { PasswordRules } from "../../utils/Constants";
-const PasswordTextField = ({ name, control, error }) => {
+const PasswordTextField = ({ name, control, error, rules = PasswordRules }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => setIsPasswordVisible((prev) => !prev);
   return (
@@ -19,7 +19,7 @@ const PasswordTextField = ({ name, control, error }) => {
       inputVariant={TextFieldProps.inputVariant}
       size={TextFieldProps.size}
       type={isPasswordVisible ? "text" : "password"}
-      rules={PasswordRules}
+      rules={rules}
       error={error}
       startIcon={<DotsHorizontalIcon />}
       endIcon={

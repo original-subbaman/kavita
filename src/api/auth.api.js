@@ -25,6 +25,25 @@ async function updateProfileData(userData) {
   ]);
 }
 
-async function signIn(email, password) {}
+async function signIn(email, password) {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-export { signUpWithEmail, updateProfileData };
+    if (error) {
+      throw error;
+    }
+
+    // User signed in successfully
+    return {
+      user: data.user,
+      session: data.session,
+    };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { signIn, signUpWithEmail, updateProfileData };
