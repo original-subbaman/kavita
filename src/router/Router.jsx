@@ -13,18 +13,44 @@ function CreateRouter() {
   return createBrowserRouter([
     {
       path: "/",
-      element: <ProtectedRoute element={<Home />} />,
+      element: (
+        <ProtectedRoute>
+          <Home />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/post/:id",
-      element: <ProtectedRoute element={<PostDetail />} />,
+      element: (
+        <ProtectedRoute>
+          <PostDetail />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/languagewall",
-      element: <ProtectedRoute element={<LanguageWall />} />,
+      element: (
+        <ProtectedRoute>
+          <LanguageWall />
+        </ProtectedRoute>
+      ),
     },
-    { path: "/my-posts", element: <ProtectedRoute element={<MyPosts />} /> },
-    { path: "/profile", element: <ProtectedRoute element={<Profile />} /> },
+    {
+      path: "/my-posts",
+      element: (
+        <ProtectedRoute>
+          <MyPosts />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/profile",
+      element: (
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      ),
+    },
     { path: "/login-redirect", element: <LoginRedirect /> },
     { path: "/login", element: <Login /> },
     { path: "/signup", element: <Signup /> },

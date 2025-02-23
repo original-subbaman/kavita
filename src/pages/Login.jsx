@@ -40,6 +40,7 @@ const Login = () => {
       // If login is successful, navigate to dashboard
       navigate("/dashboard");
     } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error.message);
       let errorMessage;
       // Handle specific error cases
       if (error.message.includes("Invalid login credentials")) {

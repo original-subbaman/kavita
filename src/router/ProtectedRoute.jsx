@@ -3,15 +3,17 @@ import useAuth from "../hooks/auth/useAuth";
 import { useEffect } from "react";
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
+  console.log("🚀 ~ ProtectedRoute ~ children:", children);
+  const { user, session, loading } = useAuth();
   const navigate = useNavigate();
 
   // If no user is authenticated, navigate to the login page
   useEffect(() => {
-    if (!user) {
+    if (!loading && !session) {
       navigate("/login", { replace: true });
     }
-  }, [user]);
+    console.log("session", session);
+  }, [loading, session]);
 
   if (loading) {
     return <div>Loading...</div>;
