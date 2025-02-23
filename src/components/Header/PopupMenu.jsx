@@ -1,7 +1,19 @@
 import { Button, Box, Flex, Popover } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/auth/useAuth";
 function PopupMenu({ name }) {
   const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error("Error logging out:", error.message);
+      // Handle error - maybe show a notification
+    }
+  };
 
   return (
     <Popover.Root>
@@ -21,7 +33,9 @@ function PopupMenu({ name }) {
           <Button variant="ghost" onClick={() => navigate("/profile")}>
             Profile
           </Button>
-          <Button variant="ghost">Log out</Button>
+          <Button variant="ghost" onClick={handleLogout}>
+            Log out
+          </Button>
         </Flex>
       </Popover.Content>
     </Popover.Root>

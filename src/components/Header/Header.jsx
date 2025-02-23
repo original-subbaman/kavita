@@ -5,7 +5,6 @@ import { NavLink, useLocation } from "react-router-dom";
 import LinkText from "./LinkText";
 function Header(props) {
   const location = useLocation();
-  const [activePage, setActivePage] = useState();
 
   return (
     <header className="flex justify-between text-white bg-dark items-center h-16 px-8 drop-shadow-md sticky top-0 z-[100]">

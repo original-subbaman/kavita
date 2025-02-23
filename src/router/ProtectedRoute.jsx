@@ -3,7 +3,6 @@ import useAuth from "../hooks/auth/useAuth";
 import { useEffect } from "react";
 
 const ProtectedRoute = ({ children }) => {
-  console.log("🚀 ~ ProtectedRoute ~ children:", children);
   const { user, session, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -12,7 +11,6 @@ const ProtectedRoute = ({ children }) => {
     if (!loading && !session) {
       navigate("/login", { replace: true });
     }
-    console.log("session", session);
   }, [loading, session]);
 
   if (loading) {
