@@ -3,7 +3,7 @@ import {
   HomeIcon,
   PersonIcon,
 } from "@radix-ui/react-icons";
-import { Flex, Text } from "@radix-ui/themes";
+import { Flex, Checkbox, Text, Button, Dialog } from "@radix-ui/themes";
 import { PenLine } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,6 +18,7 @@ import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import CustomSelect from "../components/Select";
 import { GenderOptions } from "../utils/Constants";
+import TermsAndConditions from "../components/Login_Signup/TermsAndConditions";
 const REQUIRED_NAME_ERROR = "Name is required";
 const REQUIRED_EMAIL_ERROR = "Email is required";
 const REQUIRED_ADDRESS_ERROR = "Address is required";
@@ -25,8 +26,10 @@ const REQUIRED_USER_NAME_ERROR = "User name is required";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const formRef = useRef(null);
   const [gender, setGender] = useState("Male");
   const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
   const [response, setResponse] = useState({
     success: false,
     error: false,
@@ -42,7 +45,6 @@ const Signup = () => {
     control,
     formState: { errors },
   } = useForm();
-  const formRef = useRef(null);
 
   const onSubmit = async (data) => {
     try {
@@ -141,6 +143,7 @@ const Signup = () => {
         message={response.message}
         severity={"error"}
       />
+
       {/* Sign Up form */}
       <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
         <Flex direction={"column"} gap={"4"}>
@@ -211,10 +214,26 @@ const Signup = () => {
             control={control}
             error={errors?.password?.message}
           />
+          {/* Terms and Conditions */}
+          <Dialog.Root>
+            <TermsAndConditions />
+            <Dialog.Trigger>
+              <span className="text-sm text-center cursor-pointer underline text-blue-500">
+                Read Terms and Conditions
+              </span>
+            </Dialog.Trigger>
+          </Dialog.Root>
+          <Text as="label" size="2">
+            <Flex gap="2">
+              <Checkbox checked={checked} onCheckedChange={setChecked} />
+              Agree to Terms and Conditions
+            </Flex>
+          </Text>
           <LoadingButton
             loading={loading}
             type={"submit"}
             className="w-full"
+            disabled={!checked}
             size={"3"}
             my={"3"}
           >
