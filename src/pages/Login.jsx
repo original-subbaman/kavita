@@ -38,9 +38,8 @@ const Login = () => {
       await login(data.email, data.password);
 
       // If login is successful, navigate to dashboard
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error:", error.message);
       let errorMessage;
       // Handle specific error cases
       if (error.message.includes("Invalid login credentials")) {
