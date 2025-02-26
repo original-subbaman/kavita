@@ -18,7 +18,7 @@ function PopupMenu({ name }) {
   return (
     <Popover.Root>
       <div className="flex items-center gap-2 rounded cursor-pointer p-2">
-        <p className="text-2xl">{name}</p>
+        <p className="text-xl">{name}</p>
         <Popover.Trigger>
           <Box
             color="green"
