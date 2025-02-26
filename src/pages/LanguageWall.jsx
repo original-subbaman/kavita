@@ -3,10 +3,12 @@ import { SizeIcon } from "@radix-ui/react-icons";
 import {
   Box,
   Container,
+  Flex,
   IconButton,
   ScrollArea,
   Text,
   Tooltip,
+  Heading,
 } from "@radix-ui/themes";
 import { CupertinoPane } from "cupertino-pane";
 import DOMPurify from "dompurify";
@@ -19,8 +21,10 @@ import useGetLanguage from "../hooks/language/useGetLanguage";
 import useGetPostById from "../hooks/post/useGetPostById";
 import useDebounceSearch from "../hooks/useDebounceSearch";
 import { convertISOTimeToIST } from "../utils/Date";
+import useAuth from "../hooks/auth/useAuth";
 
 function LanguageWall(props) {
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [postId, setPostId] = useState();
   const debounceSearch = useDebounceSearch(searchTerm);
@@ -59,7 +63,7 @@ function LanguageWall(props) {
     isLoading: isFetching,
     isFetched: isLanguageFetched,
   } = useGetLanguage({
-    userId: "1feebd99-74d7-4b2d-9692-9742e6d7dd2d",
+    userId: user.id,
   });
 
   const filteredList = useFilterLanguage(quotes, debounceSearch);
@@ -69,14 +73,25 @@ function LanguageWall(props) {
       <Container className="mt-8" size={"2"}>
         <QuoteSearchBox handleSearchChange={handleSearchChange} />
         {isFetching && <CircularProgress />}
-        {isLanguageFetched && (
+
+        {isLanguageFetched && quotes.length === 0 && (
+          <Flex
+            align={"center"}
+            justify={"center"}
+            className="min-h-[50vh] text-gray-500"
+          >
+            <Heading as="h1">No quotes to show</Heading>
+          </Flex>
+        )}
+
+        {isLanguageFetched && quotes.length > 0 && (
           <Container className="text-white font-madimiOne" py={{ sm: "8" }}>
             {filteredList.map((quote, index) => (
               <Text
                 mr={"3"}
                 key={quote.id}
                 onClick={() => handleQuoteClick(quote.post_id)}
-                className={`font-lora  ${
+                className={` ${
                   index % 3 === 0 ? "text-3xl" : "text-lg"
                 }  hover:bg-radix-green/20 hover:px-[2px] duration-500 transition-all cursor-pointer tracking-wider`}
               >

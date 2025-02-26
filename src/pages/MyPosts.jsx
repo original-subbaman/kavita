@@ -7,7 +7,9 @@ import RootWrapper from "../components/RootWrapper";
 import useGetUserPosts from "../hooks/post/useGetUserPosts";
 import QuoteSearchBox from "../components/QuoteSearchBox";
 import useDebounceSearch from "../hooks/useDebounceSearch";
+import useAuth from "../hooks/auth/useAuth";
 const MyPosts = () => {
+  const { user } = useAuth();
   const [filterDate, setFilterDate] = useState({
     from: dayjs().startOf("year"),
     to: dayjs(),
@@ -16,7 +18,7 @@ const MyPosts = () => {
   const debounceSearch = useDebounceSearch(searchTerm);
 
   const { data: posts } = useGetUserPosts({
-    id: "1feebd99-74d7-4b2d-9692-9742e6d7dd2d",
+    id: user.id,
     from: filterDate.from,
     to: filterDate.to,
     search: debounceSearch,
