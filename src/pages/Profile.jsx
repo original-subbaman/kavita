@@ -1,10 +1,8 @@
-import { Avatar, Box, Grid, Container, Text, Heading } from "@radix-ui/themes";
-import RootWrapper from "../components/RootWrapper";
-import UploadProfile from "../components/ProfilePage/UploadProfile";
+import { Container } from "@radix-ui/themes";
 import { useState } from "react";
-import HeatMap from "@uiw/react-heat-map";
 import UserDetailSection from "../components/ProfilePage/UserDetailSection";
-
+import RootWrapper from "../components/RootWrapper";
+import ActivitySection from "../components/ProfilePage/ActivitySection";
 function Profile() {
   const [profile, setProfile] = useState(null);
   const value = [
@@ -28,6 +26,9 @@ function Profile() {
     <RootWrapper>
       <Container className="py-4">
         <UserDetailSection />
+        <div className="mt-4">
+          <ActivitySection />
+        </div>
       </Container>
     </RootWrapper>
   );
