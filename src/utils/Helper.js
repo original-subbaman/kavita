@@ -7,3 +7,26 @@ export const getRandomDimensions = (count) => {
   }
   return dimensions;
 };
+
+export const getInitialsOfName = (name) => {
+  if (!name) return "";
+
+  const splitName = name.split(" ");
+
+  // Only first name or last name provided
+  if (splitName.length === 1) {
+    return splitName[0].charAt(0);
+  }
+
+  // When first name and last name is provided
+  if (splitName.length === 2) {
+    return `${splitName[0].charAt(0)}${splitName[1].charAt(0)}`;
+  }
+
+  // When first name + more than one middle name + last name provided
+  if (splitName.length > 2) {
+    return `${splitName[0].charAt(0)}${splitName[splitName.length - 1].charAt(
+      0
+    )}`;
+  }
+};

@@ -3,6 +3,7 @@ import RootWrapper from "../components/RootWrapper";
 import UploadProfile from "../components/ProfilePage/UploadProfile";
 import { useState } from "react";
 import HeatMap from "@uiw/react-heat-map";
+import UserDetailSection from "../components/ProfilePage/UserDetailSection";
 
 function Profile() {
   const [profile, setProfile] = useState(null);
@@ -26,33 +27,7 @@ function Profile() {
   return (
     <RootWrapper>
       <Container className="py-4">
-        <Box className="flex">
-          <Grid as="div" className="max-w-60">
-            <UploadProfile
-              profile={profile}
-              handleOnClick={handleProfileClick}
-              onImgSelect={handleProfileImageSelect}
-            />
-            <Heading size={"8"} className="text-white text-left" mt={"4"}>
-              John Doe
-            </Heading>
-            <Text size={"7"} className="text-gray-50">
-              john_doe
-            </Text>
-            <p className="text-white mt-4 break-words">
-              Hi! Living life at several WTF per uncaught exception
-              asd;fljasd;flkasjdflasdfj
-            </p>
-          </Grid>
-          <Box className="text-white">
-            <Heading as="h2">John Doe</Heading>
-            <HeatMap
-              value={value}
-              weekLabels={[" ", "Mon", " ", "Wed", " ", "Fri", " "]}
-              startDate={new Date("2016/01/01")}
-            />
-          </Box>
-        </Box>
+        <UserDetailSection />
       </Container>
     </RootWrapper>
   );
