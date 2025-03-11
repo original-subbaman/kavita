@@ -7,14 +7,31 @@ import { getInitialsOfName } from "../../utils/Helper";
 import LittleInfo from "./LittleInfo";
 import StatCard from "./StatCard";
 import EditProfileDialog from "./EditProfileDialog";
+import useGetUser from "../../hooks/user/useGetUser";
 
 function UserDetailSection(props) {
   const { user } = useAuth();
   const { name, email } = user.user_metadata;
   const [openEdit, setOpenEdit] = useState(false);
+
+  const { data, isFetched } = useGetUser({ userId: user.id });
+  let joinedOn = "";
+  let username = "";
+  let address = "";
+  if (isFetched) {
+    joinedOn = new Date(data.created_at).toLocaleDateString("en-IN");
+    username = data.user_name;
+    address = data.address;
+  }
+
   return (
     <ProfileSectionWrapper height={"15rem"}>
-      <EditProfileDialog open={openEdit} setOpen={setOpenEdit} />
+      <EditProfileDialog
+        open={openEdit}
+        setOpen={setOpenEdit}
+        userId={user.id}
+        user={user.user_metadata}
+      />
       <div className="flex justify-between">
         <div className="flex gap-2">
           <div className="w-1 h-8 bg-radix-green rounded-full"></div>
@@ -41,10 +58,10 @@ function UserDetailSection(props) {
         <div className="w-full">
           <Text size={"5"}>{name}</Text>
           <div className="mt-4 flex justify-start gap-20 w-full">
-            <LittleInfo title={"username"} info={"_username"} />
-            <LittleInfo title={"email"} info={"abc@gmail.com"} />
-            <LittleInfo title={"address"} info={"xyz, xyz, yz"} />
-            <LittleInfo title={"joined_on"} info={"14/01/2025"} />
+            <LittleInfo title={"username"} info={username} />
+            <LittleInfo title={"email"} info={email || ""} />
+            <LittleInfo title={"address"} info={address} />
+            <LittleInfo title={"joined_on"} info={joinedOn} />
           </div>
           <div className="flex gap-4 mt-4">
             <StatCard title={"total_posts"} value={"304"} />

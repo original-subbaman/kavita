@@ -2,13 +2,28 @@ import React, { useRef } from "react";
 import { Dialog, Flex, TextField, Button, Text } from "@radix-ui/themes";
 import CustomTextField from "../CustomTextField";
 import { useForm } from "react-hook-form";
-function EditProfileDialog({ open, setOpen }) {
+import useUpdateUser from "../../hooks/user/useUpdateUser";
+import useAuth from "../../hooks/auth/useAuth";
+function EditProfileDialog({ open, setOpen, userId, user }) {
   const {
     formState: { errors },
     control,
     handleSubmit,
-  } = useForm();
+  } = useForm({
+    defaultValues: user,
+  });
   const formRef = useRef(null);
+  const onUpdateSuccess = (data) => {
+    console.log(data);
+  };
+  const onUpdateError = (error) => {
+    console.log(error);
+  };
+
+  const { mutate: updateUser } = useUpdateUser({
+    onSuccess: onUpdateSuccess,
+    onError: onUpdateError,
+  });
 
   const triggerSubmit = () => {
     if (formRef.current) {
@@ -17,6 +32,7 @@ function EditProfileDialog({ open, setOpen }) {
   };
   const onSubmit = (data) => {
     console.log("🚀 ~ onSubmit ~ data:", data);
+    updateUser({ userId: userId, user: data });
   };
 
   return (
