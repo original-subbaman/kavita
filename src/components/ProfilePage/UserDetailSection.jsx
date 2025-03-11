@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ProfileSectionWrapper from "./ProfileSectionWrapper";
 import { Button, Text } from "@radix-ui/themes";
 import { Avatar } from "@mui/material";
@@ -6,19 +6,22 @@ import useAuth from "../../hooks/auth/useAuth";
 import { getInitialsOfName } from "../../utils/Helper";
 import LittleInfo from "./LittleInfo";
 import StatCard from "./StatCard";
+import EditProfileDialog from "./EditProfileDialog";
 
 function UserDetailSection(props) {
   const { user } = useAuth();
   const { name, email } = user.user_metadata;
+  const [openEdit, setOpenEdit] = useState(false);
   return (
     <ProfileSectionWrapper height={"15rem"}>
+      <EditProfileDialog open={openEdit} setOpen={setOpenEdit} />
       <div className="flex justify-between">
         <div className="flex gap-2">
           <div className="w-1 h-8 bg-radix-green rounded-full"></div>
           <Text size={"6"}>Profile</Text>
         </div>
         <div>
-          <Button>Update</Button>
+          <Button onClick={() => setOpenEdit(true)}>Update</Button>
         </div>
       </div>
       <div className="flex gap-8 mt-4  h-full">

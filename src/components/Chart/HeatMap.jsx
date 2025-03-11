@@ -21,7 +21,6 @@ const HeatmapChart = () => {
         y: Math.floor(Math.random() * 5),
       };
     });
-    console.log("🚀 ~ series ~ series:", series);
     return series;
   };
 
