@@ -1,10 +1,15 @@
+import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
 import React, { useRef } from "react";
-import { Dialog, Flex, TextField, Button, Text } from "@radix-ui/themes";
-import CustomTextField from "../CustomTextField";
 import { useForm } from "react-hook-form";
-import useUpdateUser from "../../hooks/user/useUpdateUser";
-import useAuth from "../../hooks/auth/useAuth";
-function EditProfileDialog({ open, setOpen, userId, user }) {
+import CustomTextField from "../CustomTextField";
+function EditProfileDialog({
+  open,
+  setOpen,
+  userId,
+  user,
+  updateUser,
+  loading,
+}) {
   const {
     formState: { errors },
     control,
@@ -12,18 +17,8 @@ function EditProfileDialog({ open, setOpen, userId, user }) {
   } = useForm({
     defaultValues: user,
   });
-  const formRef = useRef(null);
-  const onUpdateSuccess = (data) => {
-    console.log(data);
-  };
-  const onUpdateError = (error) => {
-    console.log(error);
-  };
 
-  const { mutate: updateUser } = useUpdateUser({
-    onSuccess: onUpdateSuccess,
-    onError: onUpdateError,
-  });
+  const formRef = useRef(null);
 
   const triggerSubmit = () => {
     if (formRef.current) {
@@ -89,7 +84,9 @@ function EditProfileDialog({ open, setOpen, userId, user }) {
               Cancel
             </Button>
           </Dialog.Close>
-          <Button onClick={triggerSubmit}>Save</Button>
+          <Button loading={loading} onClick={triggerSubmit}>
+            Save
+          </Button>
         </Flex>
       </Dialog.Content>
     </Dialog.Root>
