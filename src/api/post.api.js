@@ -61,13 +61,13 @@ export async function fetchPostAndLikeStatus(postId, userId) {
   return { post, hasLiked };
 }
 
-export async function addPost(post) {
+export async function addPost(post, userId) {
   const { data, errors } = await supabase
     .from("post")
     .insert([
       {
         post: post,
-        user_id: "1feebd99-74d7-4b2d-9692-9742e6d7dd2d",
+        user_id: userId,
       },
     ])
     .select("*");

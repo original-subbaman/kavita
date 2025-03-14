@@ -14,8 +14,10 @@ import useAddPost from "../hooks/post/useAddPost";
 import useGetPosts from "../hooks/post/useGetPosts";
 import { useQueryClient } from "@tanstack/react-query";
 import { StaticDatePickerStyle } from "../utils/Date";
+import useAuth from "../hooks/auth/useAuth";
 
 function Home() {
+  const { user } = useAuth();
   const [addPostDialog, setAddPostDialog] = useState(false);
   const today = dayjs(new Date());
   const [date, setDate] = useState(today);
@@ -27,18 +29,17 @@ function Home() {
     mutate: addPost,
     isPending: isPosting,
   } = useAddPost({
+    userId: user.id,
     onSuccess: () => {
       setAddPostDialog(false);
       setPost("");
-      queryClient.invalidateQueries({ queryKey: ["get_latest_posts", date] });
+      queryClient.invalidateQueries({
+        queryKey: ["get_latest_posts", date.toDate()],
+      });
     },
   });
 
-  const {
-    data: posts,
-    isFetching: isFetchingPosts,
-    isFetched: isPostsFetched,
-  } = useGetPosts({
+  const { data: posts, isFetched: isPostsFetched } = useGetPosts({
     date: date.toDate(),
     keys: [],
   });
