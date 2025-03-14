@@ -42,3 +42,18 @@ export async function getUser(userId) {
 
   return data;
 }
+
+export async function getUserActivityCount(userId, startDate, endDate) {
+  const { data, error } = await supabase.rpc("get_posts_count_by_date", {
+    user_uuid: userId,
+    start_date: startDate,
+    end_date: endDate,
+  });
+
+  if (error) {
+    console.log("🚀 ~ getUserActivityCount ~ error:", error);
+    throw error;
+  }
+
+  return data;
+}

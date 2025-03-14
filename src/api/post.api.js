@@ -71,7 +71,6 @@ export async function addPost(post) {
       },
     ])
     .select("*");
-  console.log("🚀 ~ addPost ~ data:", data);
 
   if (errors) {
     console.log("Error inserting data", errors);
