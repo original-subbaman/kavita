@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { addPost } from "../../api/post.api";
 
-const useAddPost = ({ onSuccess, userId }) => {
+const useAddPost = ({ onSuccess, onError, userId }) => {
   return useMutation({
-    mutationFn: async (params) => {
-      const newPost = await addPost(params.post, userId);
-      return newPost[0];
+    mutationFn: (params) => {
+      return addPost(params.post, userId);
     },
     onSuccess: onSuccess,
+    onError: onError,
   });
 };
 

@@ -20,22 +20,20 @@ function Home() {
   const { user } = useAuth();
   const [addPostDialog, setAddPostDialog] = useState(false);
   const today = dayjs(new Date());
-  const [date, setDate] = useState(today);
+  const [date, setDate] = useState(dayjs(new Date()));
   const isToday = date.isSame(today, "day");
   const queryClient = useQueryClient();
 
-  const {
-    data: newPost,
-    mutate: addPost,
-    isPending: isPosting,
-  } = useAddPost({
+  const { mutate: addPost, isPending: isPosting } = useAddPost({
     userId: user.id,
-    onSuccess: () => {
+    onSuccess: (data) => {
       setAddPostDialog(false);
-      setPost("");
-      queryClient.invalidateQueries({
-        queryKey: ["get_latest_posts", date.toDate()],
+      queryClient.refetchQueries({
+        queryKey: ["get_latest_posts"],
       });
+    },
+    onError: () => {
+      console.log("error", error);
     },
   });
 
