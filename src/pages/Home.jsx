@@ -15,10 +15,16 @@ import useGetPosts from "../hooks/post/useGetPosts";
 import { useQueryClient } from "@tanstack/react-query";
 import { StaticDatePickerStyle } from "../utils/Date";
 import useAuth from "../hooks/auth/useAuth";
+import ResponseSnackbar from "../components/ResponseSnackbar";
 
 function Home() {
   const { user } = useAuth();
   const [addPostDialog, setAddPostDialog] = useState(false);
+  const [response, setResponse] = useState({
+    success: false,
+    error: false,
+    message: "",
+  });
   const today = dayjs(new Date());
   const [date, setDate] = useState(dayjs(new Date()));
   const isToday = date.isSame(today, "day");
@@ -31,9 +37,19 @@ function Home() {
       queryClient.refetchQueries({
         queryKey: ["get_latest_posts"],
       });
+      setResponse((prev) => ({
+        ...prev,
+        success: true,
+        message: "Your post has been published",
+      }));
     },
     onError: () => {
-      console.log("error", error);
+      setResponse((prev) => ({
+        ...prev,
+        error: true,
+        message: "Cannot publish at this moment",
+      }));
+      setAddPostDialog(false);
     },
   });
 
@@ -42,8 +58,31 @@ function Home() {
     keys: [],
   });
 
+  const handleClose = () => {
+    setResponse({ error: false, success: false, message: "" });
+    console.log("close");
+  };
+
   return (
     <RootWrapper>
+      {/* Success Snackbar */}
+      {response.success && (
+        <ResponseSnackbar
+          open={response.success}
+          onClose={handleClose}
+          message={response.message}
+          severity={"success"}
+        />
+      )}
+      {/* Error Snackbar */}
+      {response.error && (
+        <ResponseSnackbar
+          open={response.error}
+          onClose={handleClose}
+          message={response.message}
+          severity={"error"}
+        />
+      )}
       <Flex display={"flex"} gap={"2"} className="min-h-screen">
         {/** suggest prompt section */}
         <Box className="flex-1 hidden sm:block"></Box>

@@ -63,14 +63,15 @@ export async function fetchPostAndLikeStatus(postId, userId) {
 }
 
 export async function addPost(post, userId) {
-  const { data, error } = await supabase.from("post").insert([
-    {
-      post: post,
-      user_id: userId,
-    },
-  ]);
+  // const { data, error } = await supabase.from("post").insert([
+  //   {
+  //     post: post,
+  //     user_id: userId,
+  //   },
+  // ]);
 
-  if (error) throw error;
+  // if (error) throw error;
+  throw new Error("error");
 
   return data;
 }
