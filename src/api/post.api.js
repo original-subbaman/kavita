@@ -6,7 +6,8 @@ export async function fetchPosts({ date }) {
     .from("post")
     .select("*, user (id, name, user_name)")
     .gte("created_at", formatISO(startOfDay(date)))
-    .lte("created_at", formatISO(endOfDay(date)));
+    .lte("created_at", formatISO(endOfDay(date)))
+    .order("created_at", { ascending: false });
   return data;
 }
 
