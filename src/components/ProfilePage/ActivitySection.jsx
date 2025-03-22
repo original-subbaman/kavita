@@ -4,14 +4,15 @@ import ProfileSectionWrapper from "./ProfileSectionWrapper";
 import LineChart from "../Chart/LineChart";
 import useGetUserActivityCount from "../../hooks/user/useGetUserActivityCount";
 import useAuth from "../../hooks/auth/useAuth";
+import { getEndMonthDate, getStartMonthDate } from "../../utils/Date";
 
 function ActivitySection(props) {
   const { user } = useAuth();
 
   const { data, isLoading } = useGetUserActivityCount({
     userId: user.id,
-    startDate: new Date("2024-10-01"),
-    endDate: new Date("2025-03-22"),
+    startDate: getStartMonthDate("yyyy-MM-dd"),
+    endDate: getEndMonthDate("yyyy-MM-dd"),
     select: (data) => {
       const values = data.map((item) => ({
         x: item.creation_date,

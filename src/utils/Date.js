@@ -1,4 +1,4 @@
-import { format, parse, parseISO } from "date-fns";
+import { format, parse, parseISO, startOfMonth, endOfMonth } from "date-fns";
 export function getDateToday() {
   const currentDate = new Date();
   const day = currentDate.getDate();
@@ -56,3 +56,9 @@ export const StaticDatePickerStyle = {
     borderRadius: "12px", // Rounded corners for the calendar
   },
 };
+
+export const getStartMonthDate = (dateFormat) =>
+  format(startOfMonth(new Date()), dateFormat);
+
+export const getEndMonthDate = (dateFormat) =>
+  format(endOfMonth(new Date()), dateFormat);
