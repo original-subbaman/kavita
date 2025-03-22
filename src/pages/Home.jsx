@@ -43,7 +43,8 @@ function Home() {
         message: "Your post has been published",
       }));
     },
-    onError: () => {
+    onError: (error) => {
+      console.log("🚀 ~ Home ~ error:", error);
       setResponse((prev) => ({
         ...prev,
         error: true,
