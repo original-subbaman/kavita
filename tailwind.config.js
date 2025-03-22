@@ -10,7 +10,7 @@ export default {
       "radix-grass": "#46a758"
       },
       fontFamily: {
-        primary: ["Roboto"],
+        primary: ["Nunito"],
         lora: ["lora", "serif"],
       },
     },
