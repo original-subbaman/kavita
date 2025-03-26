@@ -16,6 +16,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { StaticDatePickerStyle } from "../utils/Date";
 import useAuth from "../hooks/auth/useAuth";
 import ResponseSnackbar from "../components/ResponseSnackbar";
+import InfinitePostSection from "../components/PostSection/InfinitePostSection";
 
 function Home() {
   const { user } = useAuth();
@@ -103,7 +104,8 @@ function Home() {
               />
             </AlertDialogRoot>
           </PromptSection>
-          {isPostsFetched && <PostSection posts={posts} />}
+          {/* {isPostsFetched && <PostSection posts={posts} />} */}
+          <InfinitePostSection />
         </Box>
         {/** filter */}
         <Box className="flex-1 my-8 color-white hidden sm:flex flex-col items-center  ">

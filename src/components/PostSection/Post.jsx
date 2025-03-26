@@ -14,9 +14,9 @@ function Post({ content, author, width, height }) {
   const sanitizedPost = DOMPurify.sanitize(content);
   return (
     <Card
-      className={`relative block
+      className={`relative block mb-4
       w-[${width}] h-[${height}]
-       text-white cursor-pointer drop-shadow-lg decoration-slate-200 hover:border-2 hover:border-radix-green hover:scale-105 duration-300 transition-all`}
+       text-white cursor-pointer drop-shadow-lg decoration-slate-200 hover:border-2 hover:border-radix-green  duration-300 transition-all`}
       style={{ backgroundColor: "#191919" }}
     >
       <Box className="bg-dark-light p-4 z-0 max-h-[300px]">
