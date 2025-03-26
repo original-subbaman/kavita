@@ -5,19 +5,22 @@ import Post from "./Post";
 import { NavLink } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loading from "../Loading";
+import ErrorMessage from "../ErrorMessage";
 
 function InfinitePostSection(props) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetInfinitePosts();
 
-  const status = "pending";
+  const status = "error";
 
   if (status === "pending") {
     return <Loading message={"Loading posts..."} />;
   }
 
   if (status === "error") {
-    return <div>Error loading posts</div>;
+    return (
+      <ErrorMessage message={"Error loading posts. Try refreshing the page."} />
+    );
   }
 
   const posts = data?.pages.reduce((acc, page) => {
