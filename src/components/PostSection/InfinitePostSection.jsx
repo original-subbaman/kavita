@@ -4,13 +4,16 @@ import { Container } from "@radix-ui/themes";
 import Post from "./Post";
 import { NavLink } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Loading from "../Loading";
 
 function InfinitePostSection(props) {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetInfinitePosts();
 
+  const status = "pending";
+
   if (status === "pending") {
-    return <div>Loading posts...</div>;
+    return <Loading message={"Loading posts..."} />;
   }
 
   if (status === "error") {
