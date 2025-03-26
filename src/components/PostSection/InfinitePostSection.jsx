@@ -8,10 +8,8 @@ import Loading from "../Loading";
 import ErrorMessage from "../ErrorMessage";
 
 function InfinitePostSection(props) {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useGetInfinitePosts();
-
-  const status = "error";
 
   if (status === "pending") {
     return <Loading message={"Loading posts..."} />;
@@ -51,11 +49,13 @@ function InfinitePostSection(props) {
             </NavLink>
           ))}
       </InfiniteScroll>
-      {isFetchingNextPage && (
-        <div className="text-white">Loading more posts...</div>
-      )}
+      {isFetchingNextPage && <Loading message={"Fetching more posts..."} />}
 
-      {!hasNextPage && <div className="text-white">No more posts to load</div>}
+      {!hasNextPage && (
+        <div className="text-white text-center mt-4 mb-8 text-lg">
+          No more posts to show
+        </div>
+      )}
     </Container>
   );
 }
