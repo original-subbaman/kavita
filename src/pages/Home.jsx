@@ -17,6 +17,7 @@ import { StaticDatePickerStyle } from "../utils/Date";
 import useAuth from "../hooks/auth/useAuth";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import InfinitePostSection from "../components/PostSection/InfinitePostSection";
+import ScrollToTop from "../components/ScrollToTop";
 
 function Home() {
   const { user } = useAuth();
@@ -123,6 +124,7 @@ function Home() {
           </LocalizationProvider>
         </Box>
       </Flex>
+      <ScrollToTop />
     </RootWrapper>
   );
 }
