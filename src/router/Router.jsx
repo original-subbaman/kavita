@@ -28,7 +28,7 @@ function CreateRouter() {
       ),
     },
     {
-      path: "/languagewall",
+      path: "/inspiration",
       element: (
         <ProtectedRoute>
           <LanguageWall />

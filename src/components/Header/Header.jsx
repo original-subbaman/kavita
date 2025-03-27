@@ -16,9 +16,9 @@ function Header(props) {
         <NavLink to={"/"}>
           <LinkText isActive={location.pathname === "/"}>Home</LinkText>
         </NavLink>
-        <NavLink to={"/languagewall"}>
-          <LinkText isActive={location.pathname === "/languagewall"}>
-            Language Wall
+        <NavLink to={"/inspiration"}>
+          <LinkText isActive={location.pathname === "/inspiration"}>
+            Inspiration
           </LinkText>
         </NavLink>
         <NavLink to={"/my-posts"}>
