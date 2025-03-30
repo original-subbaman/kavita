@@ -76,7 +76,7 @@ export async function fetchPostAndLikeStatus(postId, userId) {
     .select("*")
     .eq("post_id", postId)
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
 
   if (likeError && likeError.code !== "PGRST116") {
     // PGRST116 indicates no rows were found, which is expected if the user hasn't liked the post
