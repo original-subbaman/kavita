@@ -26,6 +26,7 @@ import {
   initialState,
   actionTypes,
 } from "../reducers/responseReducer";
+import ScrollToTop from "../components/ScrollToTop";
 export default function PostDetail() {
   let { id } = useParams();
   const [selectedText, setSelectedText] = useState();
@@ -82,6 +83,7 @@ export default function PostDetail() {
 
   return (
     <RootWrapper>
+      <ScrollToTop />
       <AlertDialogRoot>
         <ReportDialog />
         <ResponseSnackbar
