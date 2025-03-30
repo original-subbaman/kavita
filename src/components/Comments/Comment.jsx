@@ -3,7 +3,6 @@ import { convertISOTimeToIST } from "../../utils/Date";
 import CommentForm from "./CommentForm";
 const Comment = ({
   comment,
-  replies,
   currentUserId,
   deleteComment,
   activeComment,
@@ -16,8 +15,6 @@ const Comment = ({
   // If comment created is less than 5 min we allow edit else we dont allow edit
   const timePassed = new Date() - new Date(comment.createdAt) > fiveMin;
   // If null (not logged in) this value is false
-  const canReply = Boolean(currentUserId);
-  const canEdit = currentUserId === comment.userId && !timePassed;
   const canDelete = currentUserId === comment.userId && !timePassed;
 
   const isReplying =
@@ -30,19 +27,17 @@ const Comment = ({
     activeComment.type === "edit" &&
     activeComment.id === comment.id;
 
-  const replyId = parentId ? parentId : comment.id;
-
   return (
-    <Box className="text-white my-2 rounded-md p-4 bg-slate-500/40">
+    <Box className="text-white my-2 rounded-md p-4 bg-slate-600/30">
       <Box className="mb-4">
         <Text weight={"medium"} className="block" size={"4"}>
-          {comment.username}
+          {comment.userName}
         </Text>
         <Text className="text-white" size={"2"}>
-          {convertISOTimeToIST(comment.createdAt)}
+          {convertISOTimeToIST(comment.created_at)}
         </Text>
       </Box>
-      {!isEditing && <Text>{comment.body}</Text>}
+      {!isEditing && <Text>{comment.comment}</Text>}
       {isEditing && (
         <CommentForm
           submitLabel={"Update"}
@@ -54,60 +49,17 @@ const Comment = ({
           handleCancel={() => setActiveComment(null)}
         />
       )}
-      <Box className="flex gap-8 align-bottom mt-8">
-        {canReply && (
-          <Button
-            variant="ghost"
-            className="font-semibold"
-            onClick={() => setActiveComment({ id: comment.id, type: "reply" })}
-          >
-            Reply
-          </Button>
-        )}
-        {canEdit && (
-          <Button
-            variant="ghost"
-            onClick={() => setActiveComment({ id: comment.id, type: "edit" })}
-          >
-            Edit
-          </Button>
-        )}
+      <Box className="flex justify-end align-bottom mt-8">
         {canDelete && (
-          <Button variant="ghost" onClick={() => deleteComment(comment.id)}>
+          <Button
+            variant="soft"
+            size={"3"}
+            onClick={() => deleteComment(comment.id)}
+          >
             Delete
           </Button>
         )}
       </Box>
-      {isReplying && (
-        <CommentForm
-          submitLabel={"Reply"}
-          handleSubmit={(text) => {
-            // call add comment with text and parent id
-            addComment(text, replyId);
-            console.log("reply");
-          }}
-        >
-          Reply form
-        </CommentForm>
-      )}
-      {replies.length > 0 && (
-        <div>
-          {replies.map((reply) => (
-            <Comment
-              key={reply.id}
-              comment={reply}
-              replies={[]}
-              activeComment={activeComment}
-              setActiveComment={setActiveComment}
-              currentUserId={currentUserId}
-              deleteComment={deleteComment}
-              updateComment={updateComment}
-              parentId={comment.id}
-              addComment={addComment}
-            />
-          ))}
-        </div>
-      )}
     </Box>
   );
 };

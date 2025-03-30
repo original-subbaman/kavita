@@ -1,48 +1,24 @@
-import { Box, Heading, Text } from "@radix-ui/themes";
-import { useReducer, useState } from "react";
-import Comment from "./Comment";
-import CommentForm from "./CommentForm";
-import usePostComment from "../../hooks/post/usePostComment";
+import { Box } from "@radix-ui/themes";
+import { useState } from "react";
 import useAuth from "../../hooks/auth/useAuth";
+import usePostComment from "../../hooks/post/usePostComment";
+import Comment from "./Comment";
+import Loading from "../Loading";
+import ErrorMessage from "../ErrorMessage";
+import CommentForm from "./CommentForm";
+import useLoadComments from "../../hooks/post/useLoadComments";
 
 const CommentSection = ({ postId, onPostComment, onPostCommentError }) => {
-  const [comments, setComments] = useState([
-    {
-      id: "1",
-      body: "First comment",
-      username: "Jack",
-      userId: "1",
-      parentId: null,
-      createdAt: "2021-08-16T23:00:33.010+02:00",
-    },
-    {
-      id: "2",
-      body: "Second comment",
-      username: "John",
-      userId: "2",
-      parentId: null,
-      createdAt: "2021-08-16T23:00:33.010+02:00",
-    },
-    {
-      id: "3",
-      body: "First comment first child",
-      username: "John",
-      userId: "2",
-      parentId: "1",
-      createdAt: "2021-08-16T23:00:33.010+02:00",
-    },
-    {
-      id: "4",
-      body: "Second comment second child",
-      username: "John",
-      userId: "2",
-      parentId: "2",
-      createdAt: "2021-08-16T23:00:33.010+02:00",
-    },
-  ]);
   const [activeComment, setActiveComment] = useState(null);
   const { user } = useAuth();
-  const rootComments = comments.filter((comment) => comments.parentId == null);
+  // const rootComments = comments.filter((comment) => comments.parentId == null);
+
+  const {
+    data: comments,
+    isFetching,
+    isError,
+  } = useLoadComments({ postId: postId });
+  console.log("🚀 ~ CommentSection ~ comments:", comments);
 
   const { mutate } = usePostComment({
     onSuccess: () => {
@@ -80,18 +56,20 @@ const CommentSection = ({ postId, onPostComment, onPostCommentError }) => {
     <Box>
       <CommentForm submitLabel="Post" handleSubmit={addComment} />
       <Box as="div">
-        {rootComments.map((rootComment) => (
-          <Comment
-            comment={rootComment}
-            replies={getReplies(rootComment.id)}
-            currentUserId={1}
-            deleteComment={deleteComment}
-            updateComment={updateComment}
-            activeComment={activeComment}
-            setActiveComment={setActiveComment}
-            addComment={addComment}
-          />
-        ))}
+        {isFetching && <Loading message={"Fetching comments"} />}
+        {isError && <ErrorMessage message={"Failed to load comments"} />}
+        {comments &&
+          comments.map((rootComment) => (
+            <Comment
+              comment={rootComment}
+              currentUserId={user.id}
+              deleteComment={deleteComment}
+              updateComment={updateComment}
+              activeComment={activeComment}
+              setActiveComment={setActiveComment}
+              addComment={addComment}
+            />
+          ))}
       </Box>
     </Box>
   );

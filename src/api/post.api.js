@@ -133,4 +133,20 @@ export async function postComment(postId, userId, comment) {
   return data;
 }
 
-export async function loadComments(postId) {}
+export async function loadComments(postId) {
+  if (!postId) {
+    throw new Error("Missing postId");
+  }
+
+  const { data, error } = await supabase
+    .from("comments")
+    .select("*, user(id, name, user_name)")
+    .eq("post_id", postId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message || "Failed to load comments");
+  }
+
+  return data;
+}
