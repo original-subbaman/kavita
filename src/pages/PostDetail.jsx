@@ -140,7 +140,7 @@ export default function PostDetail() {
               <Button color="gray">Report</Button>
             </AlertDialogTrigger>
           </Box>
-          <CommentSection />
+          <CommentSection postId={id} />
         </Container>
       </AlertDialogRoot>
     </RootWrapper>

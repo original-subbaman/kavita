@@ -10,7 +10,6 @@ export const recordLanguage = async ({ language, userId, postId }) => {
   ]);
 
   if (errors) {
-    console.log("🚀 ~ recordLanguage ~ errors:", errors);
     throw new Error(errors);
   }
 

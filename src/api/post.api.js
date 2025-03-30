@@ -12,7 +12,6 @@ export async function fetchPosts({ date }) {
 }
 
 export async function fetchPostsPagination({ pageParam }) {
-  console.log("🚀 ~ fetchPostsPagination ~ pageParam:", pageParam);
   let query = supabase
     .from("post")
     .select("*, user (id, name, user_name)")
@@ -25,7 +24,6 @@ export async function fetchPostsPagination({ pageParam }) {
   }
 
   const { data, error } = await query;
-  console.log("🚀 ~ fetchPostsPagination ~ data:", data);
 
   if (error) {
     console.error("Pagination error:", error);
@@ -103,3 +101,36 @@ export async function addPost(post, userId) {
 
   return data;
 }
+
+/**
+ * Adds a comment to a post in the database.
+ *
+ * @param {string} postId - The UUID of the post being commented on.
+ * @param {string} userId - The UUID of the user making the comment.
+ * @param {string} comment - The content of the comment.
+ * @returns {Promise<object>} - Returns the inserted comment object.
+ * @throws {Error} - Throws an error if input validation fails or if the database insert operation fails.
+ */
+export async function postComment(postId, userId, comment) {
+  if (!postId || !userId || !comment) {
+    throw new Error("Missing postId or userId or comment");
+  }
+  const { data, error } = await supabase
+    .from("comments")
+    .insert([
+      {
+        user_id: userId,
+        post_id: postId,
+        comment: comment,
+      },
+    ])
+    .select();
+
+  if (error) {
+    throw new Error(error.message || "Failed to post comment");
+  }
+
+  return data;
+}
+
+export async function loadComments(postId) {}
