@@ -1,11 +1,11 @@
 import { Box, Heading, Text } from "@radix-ui/themes";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
 import usePostComment from "../../hooks/post/usePostComment";
 import useAuth from "../../hooks/auth/useAuth";
 
-const CommentSection = ({ postId }) => {
+const CommentSection = ({ postId, onPostComment, onPostCommentError }) => {
   const [comments, setComments] = useState([
     {
       id: "1",
@@ -41,17 +41,20 @@ const CommentSection = ({ postId }) => {
     },
   ]);
   const [activeComment, setActiveComment] = useState(null);
-
   const { user } = useAuth();
   const rootComments = comments.filter((comment) => comments.parentId == null);
 
-  const { mutate } = usePostComment({ onSuccess: () => {}, onError: () => {} });
+  const { mutate } = usePostComment({
+    onSuccess: () => {
+      onPostComment();
+    },
+    onError: () => {
+      onPostCommentError();
+    },
+  });
 
   const addComment = (text, parentId) => {
-    console.log("add comment", text, parentId);
-    // call add comment api
     mutate({ userId: user.id, postId: postId, comment: text });
-    // after success call back
     setActiveComment(null);
   };
 

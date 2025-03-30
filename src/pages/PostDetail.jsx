@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import DOMPurify from "dompurify";
 import {
   Button,
@@ -21,43 +21,37 @@ import ResponseSnackbar from "../components/ResponseSnackbar";
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import useRecordLanguage from "../hooks/language/useRecordLanguage";
 import ReportDialog from "../components/PostDetail/ReportDialog";
+import {
+  responseReducer,
+  initialState,
+  actionTypes,
+} from "../reducers/responseReducer";
 export default function PostDetail() {
   let { id } = useParams();
   const [selectedText, setSelectedText] = useState();
-  const [response, setResponse] = useState({
-    success: false,
-    error: false,
-    message: "",
-  });
+  const [response, dispatch] = useReducer(responseReducer, initialState);
 
-  const closeAlert = () =>
-    setResponse({ success: false, error: false, message: "" });
+  const closeAlert = () => dispatch({ type: actionTypes.RESET_RESPONSE });
 
   const { mutate: likePost, isPending: isUpdating } = useLikePost({
     onSuccess: () =>
-      setResponse({ success: true, error: false, message: "Post liked" }),
+      dispatch({ type: actionTypes.SET_SUCCESS, payload: "Post liked" }),
     onError: () =>
-      setResponse({
-        success: false,
-        error: true,
-        message: "Error liking post",
-      }),
+      dispatch({ type: actionTypes.SET_ERROR, payload: "Post like failed" }),
     onSettled: () => {},
   });
 
   const { mutate: recordLanguage } = useRecordLanguage({
     onSuccess: (data) =>
-      setResponse((prev) => ({
-        ...prev,
-        success: true,
-        message: "Language captured successfully",
-      })),
+      dispatch({
+        type: actionTypes.SET_SUCCESS,
+        payload: "Language captured successfully",
+      }),
     onError: (error) =>
-      setResponse((prev) => ({
-        ...prev,
-        error: false,
-        message: "Error capturing language",
-      })),
+      dispatch({
+        type: actionTypes.SET_ERROR,
+        payload: "Error capturing language",
+      }),
   });
 
   const handleCaptureLanguage = () => {
@@ -140,7 +134,21 @@ export default function PostDetail() {
               <Button color="gray">Report</Button>
             </AlertDialogTrigger>
           </Box>
-          <CommentSection postId={id} />
+          <CommentSection
+            postId={id}
+            onPostComment={() =>
+              dispatch({
+                type: actionTypes.SET_SUCCESS,
+                payload: "Comment posted!",
+              })
+            }
+            onPostCommentError={() =>
+              dispatch({
+                type: actionTypes.SET_ERROR,
+                payload: "Posting comment failed",
+              })
+            }
+          />
         </Container>
       </AlertDialogRoot>
     </RootWrapper>
