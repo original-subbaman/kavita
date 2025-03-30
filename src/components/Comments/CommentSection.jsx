@@ -7,22 +7,23 @@ import Loading from "../Loading";
 import ErrorMessage from "../ErrorMessage";
 import CommentForm from "./CommentForm";
 import useLoadComments from "../../hooks/post/useLoadComments";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CommentSection = ({ postId, onPostComment, onPostCommentError }) => {
   const [activeComment, setActiveComment] = useState(null);
+  const queryClient = useQueryClient();
   const { user } = useAuth();
-  // const rootComments = comments.filter((comment) => comments.parentId == null);
 
   const {
     data: comments,
     isFetching,
     isError,
   } = useLoadComments({ postId: postId });
-  console.log("🚀 ~ CommentSection ~ comments:", comments);
 
   const { mutate } = usePostComment({
     onSuccess: () => {
       onPostComment();
+      queryClient.refetchQueries({ queryKey: ["load_comments", postId] });
     },
     onError: () => {
       onPostCommentError();
@@ -43,15 +44,6 @@ const CommentSection = ({ postId, onPostComment, onPostCommentError }) => {
     setActiveComment(null);
   };
 
-  // Get replies for a parent comment and sort the replies with oldest replies last
-  const getReplies = (commentId) => {
-    return comments
-      .filter((comment) => comment.parentId === commentId)
-      .sort(
-        (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      );
-  };
   return (
     <Box>
       <CommentForm submitLabel="Post" handleSubmit={addComment} />
