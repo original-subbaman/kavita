@@ -8,7 +8,7 @@ import {
 } from "@radix-ui/themes";
 import { useState } from "react";
 
-const ReportDialog = ({ title, description }) => {
+const ReportDialog = ({ title, description, onClose }) => {
   const [reportReason, setReportReason] = useState();
   const handleValueChange = (newValue) => setReportReason(newValue);
   return (
@@ -43,16 +43,12 @@ const ReportDialog = ({ title, description }) => {
       </RadioGroupRoot>
       {reportReason == "other" && <TextField></TextField>}
       <Flex gap="3" mt="4" justify="end">
-        <AlertDialog.Cancel>
-          <Button variant="soft" color="gray">
-            Cancel
-          </Button>
-        </AlertDialog.Cancel>
-        <AlertDialog.Action>
-          <Button variant="solid" color="red">
-            Revoke access
-          </Button>
-        </AlertDialog.Action>
+        <Button variant="soft" color="gray" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button variant="solid" color="red">
+          Revoke access
+        </Button>
       </Flex>
     </AlertDialog.Content>
   );

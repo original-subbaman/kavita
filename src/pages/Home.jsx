@@ -33,7 +33,7 @@ function Home() {
   const queryClient = useQueryClient();
 
   const { mutate: addPost, isPending: isPosting } = useAddPost({
-    userId: user.id,
+    userId: user?.id,
     onSuccess: (data) => {
       setAddPostDialog(false);
       queryClient.refetchQueries({
@@ -46,7 +46,6 @@ function Home() {
       }));
     },
     onError: (error) => {
-      console.log("🚀 ~ Home ~ error:", error);
       setResponse((prev) => ({
         ...prev,
         error: true,

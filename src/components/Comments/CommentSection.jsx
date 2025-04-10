@@ -9,7 +9,12 @@ import CommentForm from "./CommentForm";
 import useLoadComments from "../../hooks/post/useLoadComments";
 import { useQueryClient } from "@tanstack/react-query";
 
-const CommentSection = ({ postId, onPostComment, onPostCommentError }) => {
+const CommentSection = ({
+  postId,
+  onPostComment,
+  onPostCommentError,
+  setReportError,
+}) => {
   const [activeComment, setActiveComment] = useState(null);
   const queryClient = useQueryClient();
   const { user } = useAuth();
@@ -46,7 +51,7 @@ const CommentSection = ({ postId, onPostComment, onPostCommentError }) => {
 
   return (
     <Box>
-      <CommentForm submitLabel="Post" handleSubmit={addComment} />
+      <CommentForm submitLabel="Post Comment" handleSubmit={addComment} />
       <Box as="div">
         {isFetching && <Loading message={"Fetching comments"} />}
         {isError && <ErrorMessage message={"Failed to load comments"} />}

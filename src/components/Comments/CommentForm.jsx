@@ -35,7 +35,7 @@ const CommentForm = ({
             size={"3"}
             type="submit"
             disabled={isTextAreaDisabled}
-            className="w-32 font-bold text-2xl"
+            className="w-36 "
           >
             {submitLabel}
           </Button>

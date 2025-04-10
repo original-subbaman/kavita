@@ -1,6 +1,8 @@
-import { Text, Box, Button } from "@radix-ui/themes";
+import { Box, Button, Text } from "@radix-ui/themes";
 import { convertISOTimeToIST } from "../../utils/Date";
+import { useDispatch } from "react-redux";
 import CommentForm from "./CommentForm";
+import { setOpenReportComment } from "../../slice/postDetailSlice";
 const Comment = ({
   comment,
   currentUserId,
@@ -11,11 +13,13 @@ const Comment = ({
   addComment,
   parentId = null,
 }) => {
+  const dispatch = useDispatch();
   const fiveMin = 300000;
   // If comment created is less than 5 min we allow edit else we dont allow edit
   const timePassed = new Date() - new Date(comment.createdAt) > fiveMin;
   // If null (not logged in) this value is false
   const canDelete = currentUserId === comment.userId && !timePassed;
+  const canReport = currentUserId !== comment.userId;
 
   const isReplying =
     activeComment &&
@@ -49,11 +53,22 @@ const Comment = ({
           handleCancel={() => setActiveComment(null)}
         />
       )}
-      <Box className="flex justify-end align-bottom mt-8">
+      <Box className="flex justify-end align-bottom mt-8 gap-2">
+        {canReport && (
+          <Button
+            variant="solid"
+            size={"2"}
+            color="gray"
+            onClick={() => dispatch(setOpenReportComment(true))}
+          >
+            Report
+          </Button>
+        )}
         {canDelete && (
           <Button
-            variant="soft"
-            size={"3"}
+            variant="solid"
+            size={"2"}
+            color="red"
             onClick={() => deleteComment(comment.id)}
           >
             Delete
