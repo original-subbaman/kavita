@@ -90,7 +90,7 @@ export async function fetchPostAndLikeStatus(postId, userId) {
 }
 
 export async function addPost(post, userId) {
-  const { data, error } = await supabase.from("post").insert([
+  const { data, error } = await supabase.from("post_comment").insert([
     {
       post: post,
       user_id: userId,
@@ -116,7 +116,7 @@ export async function postComment(postId, userId, comment) {
     throw new Error("Missing postId or userId or comment");
   }
   const { data, error } = await supabase
-    .from("comments")
+    .from("post_comment")
     .insert([
       {
         user_id: userId,
@@ -139,7 +139,7 @@ export async function loadComments(postId) {
   }
 
   const { data, error } = await supabase
-    .from("comments")
+    .from("post_comment")
     .select("*, user(id, name, user_name)")
     .eq("post_id", postId)
     .order("created_at", { ascending: false });
@@ -149,4 +149,20 @@ export async function loadComments(postId) {
   }
 
   return data;
+}
+
+export async function deleteComment(commentId) {
+  if (!commentId) {
+    throw new Error("Missing commentId");
+  }
+  const { error } = await supabase
+    .from("post_comment")
+    .delete()
+    .eq("id", commentId);
+
+  if (error) {
+    throw new Error(error.message || "Failed to delete comment");
+  }
+
+  return true;
 }

@@ -2,7 +2,11 @@ import { Box, Button, Text } from "@radix-ui/themes";
 import { convertISOTimeToIST } from "../../utils/Date";
 import { useDispatch } from "react-redux";
 import CommentForm from "./CommentForm";
-import { setOpenReportComment } from "../../slice/postDetailSlice";
+import {
+  setCommentId,
+  setOpenDeleteComment,
+  setOpenReportComment,
+} from "../../slice/postDetailSlice";
 const Comment = ({
   comment,
   currentUserId,
@@ -69,7 +73,11 @@ const Comment = ({
             variant="solid"
             size={"2"}
             color="red"
-            onClick={() => deleteComment(comment.id)}
+            onClick={() => {
+              dispatch(setOpenDeleteComment(true));
+              dispatch(setCommentId(comment.id));
+              // deleteComment(comment.id);
+            }}
           >
             Delete
           </Button>

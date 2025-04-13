@@ -1,3 +1,4 @@
+import { AlertDialogPortal } from "@radix-ui/react-alert-dialog";
 import { HeartFilledIcon, HeartIcon } from "@radix-ui/react-icons";
 import {
   AlertDialogRoot,
@@ -9,7 +10,8 @@ import {
   Text,
 } from "@radix-ui/themes";
 import DOMPurify from "dompurify";
-import React, { useReducer, useState } from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import CommentSection from "../components/Comments/CommentSection";
 import ReportCommentDialog from "../components/PostDetail/ReportCommentDialog";
@@ -21,20 +23,13 @@ import SelectedText from "../components/SelectedText";
 import useRecordLanguage from "../hooks/language/useRecordLanguage";
 import useGetPost from "../hooks/post/useGetPost";
 import useLikePost from "../hooks/post/useLikePost";
-import {
-  actionTypes,
-  initialState,
-  responseReducer,
-} from "../reducers/responseReducer";
-import { useSelector, useDispatch } from "react-redux";
+import { actionTypes } from "../reducers/responseReducer";
 import {
   setOpenReportComment,
   setOpenReportPost,
 } from "../slice/postDetailSlice";
-import { resetResponse, setSuccess, setError } from "../slice/responseSlice";
+import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { convertISOTimestamp } from "../utils/Date";
-import { AlertDialogPortal } from "@radix-ui/react-alert-dialog";
-import { use } from "react";
 export default function PostDetail() {
   let { id } = useParams();
 
@@ -157,21 +152,23 @@ export default function PostDetail() {
             Report
           </Button>
         </Box>
-        <CommentSection
-          postId={id}
-          onPostComment={() =>
-            dispatch({
-              type: actionTypes.SET_SUCCESS,
-              payload: "Comment posted!",
-            })
-          }
-          onPostCommentError={() =>
-            dispatch({
-              type: actionTypes.SET_ERROR,
-              payload: "Posting comment failed",
-            })
-          }
-        />
+        <Box className="mb-8">
+          <CommentSection
+            postId={id}
+            onPostComment={() =>
+              dispatch({
+                type: actionTypes.SET_SUCCESS,
+                payload: "Comment posted!",
+              })
+            }
+            onPostCommentError={() =>
+              dispatch({
+                type: actionTypes.SET_ERROR,
+                payload: "Posting comment failed",
+              })
+            }
+          />
+        </Box>
       </Container>
     </RootWrapper>
   );

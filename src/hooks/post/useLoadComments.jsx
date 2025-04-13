@@ -8,6 +8,7 @@ const useLoadComments = ({ postId }) => {
     staleTime: Infinity,
     select: (comments) => {
       return comments.map((comment) => ({
+        id: comment.id,
         created_at: comment.created_at,
         userName: comment.user.user_name,
         comment: comment.comment,
