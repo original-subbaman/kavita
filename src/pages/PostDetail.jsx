@@ -14,7 +14,6 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import CommentSection from "../components/Comments/CommentSection";
-import ReportCommentDialog from "../components/PostDetail/ReportCommentDialog";
 import ReportDialog from "../components/PostDetail/ReportDialog";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import RootWrapper from "../components/RootWrapper";
@@ -24,18 +23,12 @@ import useRecordLanguage from "../hooks/language/useRecordLanguage";
 import useGetPost from "../hooks/post/useGetPost";
 import useLikePost from "../hooks/post/useLikePost";
 import { actionTypes } from "../reducers/responseReducer";
-import {
-  setOpenReportComment,
-  setOpenReportPost,
-} from "../slice/postDetailSlice";
+import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { convertISOTimestamp } from "../utils/Date";
 export default function PostDetail() {
   let { id } = useParams();
 
-  const openReportComment = useSelector(
-    (state) => state.postDetail.openReportComment
-  );
   const openReportPost = useSelector(
     (state) => state.postDetail.openReportPost
   );
@@ -91,14 +84,8 @@ export default function PostDetail() {
           <ReportDialog onClose={() => dispatch(setOpenReportPost(false))} />
         </AlertDialogPortal>
       </AlertDialogRoot>
-      {/* Report Comment Dialog */}
-      <AlertDialogRoot open={openReportComment}>
-        <AlertDialogPortal>
-          <ReportCommentDialog
-            onClose={() => dispatch(setOpenReportComment(false))}
-          />
-        </AlertDialogPortal>
-      </AlertDialogRoot>
+
+      {/* Error Deleting Message */}
       <ResponseSnackbar
         open={error}
         autoHideDuration={3000}
@@ -106,6 +93,7 @@ export default function PostDetail() {
         severity={"error"}
         message={message}
       />
+      {/* Success Deleting Message */}
       <ResponseSnackbar
         open={success}
         autoHideDuration={3000}

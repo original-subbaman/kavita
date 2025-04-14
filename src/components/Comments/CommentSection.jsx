@@ -1,5 +1,5 @@
-import { AlertDialogRoot, Box } from "@radix-ui/themes";
 import { AlertDialogPortal } from "@radix-ui/react-alert-dialog";
+import { AlertDialogRoot, Box } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,11 +7,16 @@ import useAuth from "../../hooks/auth/useAuth";
 import useDeleteComment from "../../hooks/post/useDeleteComment";
 import useLoadComments from "../../hooks/post/useLoadComments";
 import usePostComment from "../../hooks/post/usePostComment";
-import { setOpenDeleteComment } from "../../slice/postDetailSlice";
+import useReportComment from "../../hooks/post/useReportComment";
+import {
+  setOpenDeleteComment,
+  setOpenReportComment,
+} from "../../slice/postDetailSlice";
 import { setError, setSuccess } from "../../slice/responseSlice";
 import ErrorMessage from "../ErrorMessage";
 import Loading from "../Loading";
 import DeleteCommentDialog from "../PostDetail/DeleteCommentDialog";
+import ReportCommentDialog from "../PostDetail/ReportCommentDialog";
 import ResponseSnackbar from "../ResponseSnackbar";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
@@ -28,6 +33,9 @@ const CommentSection = ({
   const dispatch = useDispatch();
   const openDeleteComment = useSelector(
     (state) => state.postDetail.openDeleteComment
+  );
+  const openReportComment = useSelector(
+    (state) => state.postDetail.openReportComment
   );
   const deleteCommentId = useSelector((state) => state.postDetail.commentId);
   const { success, error, message } = useSelector((state) => state.response);
@@ -57,6 +65,11 @@ const CommentSection = ({
     onError: () => dispatch(setError("Error deleting comment")),
   });
 
+  const { mutate: reportComment } = useReportComment({
+    onSuccess: () => dispatch(setSuccess("Comment reported successfully")),
+    onError: () => dispatch(setError("Error reporting comment")),
+  });
+
   const addComment = (text, parentId) => {
     mutate({ userId: user.id, postId: postId, comment: text });
     setActiveComment(null);
@@ -74,6 +87,15 @@ const CommentSection = ({
           <DeleteCommentDialog
             onClose={() => dispatch(setOpenDeleteComment(false))}
             onDelete={() => deleteComment({ commentId: deleteCommentId })}
+          />
+        </AlertDialogPortal>
+      </AlertDialogRoot>
+      {/* Report Comment Dialog */}
+      <AlertDialogRoot open={openReportComment}>
+        <AlertDialogPortal>
+          <ReportCommentDialog
+            onClose={() => dispatch(setOpenReportComment(false))}
+            onReport={reportComment}
           />
         </AlertDialogPortal>
       </AlertDialogRoot>

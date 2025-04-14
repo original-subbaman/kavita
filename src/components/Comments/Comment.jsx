@@ -6,6 +6,7 @@ import {
   setCommentId,
   setOpenDeleteComment,
   setOpenReportComment,
+  setPostId,
 } from "../../slice/postDetailSlice";
 const Comment = ({
   comment,
@@ -63,7 +64,10 @@ const Comment = ({
             variant="solid"
             size={"2"}
             color="gray"
-            onClick={() => dispatch(setOpenReportComment(true))}
+            onClick={() => {
+              dispatch(setOpenReportComment(true));
+              dispatch(setCommentId(comment.id));
+            }}
           >
             Report
           </Button>
@@ -76,7 +80,6 @@ const Comment = ({
             onClick={() => {
               dispatch(setOpenDeleteComment(true));
               dispatch(setCommentId(comment.id));
-              // deleteComment(comment.id);
             }}
           >
             Delete

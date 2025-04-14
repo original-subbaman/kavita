@@ -10,6 +10,7 @@ function SelectedText({ selectedText, captureLanguage }) {
         onClick={captureLanguage}
         radius="full"
         color="orange"
+        disabled={!selectedText}
         style={{
           color: "white",
           marginRight: "8px",

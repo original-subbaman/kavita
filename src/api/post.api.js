@@ -1,5 +1,5 @@
+import { endOfDay, formatISO } from "date-fns";
 import supabase from "../supabase_client/create_client";
-import { startOfDay, endOfDay, formatISO } from "date-fns";
 
 export async function fetchPosts({ date }) {
   const { data } = await supabase
@@ -146,6 +146,41 @@ export async function loadComments(postId) {
 
   if (error) {
     throw new Error(error.message || "Failed to load comments");
+  }
+
+  return data;
+}
+
+export async function reportComment(
+  postId,
+  commentId,
+  userId,
+  reason,
+  additionalInfo
+) {
+  if (!postId || !commentId || !userId || !reason) {
+    throw new Error("Missing postId, commentId, userId or reason");
+  }
+  const { reportError } = await supabase
+    .from("comment_report")
+    .insert([
+      {
+        post_id: postId,
+        comment_id: commentId,
+        user_id: userId,
+        reason: reason,
+        additional_info: additionalInfo,
+      },
+    ])
+    .select();
+
+  const { commentError } = await supabase
+    .from("post_comment")
+    .update({ is_hidden: true })
+    .eq("id", commentId);
+
+  if (reportError || commentError) {
+    throw new Error(error.message || "Failed to report comment");
   }
 
   return data;
