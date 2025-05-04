@@ -71,7 +71,6 @@ const CommentSection = ({
       queryClient.invalidateQueries({ queryKey: ["load_comments"] });
     },
     onError: (error) => {
-      console.log("🚀 ~ error:", error);
       dispatch(setError("Error reporting comment"));
     },
   });

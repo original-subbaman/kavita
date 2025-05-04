@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import CommentSection from "../components/Comments/CommentSection";
-import ReportDialog from "../components/PostDetail/ReportDialog";
+import ReportPostDialog from "../components/PostDetail/ReportPostDialog";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import RootWrapper from "../components/RootWrapper";
 import ScrollToTop from "../components/ScrollToTop";
@@ -83,7 +83,9 @@ export default function PostDetail() {
       {/* Report Post Dialog */}
       <AlertDialogRoot open={openReportPost}>
         <AlertDialogPortal>
-          <ReportDialog onClose={() => dispatch(setOpenReportPost(false))} />
+          <ReportPostDialog
+            onClose={() => dispatch(setOpenReportPost(false))}
+          />
         </AlertDialogPortal>
       </AlertDialogRoot>
 
