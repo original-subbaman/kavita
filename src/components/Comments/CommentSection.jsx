@@ -66,8 +66,14 @@ const CommentSection = ({
   });
 
   const { mutate: reportComment } = useReportComment({
-    onSuccess: () => dispatch(setSuccess("Comment reported successfully")),
-    onError: () => dispatch(setError("Error reporting comment")),
+    onSuccess: () => {
+      dispatch(setSuccess("Comment reported successfully"));
+      queryClient.invalidateQueries({ queryKey: ["load_comments"] });
+    },
+    onError: (error) => {
+      console.log("🚀 ~ error:", error);
+      dispatch(setError("Error reporting comment"));
+    },
   });
 
   const addComment = (text, parentId) => {
@@ -108,6 +114,7 @@ const CommentSection = ({
       {/* Response Error Snackbar */}
       <ResponseSnackbar
         open={error}
+        severity={"error"}
         message={message}
         onClose={() => dispatch(setError(false))}
       />

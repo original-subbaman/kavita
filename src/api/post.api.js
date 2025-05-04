@@ -142,6 +142,7 @@ export async function loadComments(postId) {
     .from("post_comment")
     .select("*, user(id, name, user_name)")
     .eq("post_id", postId)
+    .eq("is_hidden", false)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -182,8 +183,6 @@ export async function reportComment(
   if (reportError || commentError) {
     throw new Error(error.message || "Failed to report comment");
   }
-
-  return data;
 }
 
 export async function deleteComment(commentId) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { useSelector } from "react-redux";
 import {
   AlertDialog,
@@ -23,7 +23,7 @@ const reportReasons = [
   "Other",
 ];
 
-const ReportCommentDialog = ({ onClose, onReport }) => {
+const ReportCommentDialog = forwardRef(({ onClose, onReport }, ref) => {
   const { id: postId } = useParams();
   const { user } = useAuth();
   const commentId = useSelector((state) => {
@@ -48,13 +48,12 @@ const ReportCommentDialog = ({ onClose, onReport }) => {
   };
 
   return (
-    <AlertDialog.Content maxWidth="450px">
+    <AlertDialog.Content ref={ref} maxwidth="450px">
       <AlertDialog.Title>Report Comment</AlertDialog.Title>
       <AlertDialog.Description>
         Reporting a comment means you're blacklisting it. Please select a reason
         below.
       </AlertDialog.Description>
-
       <Box mt="3">
         <RadioGroup.Root
           value={selectedReason}
@@ -68,7 +67,6 @@ const ReportCommentDialog = ({ onClose, onReport }) => {
           ))}
         </RadioGroup.Root>
       </Box>
-
       <Box mt="4">
         <label htmlFor="additionalInfo">
           Additional Information (optional)
@@ -81,7 +79,6 @@ const ReportCommentDialog = ({ onClose, onReport }) => {
           rows={3}
         />
       </Box>
-
       <Flex gap="3" mt="4" justify="end">
         <Button variant="soft" color="gray" onClick={onClose}>
           Cancel
@@ -92,6 +89,8 @@ const ReportCommentDialog = ({ onClose, onReport }) => {
       </Flex>
     </AlertDialog.Content>
   );
-};
+});
+
+ReportCommentDialog.displayName = "ReportCommentDialog";
 
 export default ReportCommentDialog;
