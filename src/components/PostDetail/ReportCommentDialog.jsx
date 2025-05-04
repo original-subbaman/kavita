@@ -79,7 +79,6 @@ const ReportCommentDialog = ({ onClose, onReport }) => {
           value={additionalInfo}
           onChange={(e) => setAdditionalInfo(e.target.value)}
           rows={3}
-          maxRows={3}
         />
       </Box>
 

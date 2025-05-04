@@ -26,7 +26,9 @@ import { actionTypes } from "../reducers/responseReducer";
 import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { convertISOTimestamp } from "../utils/Date";
+import useAuth from "../hooks/auth/useAuth";
 export default function PostDetail() {
+  const { user } = useAuth();
   let { id } = useParams();
 
   const openReportPost = useSelector(
@@ -51,7 +53,7 @@ export default function PostDetail() {
 
   const { data } = useGetPost({
     postId: id,
-    userId: "1feebd99-74d7-4b2d-9692-9742e6d7dd2d",
+    userId: user.id,
     isUpdating: isUpdating,
   });
 
@@ -59,7 +61,7 @@ export default function PostDetail() {
     recordLanguage({
       language: selectedText,
       postId: id,
-      userId: "1feebd99-74d7-4b2d-9692-9742e6d7dd2d", // replace by actual user id
+      userId: user.id, // replace by actual user id
     });
   };
 

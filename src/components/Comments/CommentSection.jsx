@@ -120,6 +120,7 @@ const CommentSection = ({
         {comments &&
           comments.map((rootComment) => (
             <Comment
+              key={rootComment.id}
               comment={rootComment}
               currentUserId={user.id}
               deleteComment={deleteComment}
