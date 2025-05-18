@@ -185,6 +185,67 @@ export async function reportComment(
   }
 }
 
+/**
+ * Reports a post by inserting a report record into the 'post_report' table in Supabase.
+ * only if the same user has not already reported the same post.
+ *
+ * @param {string} postId - The ID of the post being reported.
+ * @param {string} userId - The ID of the user reporting the post.
+ * @param {string} reason - The reason for reporting the post (e.g., spam, offensive content).
+ * @param {string} [additionalInfo] - Optional additional information about the report.
+ * @throws Will throw an error if required parameters are missing or if the database operation fails.
+ */
+export async function reportPost(postId, userId, reason, additionalInfo) {
+  if (!postId || !userId || !reason) {
+    throw new Error("Missing postId, commentId, userId or reason");
+  }
+
+  // Check if a report already exists for the same user and post
+  const { data: existingReports, error: fetchError } = await supabase
+    .from("post_report")
+    .select("*")
+    .eq("post_id", postId)
+    .eq("user_id", userId);
+
+  if (fetchError) {
+    throw new Error(
+      fetchError.message || "Failed to check for existing report"
+    );
+  }
+
+  let reportError = null;
+  if (existingReports.length > 0) {
+    const { error: updateError } = await supabase
+      .from("post_report")
+      .update({
+        reason: reason,
+        additional_info: additionalInfo,
+      })
+      .eq("post_id", postId)
+      .eq("user_id", userId);
+
+    reportError = updateError;
+  } else {
+    const { error: insertError } = await supabase
+      .from("post_report")
+      .insert([
+        {
+          post_id: postId,
+          user_id: userId,
+          reason: reason,
+          additional_info: additionalInfo,
+        },
+      ])
+      .select();
+
+    reportError = insertError;
+  }
+
+  if (reportError) {
+    throw new Error(error.message || "Failed to report post");
+  }
+}
+
 export async function deleteComment(commentId) {
   if (!commentId) {
     throw new Error("Missing commentId");

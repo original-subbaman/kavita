@@ -27,6 +27,8 @@ import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { convertISOTimestamp } from "../utils/Date";
 import useAuth from "../hooks/auth/useAuth";
+import useReportPost from "../hooks/post/useReportPost";
+
 export default function PostDetail() {
   const { user } = useAuth();
   let { id } = useParams();
@@ -49,6 +51,13 @@ export default function PostDetail() {
   const { mutate: recordLanguage } = useRecordLanguage({
     onSuccess: (data) => dispatch(setSuccess("Language captured successfully")),
     onError: (error) => dispatch(setError("Error capturing language")),
+  });
+
+  const { mutate: reportPost } = useReportPost({
+    onSuccess: () => dispatch(setSuccess("Post reported successfully")),
+    onError: (error) => {
+      dispatch(setError(error?.message || "Error reporting post"));
+    },
   });
 
   const { data } = useGetPost({
@@ -85,6 +94,9 @@ export default function PostDetail() {
         <AlertDialogPortal>
           <ReportPostDialog
             onClose={() => dispatch(setOpenReportPost(false))}
+            onConfirm={reportPost}
+            postId={id}
+            userId={user.id}
           />
         </AlertDialogPortal>
       </AlertDialogRoot>
