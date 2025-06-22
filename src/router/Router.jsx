@@ -9,48 +9,45 @@ import Signup from "../pages/Signup.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import PageNotFound from "../pages/PageNotFound.jsx";
 import LoginRedirect from "../pages/LoginRedirect.jsx";
+import Notification from "../pages/Notification.jsx";
+import RootWrapper from "../components/RootWrapper.jsx";
 function CreateRouter() {
   return createBrowserRouter([
     {
       path: "/",
       element: (
         <ProtectedRoute>
-          <Home />
+          <RootWrapper />
         </ProtectedRoute>
       ),
+      children: [
+        {
+          index: true,
+          element: <Home />,
+        },
+        {
+          path: "/post/:id",
+          element: <PostDetail />,
+        },
+        {
+          path: "/inspiration",
+          element: <LanguageWall />,
+        },
+        {
+          path: "/my-posts",
+          element: <MyPosts />,
+        },
+        {
+          path: "/profile",
+          element: <Profile />,
+        },
+        {
+          path: "/notifications",
+          element: <Notification />,
+        },
+      ],
     },
-    {
-      path: "/post/:id",
-      element: (
-        <ProtectedRoute>
-          <PostDetail />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: "/inspiration",
-      element: (
-        <ProtectedRoute>
-          <LanguageWall />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: "/my-posts",
-      element: (
-        <ProtectedRoute>
-          <MyPosts />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: "/profile",
-      element: (
-        <ProtectedRoute>
-          <Profile />
-        </ProtectedRoute>
-      ),
-    },
+
     { path: "/login-redirect", element: <LoginRedirect /> },
     { path: "/login", element: <Login /> },
     { path: "/signup", element: <Signup /> },

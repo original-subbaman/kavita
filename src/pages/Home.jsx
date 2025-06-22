@@ -2,22 +2,20 @@ import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Root as AlertDialogRoot } from "@radix-ui/react-alert-dialog";
 import { Box, Flex } from "@radix-ui/themes";
+import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useState } from "react";
-import PostSection from "../components/PostSection/PostSection";
+import InfinitePostSection from "../components/PostSection/InfinitePostSection";
 import AddPostButton from "../components/PromptSection/AddPostButton";
 import InputAlertDialog from "../components/PromptSection/InputAlertDialog";
 import PromptSection from "../components/PromptSection/PromptSection";
 import PromptText from "../components/PromptSection/PromptText";
-import RootWrapper from "../components/RootWrapper";
+import ResponseSnackbar from "../components/ResponseSnackbar";
+import ScrollToTop from "../components/ScrollToTop";
+import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
 import useGetPosts from "../hooks/post/useGetPosts";
-import { useQueryClient } from "@tanstack/react-query";
 import { StaticDatePickerStyle } from "../utils/Date";
-import useAuth from "../hooks/auth/useAuth";
-import ResponseSnackbar from "../components/ResponseSnackbar";
-import InfinitePostSection from "../components/PostSection/InfinitePostSection";
-import ScrollToTop from "../components/ScrollToTop";
 
 function Home() {
   const { user } = useAuth();
@@ -66,7 +64,7 @@ function Home() {
   };
 
   return (
-    <RootWrapper>
+    <>
       {/* Success Snackbar */}
       {response.success && (
         <ResponseSnackbar
@@ -124,7 +122,7 @@ function Home() {
         </Box>
       </Flex>
       <ScrollToTop />
-    </RootWrapper>
+    </>
   );
 }
 

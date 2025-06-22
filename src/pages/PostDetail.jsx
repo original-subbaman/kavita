@@ -87,7 +87,7 @@ export default function PostDetail() {
   const hasLiked = data?.hasLiked;
 
   return (
-    <RootWrapper>
+    <>
       <ScrollToTop />
       {/* Report Post Dialog */}
       <AlertDialogRoot open={openReportPost}>
@@ -174,6 +174,6 @@ export default function PostDetail() {
           />
         </Box>
       </Container>
-    </RootWrapper>
+    </>
   );
 }

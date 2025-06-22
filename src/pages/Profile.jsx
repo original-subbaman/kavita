@@ -23,14 +23,12 @@ function Profile() {
     }
   };
   return (
-    <RootWrapper>
-      <Container className="py-4">
-        <UserDetailSection />
-        <div className="mt-4">
-          <ActivitySection />
-        </div>
-      </Container>
-    </RootWrapper>
+    <Container className="py-4">
+      <UserDetailSection />
+      <div className="mt-4">
+        <ActivitySection />
+      </div>
+    </Container>
   );
 }
 

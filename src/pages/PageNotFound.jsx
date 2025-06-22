@@ -16,7 +16,7 @@ const PageNotFound = () => {
   const navigateToLogin = () => navigate("/login");
   const navigateToRegister = () => navigate("/signup");
   return (
-    <RootWrapper showHeader={false}>
+    <div className="w-full font-primary min-h-screen bg-dark-light">
       <div className="w-full h-[100vh] font-mono flex flex-col text-white items-center justify-center">
         <p className="text-8xl font-mono text-gray-400">404</p>
         <p className="text-2xl font-mono font-semibold mb-4">
@@ -29,7 +29,7 @@ const PageNotFound = () => {
           <NavigateButton title={"Register"} onClick={navigateToRegister} />
         </div>
       </div>
-    </RootWrapper>
+    </div>
   );
 };
 

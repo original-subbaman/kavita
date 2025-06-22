@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import PopupMenu from "./PopupMenu";
-import { Text } from "@radix-ui/themes";
+import { Button, Text } from "@radix-ui/themes";
 import { NavLink, useLocation } from "react-router-dom";
-import LinkText from "./LinkText";
 import useAuth from "../../hooks/auth/useAuth";
+import LinkText from "./LinkText";
+import PopupMenu from "./PopupMenu";
+import { IconButton } from "@mui/material";
+import { IoIosNotifications } from "react-icons/io";
 function Header(props) {
   const location = useLocation();
   const { user } = useAuth();
@@ -12,7 +13,7 @@ function Header(props) {
   return (
     <header className="flex justify-between text-white bg-dark items-center h-16 px-8 drop-shadow-md sticky top-0 z-[100]">
       <Text size="6">CWS</Text>
-      <nav className="flex gap-2">
+      <nav className=" absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2">
         <NavLink to={"/"}>
           <LinkText isActive={location.pathname === "/"}>Home</LinkText>
         </NavLink>
@@ -27,7 +28,14 @@ function Header(props) {
           </LinkText>
         </NavLink>
       </nav>
-      <PopupMenu name={userName} />
+      <div className="flex items-center gap-2">
+        <NavLink to="/notifications">
+          <IconButton sx={{ color: "white" }}>
+            <IoIosNotifications />
+          </IconButton>
+        </NavLink>
+        <PopupMenu name={userName} />
+      </div>
     </header>
   );
 }
