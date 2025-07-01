@@ -28,9 +28,11 @@ import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { convertISOTimestamp } from "../utils/Date";
 import useAuth from "../hooks/auth/useAuth";
 import useReportPost from "../hooks/post/useReportPost";
+import useNotifyPostLike from "../hooks/notification/useNotifyPostLike";
 
 export default function PostDetail() {
   const { user } = useAuth();
+  console.log("🚀 ~ PostDetail ~ user:", user);
   let { id } = useParams();
 
   const openReportPost = useSelector(
@@ -42,9 +44,9 @@ export default function PostDetail() {
 
   const closeAlert = () => dispatch(resetResponse());
 
-  const { mutate: likePost, isPending: isUpdating } = useLikePost({
-    onSuccess: () => dispatch(setSuccess("Post liked successfully")),
-    onError: () => dispatch(setError("Error liking post")),
+  const { mutateAsync: likePost, isPending: isUpdating } = useLikePost({
+    onSuccess: () => {},
+    onError: () => {},
     onSettled: () => {},
   });
 
@@ -58,6 +60,11 @@ export default function PostDetail() {
     onError: (error) => {
       dispatch(setError(error?.message || "Error reporting post"));
     },
+  });
+
+  const { mutateAsync: notifyLikePost } = useNotifyPostLike({
+    onSuccess: () => {},
+    onError: () => {},
   });
 
   const { data } = useGetPost({
@@ -81,7 +88,33 @@ export default function PostDetail() {
     }
   }
 
+  async function handleLikePost(
+    postId,
+    userId,
+    recipientId,
+    senderId,
+    message
+  ) {
+    try {
+      const likePostResult = await likePost({ postId, userId: userId });
+      console.log("🚀 ~ PostDetail ~ result:", likePostResult);
+      if (likePostResult.success) {
+        dispatch(setSuccess("Post liked successfully"));
+        await notifyLikePost({
+          postId,
+          senderId,
+          recipientId,
+          message,
+        });
+      }
+    } catch (error) {
+      dispatch(setError("Error liking post"));
+    }
+  }
+
   const author = data?.post.user.name;
+  const authorId = data?.post.user.id;
+  const currentUser = user.user_metadata.name;
   const createdAt = data?.post.created_at;
   const post = DOMPurify.sanitize(data?.post.post);
   const hasLiked = data?.hasLiked;
@@ -100,7 +133,6 @@ export default function PostDetail() {
           />
         </AlertDialogPortal>
       </AlertDialogRoot>
-
       {/* Error Deleting Message */}
       <ResponseSnackbar
         open={error}
@@ -129,7 +161,6 @@ export default function PostDetail() {
             selectedText={selectedText}
             captureLanguage={handleCaptureLanguage}
           />
-
           <Box
             dangerouslySetInnerHTML={{ __html: post }}
             onMouseMove={(event) => getSelectionText()}
@@ -139,17 +170,22 @@ export default function PostDetail() {
         </Section>
         <Box className="flex items-end justify-end   gap-4 my-0  max-h-['10px']">
           <Button
+            className="cursor-pointer"
             onClick={() =>
-              likePost({
-                postId: id,
-                userId: "1feebd99-74d7-4b2d-9692-9742e6d7dd2d",
-              })
+              handleLikePost(
+                id,
+                user.id,
+                authorId,
+                user.id,
+                `@${currentUser} liked your post`
+              )
             }
           >
             {hasLiked ? <HeartFilledIcon /> : <HeartIcon />}
             Like
           </Button>
           <Button
+            className="cursor-pointer"
             color="gray"
             onClick={() => dispatch(setOpenReportPost(true))}
           >

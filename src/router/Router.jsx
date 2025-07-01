@@ -11,6 +11,7 @@ import PageNotFound from "../pages/PageNotFound.jsx";
 import LoginRedirect from "../pages/LoginRedirect.jsx";
 import Notification from "../pages/Notification.jsx";
 import RootWrapper from "../components/RootWrapper.jsx";
+
 function CreateRouter() {
   return createBrowserRouter([
     {
@@ -26,28 +27,27 @@ function CreateRouter() {
           element: <Home />,
         },
         {
-          path: "/post/:id",
+          path: "post/:id",
           element: <PostDetail />,
         },
         {
-          path: "/inspiration",
+          path: "inspiration",
           element: <LanguageWall />,
         },
         {
-          path: "/my-posts",
+          path: "my-posts",
           element: <MyPosts />,
         },
         {
-          path: "/profile",
+          path: "profile",
           element: <Profile />,
         },
         {
-          path: "/notifications",
+          path: "notifications",
           element: <Notification />,
         },
       ],
     },
-
     { path: "/login-redirect", element: <LoginRedirect /> },
     { path: "/login", element: <Login /> },
     { path: "/signup", element: <Signup /> },

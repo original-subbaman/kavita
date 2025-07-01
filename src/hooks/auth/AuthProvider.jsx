@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setSession(null);
     } catch (error) {
-      console.log("🚀 ~ logout ~ error:", error.message);
       throw error;
     }
   };

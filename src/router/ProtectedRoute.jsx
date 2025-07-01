@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/auth/useAuth";
 import { useEffect } from "react";
+import Loading from "../components/Loading";
 
 const ProtectedRoute = ({ children }) => {
   const { user, session, loading } = useAuth();
@@ -14,7 +15,7 @@ const ProtectedRoute = ({ children }) => {
   }, [loading, session]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   // If user is authenticated, return the element (the protected route)

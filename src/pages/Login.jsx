@@ -19,11 +19,13 @@ const Login = () => {
     error: false,
     message: "",
   });
+
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
+
   const { login, loading } = useAuth();
 
   const handleForgotPassword = () => {};

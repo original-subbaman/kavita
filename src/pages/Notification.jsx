@@ -36,7 +36,9 @@ function Notification() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold mb-6">Notifications</h1>
+      <h1 className="text-green-700 text-2xl font-semibold mb-6">
+        Notifications
+      </h1>
       <ul className="space-y-4">
         {notifications.length === 0 && (
           <p className="text-gray-500">You're all caught up 🎉</p>
@@ -61,22 +63,7 @@ function Notification() {
                 {notification.title}
               </h2>
               <p className="text-sm text-gray-600">{notification.message}</p>
-              {!notification.read && (
-                <button
-                  className="mt-2 text-xs text-blue-600 hover:underline"
-                  onClick={() => markAsRead(notification.id)}
-                >
-                  Mark as read
-                </button>
-              )}
             </div>
-            <button
-              onClick={() => removeNotification(notification.id)}
-              className="ml-4 text-gray-400 hover:text-red-500 transition"
-              aria-label="Dismiss notification"
-            >
-              <MdClose />
-            </button>
           </li>
         ))}
       </ul>
