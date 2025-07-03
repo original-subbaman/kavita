@@ -21,7 +21,7 @@ import ScrollToTop from "../components/ScrollToTop";
 import SelectedText from "../components/SelectedText";
 import useRecordLanguage from "../hooks/language/useRecordLanguage";
 import useGetPost from "../hooks/post/useGetPost";
-import useLikePost from "../hooks/post/useLikePost";
+import useToggleLikeOnPost from "../hooks/post/useToggleLikeOnPost";
 import { actionTypes } from "../reducers/responseReducer";
 import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
@@ -32,7 +32,6 @@ import useNotifyPostLike from "../hooks/notification/useNotifyPostLike";
 
 export default function PostDetail() {
   const { user } = useAuth();
-  console.log("🚀 ~ PostDetail ~ user:", user);
   let { id } = useParams();
 
   const openReportPost = useSelector(
@@ -44,8 +43,7 @@ export default function PostDetail() {
 
   const closeAlert = () => dispatch(resetResponse());
 
-  const { mutateAsync: likePost, isPending: isUpdating } = useLikePost({
-    onSuccess: () => {},
+  const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
     onError: () => {},
     onSettled: () => {},
   });
@@ -95,21 +93,7 @@ export default function PostDetail() {
     senderId,
     message
   ) {
-    try {
-      const likePostResult = await likePost({ postId, userId: userId });
-      console.log("🚀 ~ PostDetail ~ result:", likePostResult);
-      if (likePostResult.success) {
-        dispatch(setSuccess("Post liked successfully"));
-        await notifyLikePost({
-          postId,
-          senderId,
-          recipientId,
-          message,
-        });
-      }
-    } catch (error) {
-      dispatch(setError("Error liking post"));
-    }
+    const likePostResult = toggleLike({ postId, userId: userId });
   }
 
   const author = data?.post.user.name;
