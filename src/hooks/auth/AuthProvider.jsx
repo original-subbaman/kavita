@@ -1,5 +1,6 @@
-import React, { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { signIn } from "../../api/auth.api";
+import { getUser } from "../../api/user.api";
 import supabase from "../../supabase_client/create_client";
 
 export const AuthContext = createContext();
@@ -10,16 +11,50 @@ export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user);
-    });
+    const fetchSessionAndUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        try {
+          const userDetails = await getUser(session.user.id);
+          setSession(session);
+          setUser({ ...session.user, ...userDetails }); // Merge auth and DB user
+        } catch (error) {
+          console.error("Failed to fetch user details:", error);
+          setUser(session.user); // fallback to auth user only
+        }
+      } else {
+        setSession(null);
+        setUser(null);
+      }
+
+      setLoading(false);
+    };
+
+    fetchSessionAndUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        try {
+          const userDetails = await getUser(session.user.id);
+          setSession(session);
+          setUser({ ...session.user, ...userDetails });
+        } catch (error) {
+          console.error(
+            "Failed to fetch user details on auth state change:",
+            error
+          );
+          setUser(session.user);
+        }
+      } else {
+        setSession(null);
+        setUser(null);
+      }
+
       setLoading(false);
     });
 

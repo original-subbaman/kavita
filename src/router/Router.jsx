@@ -1,16 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
+import RootWrapper from "../components/RootWrapper.jsx";
 import Home from "../pages/Home.jsx";
-import PostDetail from "../pages/PostDetail.jsx";
 import LanguageWall from "../pages/LanguageWall.jsx";
-import Profile from "../pages/Profile.jsx";
-import MyPosts from "../pages/MyPosts.jsx";
 import Login from "../pages/Login.jsx";
+import LoginRedirect from "../pages/LoginRedirect.jsx";
+import MyPosts from "../pages/MyPosts.jsx";
+import Notification from "../pages/Notification.jsx";
+import PageNotFound from "../pages/PageNotFound.jsx";
+import PostDetail from "../pages/PostDetail.jsx";
+import Profile from "../pages/Profile.jsx";
 import Signup from "../pages/Signup.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-import PageNotFound from "../pages/PageNotFound.jsx";
-import LoginRedirect from "../pages/LoginRedirect.jsx";
-import Notification from "../pages/Notification.jsx";
-import RootWrapper from "../components/RootWrapper.jsx";
 
 function CreateRouter() {
   return createBrowserRouter([
@@ -49,7 +49,10 @@ function CreateRouter() {
       ],
     },
     { path: "/login-redirect", element: <LoginRedirect /> },
-    { path: "/login", element: <Login /> },
+    {
+      path: "/login",
+      element: <Login />,
+    },
     { path: "/signup", element: <Signup /> },
     { path: "*", element: <PageNotFound /> },
   ]);

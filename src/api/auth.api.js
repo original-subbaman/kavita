@@ -32,13 +32,19 @@ async function signIn(email, password) {
       password,
     });
 
+    const { data: username } = await supabase
+      .from("user")
+      .select("user_name")
+      .eq("id", data.user.id)
+      .single();
+
     if (error) {
       throw error;
     }
 
     // User signed in successfully
     return {
-      user: data.user,
+      user: { ...data.user, ...username },
       session: data.session,
     };
   } catch (error) {

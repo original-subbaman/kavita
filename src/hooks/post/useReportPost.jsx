@@ -1,7 +1,7 @@
 import { reportPost } from "../../api/post.api";
 import { useMutation } from "@tanstack/react-query";
 
-const useReportPost = ({ onSuccess, onError }) => {
+const useReportPost = (onSuccess = () => {}, onError = () => {}) => {
   return useMutation({
     mutationFn: (reportData) =>
       reportPost(

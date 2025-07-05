@@ -32,6 +32,7 @@ import useNotifyPostLike from "../hooks/notification/useNotifyPostLike";
 
 export default function PostDetail() {
   const { user } = useAuth();
+  console.log("🚀 ~ PostDetail ~ user:", user);
   let { id } = useParams();
 
   const openReportPost = useSelector(
@@ -44,8 +45,14 @@ export default function PostDetail() {
   const closeAlert = () => dispatch(resetResponse());
 
   const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
-    onError: () => {},
-    onSettled: () => {},
+    onSuccess: () => {
+      notifyLikePost({
+        postId: id,
+        recipientId: authorId,
+        senderId: user.id,
+        message: `@${user.user_name} liked your post`,
+      });
+    },
   });
 
   const { mutate: recordLanguage } = useRecordLanguage({
@@ -53,22 +60,19 @@ export default function PostDetail() {
     onError: (error) => dispatch(setError("Error capturing language")),
   });
 
-  const { mutate: reportPost } = useReportPost({
-    onSuccess: () => dispatch(setSuccess("Post reported successfully")),
-    onError: (error) => {
+  const { mutate: reportPost } = useReportPost(
+    () => dispatch(setSuccess("Post reported successfully")),
+    (error) => {
       dispatch(setError(error?.message || "Error reporting post"));
-    },
-  });
+    }
+  );
 
-  const { mutateAsync: notifyLikePost } = useNotifyPostLike({
-    onSuccess: () => {},
-    onError: () => {},
-  });
+  const { mutate: notifyLikePost } = useNotifyPostLike();
 
   const { data } = useGetPost({
     postId: id,
     userId: user.id,
-    isUpdating: isUpdating,
+    isUpdating: false,
   });
 
   const handleCaptureLanguage = () => {
@@ -86,19 +90,12 @@ export default function PostDetail() {
     }
   }
 
-  async function handleLikePost(
-    postId,
-    userId,
-    recipientId,
-    senderId,
-    message
-  ) {
-    const likePostResult = toggleLike({ postId, userId: userId });
+  async function handleLikePost(postId, userId) {
+    toggleLike({ postId, userId: userId });
   }
 
   const author = data?.post.user.name;
   const authorId = data?.post.user.id;
-  const currentUser = user.user_metadata.name;
   const createdAt = data?.post.created_at;
   const post = DOMPurify.sanitize(data?.post.post);
   const hasLiked = data?.hasLiked;
@@ -153,21 +150,15 @@ export default function PostDetail() {
           />
         </Section>
         <Box className="flex items-end justify-end   gap-4 my-0  max-h-['10px']">
+          {/* Like Button */}
           <Button
             className="cursor-pointer"
-            onClick={() =>
-              handleLikePost(
-                id,
-                user.id,
-                authorId,
-                user.id,
-                `@${currentUser} liked your post`
-              )
-            }
+            onClick={() => handleLikePost(id, user.id)}
           >
             {hasLiked ? <HeartFilledIcon /> : <HeartIcon />}
             Like
           </Button>
+          {/* Report Button */}
           <Button
             className="cursor-pointer"
             color="gray"

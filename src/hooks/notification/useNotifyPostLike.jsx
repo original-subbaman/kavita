@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { createNotificationForPostLike } from "../../api/notification.api";
 
-const useNotifyPostLike = ({ onSuccess, onError }) => {
+const useNotifyPostLike = (onSuccess = () => {}, onError = () => {}) => {
   return useMutation({
     mutationFn: (params) =>
       createNotificationForPostLike(
@@ -10,7 +10,6 @@ const useNotifyPostLike = ({ onSuccess, onError }) => {
         params.senderId,
         params.message
       ),
-
     onSuccess: onSuccess,
     onError: onError,
   });
