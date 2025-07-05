@@ -32,7 +32,6 @@ import useNotifyPostLike from "../hooks/notification/useNotifyPostLike";
 
 export default function PostDetail() {
   const { user } = useAuth();
-  console.log("🚀 ~ PostDetail ~ user:", user);
   let { id } = useParams();
 
   const openReportPost = useSelector(
@@ -74,6 +73,7 @@ export default function PostDetail() {
     userId: user.id,
     isUpdating: false,
   });
+  console.log("🚀 ~ PostDetail ~ data:", data);
 
   const handleCaptureLanguage = () => {
     recordLanguage({
@@ -94,7 +94,7 @@ export default function PostDetail() {
     toggleLike({ postId, userId: userId });
   }
 
-  const author = data?.post.user.name;
+  const author = data?.post.user.user_name;
   const authorId = data?.post.user.id;
   const createdAt = data?.post.created_at;
   const post = DOMPurify.sanitize(data?.post.post);
