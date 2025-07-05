@@ -73,7 +73,6 @@ export default function PostDetail() {
     userId: user.id,
     isUpdating: false,
   });
-  console.log("🚀 ~ PostDetail ~ data:", data);
 
   const handleCaptureLanguage = () => {
     recordLanguage({
