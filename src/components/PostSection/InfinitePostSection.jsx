@@ -30,7 +30,7 @@ function InfinitePostSection(props) {
   }, []);
 
   return (
-    <Container className="px-3 sm:p-0">
+    <Container className="px-3 sm:p-0 md:w-[800px]">
       <InfiniteScroll
         dataLength={posts ? posts.length : 0}
         next={() => fetchNextPage()}

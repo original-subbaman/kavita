@@ -87,7 +87,7 @@ function Home() {
         {/** suggest prompt section */}
         <Box className="flex-1 hidden sm:block"></Box>
         {/** Posts Section */}
-        <Box className="flex-1">
+        <Box className="flex-1 md:w-[800px]">
           <PromptSection>
             <PromptText />
             <AlertDialogRoot
