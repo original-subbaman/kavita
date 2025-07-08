@@ -6,14 +6,18 @@ import { NavLink } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loading from "../Loading";
 import ErrorMessage from "../ErrorMessage";
+import Masonry from "react-responsive-masonry";
+import "./masonry-grid.css";
+
+const breakpointColumnsObj = {
+  default: 3,
+  1100: 2,
+  700: 1,
+};
 
 function InfinitePostSection(props) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useGetInfinitePosts();
-
-  if (status === "pending") {
-    return <Loading message={"Loading posts..."} />;
-  }
 
   if (status === "error") {
     return (
@@ -33,21 +37,28 @@ function InfinitePostSection(props) {
         hasMore={hasNextPage}
         loader={<div className="text-white text-2xl">Loading...</div>}
       >
-        {posts &&
-          posts.map((post, index) => (
-            <NavLink
-              to={`/post/${post.id}`}
-              key={post.id}
-              style={{ marginBottom: "0.2rem" }}
-            >
-              <Post
-                content={post.post}
-                author={post.user.user_name}
-                width={"300px"}
-                height={"400px"}
-              />
-            </NavLink>
-          ))}
+        {posts && (
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {posts.map((post) => (
+              <NavLink
+                to={`/post/${post.id}`}
+                key={post.id}
+                style={{ margin: "0.5rem" }}
+              >
+                <Post
+                  content={post.post}
+                  author={post.user.user_name}
+                  width="100%" // Let Masonry decide width
+                  height="auto"
+                />
+              </NavLink>
+            ))}
+          </Masonry>
+        )}
       </InfiniteScroll>
       {isFetchingNextPage && <Loading message={"Fetching more posts..."} />}
 
