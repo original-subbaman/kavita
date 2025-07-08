@@ -22,7 +22,7 @@ const useToggleLikeOnPost = ({ onSuccess = () => {} }) => {
           if (oldData) {
             return {
               ...oldData,
-              hasLiked: true,
+              hasLiked: oldData.hasLiked ? false : true,
             };
           }
           return oldData;
@@ -33,7 +33,6 @@ const useToggleLikeOnPost = ({ onSuccess = () => {} }) => {
     },
     onSuccess: onSuccess,
     onError: (err, variables, context) => {
-      console.log("🚀 ~ useLikePost ~ err:", err);
       if (context?.querySnapshot) {
         queryClient.setQueryData([], context.querySnapshot);
       }
@@ -45,9 +44,6 @@ const useToggleLikeOnPost = ({ onSuccess = () => {} }) => {
       queryClient.invalidateQueries({
         queryKey: ["get_post"],
       });
-      if (onSettled) {
-        onSettled();
-      }
     },
   });
 };

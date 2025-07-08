@@ -25,7 +25,32 @@ export async function createNotificationForPostLike(
   message
 ) {
   if (!postId || !recipientId || !senderId || !message) {
-    throw new Error("Missing postId, recipientId, senderId or message");
+    throw new Error(
+      "All parameters (postId, recipientId, senderId, message) are required."
+    );
+  }
+
+  const { data: existingNotifications, error: fetchError } = await supabase
+    .from("user_notification")
+    .select("id")
+    .eq("recipient_id", recipientId)
+    .eq("sender_id", senderId)
+    .eq("target_id", postId)
+    .eq("type", "like")
+    .eq("target_type", "post");
+
+  if (fetchError) {
+    throw new Error(
+      fetchError.message || "Failed to check existing notification"
+    );
+  }
+
+  if (existingNotifications && existingNotifications.length > 0) {
+    return {
+      success: true,
+      message: "Notification already exists",
+      data: existingNotifications[0],
+    };
   }
 
   const { data, error } = await supabase
@@ -35,7 +60,7 @@ export async function createNotificationForPostLike(
         target_id: postId,
         recipient_id: recipientId,
         sender_id: senderId,
-        message: message,
+        message,
         target_type: "post",
         type: "like",
       },
@@ -48,7 +73,11 @@ export async function createNotificationForPostLike(
     );
   }
 
-  return { success: true, data };
+  return {
+    success: true,
+    message: "Notification created successfully",
+    data: data[0],
+  };
 }
 
 function createNotificationForComment(postId, recipientId, senderId, message) {}
