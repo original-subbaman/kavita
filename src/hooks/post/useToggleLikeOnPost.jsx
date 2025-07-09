@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toggleLike } from "../../api/likes.api";
-const useToggleLikeOnPost = ({ onSuccess = () => {} }) => {
+
+const UseToggleLikeOnPost = ({ onSuccess = () => {} }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (params) => toggleLike(params.postId, params.userId),
@@ -48,4 +49,4 @@ const useToggleLikeOnPost = ({ onSuccess = () => {} }) => {
   });
 };
 
-export default useToggleLikeOnPost;
+export default UseToggleLikeOnPost;

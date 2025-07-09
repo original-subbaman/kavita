@@ -80,4 +80,41 @@ export async function createNotificationForPostLike(
   };
 }
 
+export async function removeNotificationForPost(postId, recipientId, senderId) {
+  try {
+    if (!postId || !recipientId || !senderId) {
+      throw new Error(
+        "All parameters (postId, recipientId, senderId) are required."
+      );
+    }
+
+    const { data: deletedNotification, error: deleteError } = await supabase
+      .from("user_notification")
+      .delete()
+      .eq("recipient_id", recipientId)
+      .eq("sender_id", senderId)
+      .eq("target_id", postId)
+      .eq("type", "like")
+      .eq("target_type", "post")
+      .select();
+
+    if (deleteError) {
+      throw new Error(deleteError.message || "Failed to delete notification");
+    }
+
+    return {
+      success: true,
+      message: "Notification deleted successfully",
+      data: deletedNotification[0],
+    };
+  } catch (error) {
+    console.log("🚀 ~ removeNotificationForPost ~ error:", error);
+    return {
+      success: false,
+      message: "An error occured",
+      error,
+    };
+  }
+}
+
 function createNotificationForComment(postId, recipientId, senderId, message) {}

@@ -1,13 +1,12 @@
-import React, { Fragment } from "react";
-import useGetInfinitePosts from "../../hooks/post/useGetInfinitePosts";
 import { Container } from "@radix-ui/themes";
-import Post from "./Post";
-import { NavLink } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Loading from "../Loading";
-import ErrorMessage from "../ErrorMessage";
 import Masonry from "react-responsive-masonry";
+import { NavLink } from "react-router-dom";
+import useGetInfinitePosts from "../../hooks/post/useGetInfinitePosts";
+import ErrorMessage from "../ErrorMessage";
+import Loading from "../Loading";
 import "./masonry-grid.css";
+import Post from "./Post";
 
 const breakpointColumnsObj = {
   default: 3,
@@ -35,7 +34,7 @@ function InfinitePostSection(props) {
         dataLength={posts ? posts.length : 0}
         next={() => fetchNextPage()}
         hasMore={hasNextPage}
-        loader={<div className="text-white text-2xl">Loading...</div>}
+        loader={<div className="text-white text-2xl"></div>}
       >
         {posts && (
           <Masonry

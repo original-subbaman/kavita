@@ -53,11 +53,6 @@ function Home() {
     },
   });
 
-  const { data: posts, isFetched: isPostsFetched } = useGetPosts({
-    date: date.toDate(),
-    keys: [],
-  });
-
   const handleClose = () => {
     setResponse({ error: false, success: false, message: "" });
     console.log("close");

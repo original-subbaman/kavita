@@ -31,10 +31,10 @@ export async function fetchPostsPagination({ pageParam }) {
   }
 
   const cursor = data?.length === 5 ? data[data.length - 1].created_at : null;
+
   return {
     data,
-    // Set nextCursor to the last post's created_at if we have exactly 5 posts
-    nextCursor: data?.length === 5 ? data[data.length - 1].created_at : null,
+    nextCursor: cursor,
   };
 }
 

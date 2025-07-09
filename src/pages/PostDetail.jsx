@@ -21,7 +21,7 @@ import ScrollToTop from "../components/ScrollToTop";
 import SelectedText from "../components/SelectedText";
 import useRecordLanguage from "../hooks/language/useRecordLanguage";
 import useGetPost from "../hooks/post/useGetPost";
-import useToggleLikeOnPost from "../hooks/post/useToggleLikeOnPost";
+import UseToggleLikeOnPost from "../hooks/post/useToggleLikeOnPost";
 import { actionTypes } from "../reducers/responseReducer";
 import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
@@ -29,6 +29,7 @@ import { convertISOTimestamp } from "../utils/Date";
 import useAuth from "../hooks/auth/useAuth";
 import useReportPost from "../hooks/post/useReportPost";
 import useNotifyPostLike from "../hooks/notification/useNotifyPostLike";
+import useRemovePostNotification from "../hooks/notification/useRemovePostNotification";
 
 export default function PostDetail() {
   const { user } = useAuth();
@@ -43,14 +44,26 @@ export default function PostDetail() {
 
   const closeAlert = () => dispatch(resetResponse());
 
-  const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
-    onSuccess: () => {
-      notifyLikePost({
-        postId: id,
-        recipientId: authorId,
-        senderId: user.id,
-        message: `@${user.user_name} liked your post`,
-      });
+  const { mutate: toggleLike, isPending: isUpdating } = UseToggleLikeOnPost({
+    onSuccess: (data, variables, context) => {
+      const { success, isLiked } = data;
+
+      if (success && isLiked) {
+        notifyLikePost({
+          postId: id,
+          recipientId: authorId,
+          senderId: user.id,
+          message: `@${user.user_name} liked your post`,
+        });
+      }
+
+      if (success && !isLiked) {
+        rmPostNotification({
+          postId: id,
+          recipientId: authorId,
+          senderId: user.id,
+        });
+      }
     },
   });
 
@@ -66,7 +79,23 @@ export default function PostDetail() {
     }
   );
 
-  const { mutate: notifyLikePost } = useNotifyPostLike();
+  const { mutate: notifyLikePost } = useNotifyPostLike(
+    () => {
+      console.log("post notified");
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+
+  const { mutate: rmPostNotification } = useRemovePostNotification(
+    () => {
+      console.log("rm post notified");
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
 
   const { data } = useGetPost({
     postId: id,
