@@ -8,7 +8,7 @@ const useGetInfinitePosts = () => {
       return fetchPostsPagination({ pageParam });
     },
     getNextPageParam: (lastPage, pages) => {
-      return lastPage.nextCursor;
+      return lastPage?.hasMore ? lastPage.nextCursor : undefined;
     },
   });
 };

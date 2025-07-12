@@ -12,13 +12,13 @@ export async function fetchPosts({ date }) {
 }
 
 export async function fetchPostsPagination({ pageParam }) {
+  const limit = 5;
   let query = supabase
     .from("post")
     .select("*, user (id, name, user_name)")
     .order("created_at", { ascending: false })
-    .limit(5);
+    .limit(limit);
 
-  // If pageParam is provided, fetch posts created before this timestamp
   if (pageParam) {
     query = query.lt("created_at", pageParam);
   }
@@ -27,14 +27,18 @@ export async function fetchPostsPagination({ pageParam }) {
 
   if (error) {
     console.error("Pagination error:", error);
-    return { data: [], nextCursor: null };
+    throw new Error(error.message);
   }
 
-  const cursor = data?.length === 5 ? data[data.length - 1].created_at : null;
+  const nextCursor =
+    data && data.length === limit
+      ? data[data.length - 1].created_at
+      : undefined;
 
   return {
-    data,
-    nextCursor: cursor,
+    data: data ?? [],
+    nextCursor,
+    hasMore: nextCursor !== undefined,
   };
 }
 

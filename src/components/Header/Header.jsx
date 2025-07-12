@@ -13,7 +13,7 @@ function Header(props) {
   return (
     <header className="flex justify-between text-white bg-dark items-center h-16 px-8 drop-shadow-md sticky top-0 z-[100]">
       <Text size="6">CWS</Text>
-      <nav className=" absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2">
+      <nav className=" absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-8">
         <NavLink to={"/"}>
           <LinkText isActive={location.pathname === "/"}>Home</LinkText>
         </NavLink>
