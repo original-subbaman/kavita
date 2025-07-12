@@ -1,4 +1,3 @@
-import { CircularProgress } from "@mui/material";
 import { SizeIcon } from "@radix-ui/react-icons";
 import {
   Box,
@@ -14,6 +13,7 @@ import { CupertinoPane } from "cupertino-pane";
 import DOMPurify from "dompurify";
 import { useEffect, useRef, useState } from "react";
 import "../components/BottomPane/bottom-pane.css";
+import Loading from "../components/Loading";
 import QuoteSearchBox from "../components/QuoteSearchBox";
 import useAuth from "../hooks/auth/useAuth";
 import useFilterLanguage from "../hooks/language/useFilterLanguage";
@@ -70,7 +70,7 @@ function LanguageWall(props) {
   return (
     <Container className="mt-8" size={"2"}>
       <QuoteSearchBox handleSearchChange={handleSearchChange} />
-      {isFetching && <CircularProgress />}
+      {isFetching && <Loading message={"Loading..."} />}
 
       {isLanguageFetched && quotes.length === 0 && (
         <Flex

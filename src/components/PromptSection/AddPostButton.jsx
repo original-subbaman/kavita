@@ -1,7 +1,6 @@
-import React from "react";
-import { Flex, Button, Text } from "@radix-ui/themes";
-import { Pencil1Icon } from "@radix-ui/react-icons";
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
+import { Pencil1Icon } from "@radix-ui/react-icons";
+import { Button, Flex, Text } from "@radix-ui/themes";
 
 function AddPostButton() {
   return (
