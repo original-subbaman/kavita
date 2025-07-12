@@ -16,6 +16,7 @@ import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
 import useGetPosts from "../hooks/post/useGetPosts";
 import { StaticDatePickerStyle } from "../utils/Date";
+import PostInputBox from "../components/PromptSection/PostInputBox";
 
 function Home() {
   const { user } = useAuth();
@@ -55,7 +56,6 @@ function Home() {
 
   const handleClose = () => {
     setResponse({ error: false, success: false, message: "" });
-    console.log("close");
   };
 
   return (
@@ -89,7 +89,8 @@ function Home() {
               open={addPostDialog}
               onOpenChange={setAddPostDialog}
             >
-              {isToday && <AddPostButton />}
+              {/* {isToday && <AddPostButton />} */}
+              {isToday && <PostInputBox />}
               <InputAlertDialog
                 addPost={addPost}
                 prompt={"A quick brown fox jumped over the lazy dog"} // Replace with actual prompt from the backend
