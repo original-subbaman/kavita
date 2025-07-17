@@ -1,59 +1,109 @@
 import supabase from "../supabase_client/create_client";
 
+/**
+ * Checks if a given username is available (i.e., not already taken).
+ *
+ * @param {Object} params - Parameters.
+ * @param {string} params.username - The username to check.
+ * @returns {Promise<boolean>} - Returns true if the username is available, false if taken.
+ */
 export async function isUserNameAvailable({ username }) {
-  const { data, error } = await supabase
-    .from("user")
-    .select("user_name")
-    .eq("user_name", username)
-    .single();
+  try {
+    const { data } = await supabase
+      .from("user")
+      .select("user_name")
+      .eq("user_name", username)
+      .single();
 
-  if (error) {
+    // If data exists, username is taken
+    return !data;
+  } catch (error) {
     console.error("Error checking username:", error);
-    return true;
+    return false;
   }
-
-  return !data;
 }
 
+/**
+ * Updates user details in the database.
+ *
+ * @param {Object} params - Parameters.
+ * @param {string} params.userId - The ID of the user to update.
+ * @param {Object} params.user - An object containing the fields to update.
+ * @returns {Promise<Object[]>} - Returns the updated user data.
+ * @throws {Error} - Throws error if update fails.
+ */
 export async function updateUser({ userId, user }) {
-  const { data, error } = await supabase
-    .from("user")
-    .update(user)
-    .eq("id", userId)
-    .select();
-  if (error) {
-    console.log("🚀 ~ updateUser ~ error:", error);
+  try {
+    const { data, error } = await supabase
+      .from("user")
+      .update(user)
+      .eq("id", userId)
+      .select();
+
+    if (error) {
+      console.error("🚀 ~ updateUser ~ error:", error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in updateUser:", error);
     throw error;
   }
-
-  return data;
 }
 
+/**
+ * Retrieves user details by ID.
+ *
+ * @param {string} userId - The ID of the user to retrieve.
+ * @returns {Promise<Object>} - Returns the user data.
+ * @throws {Error} - Throws error if retrieval fails.
+ */
 export async function getUser(userId) {
-  const { data, error } = await supabase
-    .from("user")
-    .select("*")
-    .eq("id", userId)
-    .single();
-  if (error) {
-    console.log("🚀 ~ getUser ~ error:", error);
+  try {
+    const { data, error } = await supabase
+      .from("user")
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    if (error) {
+      console.error("🚀 ~ getUser ~ error:", error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getUser:", error);
     throw error;
   }
-
-  return data;
 }
 
+/**
+ * Fetches post count for a user between given dates using a stored procedure.
+ *
+ * @param {string} userId - The UUID of the user.
+ * @param {string} startDate - The start date in YYYY-MM-DD format.
+ * @param {string} endDate - The end date in YYYY-MM-DD format.
+ * @returns {Promise<Object>} - Returns the activity count data.
+ * @throws {Error} - Throws error if stored procedure fails.
+ */
 export async function getUserActivityCount(userId, startDate, endDate) {
-  const { data, error } = await supabase.rpc("get_posts_count_by_date", {
-    user_uuid: userId,
-    start_date: startDate,
-    end_date: endDate,
-  });
+  try {
+    const { data, error } = await supabase.rpc("get_posts_count_by_date", {
+      user_uuid: userId,
+      start_date: startDate,
+      end_date: endDate,
+    });
 
-  if (error) {
-    console.log("🚀 ~ getUserActivityCount ~ error:", error);
+    if (error) {
+      console.error("🚀 ~ getUserActivityCount ~ error:", error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getUserActivityCount:", error);
     throw error;
   }
-
-  return data;
 }

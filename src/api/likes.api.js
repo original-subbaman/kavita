@@ -1,12 +1,42 @@
 import supabase from "../supabase_client/create_client";
 
+/**
+ * Fetches all likes for a given post.
+ * @param {Object} params
+ * @param {string} params.postId - The ID of the post to fetch likes for.
+ * @returns {Promise<Array>} - Array of like objects.
+ * @throws {Error} - Throws if postId is missing or fetch fails.
+ */
 export const getLikes = async ({ postId }) => {
-  const data = await supabase.from("likes").select("*").eq("post_id", postId);
-  return data;
+  try {
+    const { data, error } = await supabase
+      .from("likes")
+      .select("*")
+      .eq("post_id", postId);
+
+    if (error) {
+      throw new Error(`Failed to fetch likes: ${error.message}`);
+    }
+
+    if (!data) {
+      throw new Error("No data returned from Supabase.");
+    }
+
+    return data;
+  } catch (err) {
+    throw err;
+  }
 };
 
+/**
+ * Toggles the like status for a post by a user.
+ * If the user has already liked the post, removes the like; otherwise, adds a like.
+ * @param {string} postId - The ID of the post to like or unlike.
+ * @param {string} userId - The ID of the user toggling the like.
+ * @returns {Promise<{success: boolean, isLiked: boolean, message: string, error?: Error}>}
+ * @throws {Error} - Throws if database operations fail.
+ */
 export async function toggleLike(postId, userId) {
-  console.log("🚀 ~ toggleLike ~ postId:", postId);
   try {
     const { data: existing, error: fetchError } = await supabase
       .from("likes")
