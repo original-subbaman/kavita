@@ -61,7 +61,10 @@ export async function fetchPostsPagination({ pageParam }) {
     }
 
     const { data, error } = await query;
+    console.log("🚀 ~ fetchPostsPagination ~ error:", error);
+    console.log("🚀 ~ fetchPostsPagination ~ data:", data);
 
+    console.log("🚀 ~ fetchPostsPagination ~ pageParam:", pageParam);
     if (error) {
       throw new Error(`Failed to fetch posts: ${error.message}`);
     }
@@ -79,6 +82,7 @@ export async function fetchPostsPagination({ pageParam }) {
       hasMore: !!nextCursor,
     };
   } catch (err) {
+    console.log("🚀 ~ fetchPostsPagination ~ err:", err);
     throw err;
   }
 }

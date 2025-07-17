@@ -1,14 +1,14 @@
 import { createContext, useEffect, useState } from "react";
-import { signIn } from "../../api/auth.api";
-import { getUser } from "../../api/user.api";
-import supabase from "../../supabase_client/create_client";
-
-export const AuthContext = createContext();
+import { signIn } from "../api/auth.api";
+import { getUser } from "../api/user.api";
+import supabase from "../supabase_client/create_client";
+import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Store the user state (null or user object)
   const [loading, setLoading] = useState(true); // Loading state to track auth status
   const [session, setSession] = useState();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const fetchSessionAndUser = async () => {
@@ -16,11 +16,13 @@ export const AuthProvider = ({ children }) => {
         data: { session },
       } = await supabase.auth.getSession();
 
+      console.log("🚀 ~ fetchSessionAndUser ~ session:", session);
       if (session?.user) {
         try {
           const userDetails = await getUser(session.user.id);
           setSession(session);
           setUser({ ...session.user, ...userDetails }); // Merge auth and DB user
+          setIsAuthenticated(true);
         } catch (error) {
           console.error("Failed to fetch user details:", error);
           setUser(session.user); // fallback to auth user only
@@ -28,6 +30,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         setSession(null);
         setUser(null);
+        setIsAuthenticated(false);
       }
 
       setLoading(false);
@@ -67,6 +70,7 @@ export const AuthProvider = ({ children }) => {
       const { user, session } = await signIn(email, password);
       setUser(user);
       setSession(session);
+      setIsAuthenticated(true);
     } catch (error) {
       throw error;
     } finally {
@@ -83,13 +87,16 @@ export const AuthProvider = ({ children }) => {
       }
       setUser(null);
       setSession(null);
+      setIsAuthenticated(false);
     } catch (error) {
       throw error;
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, session }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, logout, session, isAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

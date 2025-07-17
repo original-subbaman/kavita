@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../../hooks/auth/useAuth";
 import useDeleteComment from "../../hooks/post/useDeleteComment";
 import useLoadComments from "../../hooks/post/useLoadComments";
-import usePostComment from "../../hooks/post/usePostComment";
+import { usePostComment } from "../../hooks/post/usePostComment";
 import useReportComment from "../../hooks/post/useReportComment";
 import {
   setOpenDeleteComment,

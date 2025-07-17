@@ -17,15 +17,18 @@ function CreateRouter() {
     {
       path: "/",
       element: (
+        <RootWrapper>
+          <Home />
+        </RootWrapper>
+      ),
+    },
+    {
+      element: (
         <ProtectedRoute>
           <RootWrapper />
         </ProtectedRoute>
       ),
       children: [
-        {
-          index: true,
-          element: <Home />,
-        },
         {
           path: "post/:id",
           element: <PostDetail />,

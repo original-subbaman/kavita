@@ -27,6 +27,7 @@ const Login = () => {
   } = useForm();
 
   const { login, loading } = useAuth();
+  console.log("🚀 ~ Login ~ loading:", loading);
 
   const handleForgotPassword = () => {};
 

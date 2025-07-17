@@ -4,8 +4,8 @@ import { fetchPostsPagination } from "../../api/post.api";
 const useGetInfinitePosts = () => {
   return useInfiniteQuery({
     queryKey: ["infinite_posts"],
-    queryFn: ({ pageParam }) => {
-      return fetchPostsPagination({ pageParam });
+    queryFn: async ({ pageParam }) => {
+      return await fetchPostsPagination({ pageParam });
     },
     getNextPageParam: (lastPage, pages) => {
       return lastPage?.hasMore ? lastPage.nextCursor : undefined;

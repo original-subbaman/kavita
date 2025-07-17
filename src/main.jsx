@@ -6,7 +6,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
-import { AuthProvider } from "./hooks/auth/AuthProvider.jsx";
+import { AuthProvider } from "./context/AuthProvider.jsx";
 import "./index.css";
 import CreateRouter from "./router/Router";
 import MuiTheme from "./utils/MuiTheme";

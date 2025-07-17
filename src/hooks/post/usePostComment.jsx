@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { postComment } from "../../api/post.api";
 
-const usePostComment = ({ onSuccess, onError }) => {
+export const usePostComment = ({ onSuccess, onError }) => {
   return useMutation({
     mutationFn: (params) =>
       postComment(params.postId, params.userId, params.comment),
@@ -9,5 +9,3 @@ const usePostComment = ({ onSuccess, onError }) => {
     onError: onError,
   });
 };
-
-export default usePostComment;
