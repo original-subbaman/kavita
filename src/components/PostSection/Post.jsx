@@ -13,32 +13,40 @@ function PostButton({ children }) {
 function Post({ content, author, width, height }) {
   const sanitizedPost = DOMPurify.sanitize(content);
   return (
-    <Card
-      className={`relative block mb-4
-      w-[${width}] h-[${height}]
-       text-white cursor-pointer drop-shadow-lg decoration-slate-200 hover:border-2 hover:border-radix-green  duration-300 transition-all`}
-      style={{ backgroundColor: "#191919" }}
-    >
-      <Box className="bg-dark-light p-4 z-0 max-h-[300px]">
-        <Box
-          dangerouslySetInnerHTML={{ __html: sanitizedPost }}
-          onMouseUp={(event) => console.log(event.type)}
-          className="cursor-pointer"
-          wrap={"wrap"}
-        />
-      </Box>
-      <Box className="bg-white bg-opacity-0 absolute inset-0 opacity-0 hover:opacity-100 duration-500 trasition-all rounded-b-lg text-white z-10">
-        <Flex
-          className="bg-radix-green bottom-0 absolute inset-x-0"
-          justify="between"
-          align="center"
-        >
-          <Text size="4" className="pl-4 py-2">
-            {`@${author}`}
-          </Text>
-        </Flex>
-      </Box>
-    </Card>
+    <div className="relative group cursor-pointer rounded-xl">
+      {/* Blurred border layer on hover */}
+      <div className="absolute -inset-[0.1px] bg-radix-green/30 border-radix-green rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-300 group-hover:duration-200"></div>
+      {/* Main card */}
+      <Card
+        className={`relative 
+        w-[${width}] h-[${height}]
+      text-white cursor-pointer hover:border-radix-green/30 
+        rounded-xl`}
+        style={{ backgroundColor: "#191919" }}
+      >
+        <Box className="bg-dark-light p-4 z-0 max-h-[300px]">
+          <Box
+            dangerouslySetInnerHTML={{ __html: sanitizedPost }}
+            onMouseUp={(event) => console.log(event.type)}
+            className="cursor-pointer"
+            wrap={"wrap"}
+          />
+        </Box>
+
+        {/* Hover reveal overlay */}
+        <Box className="bg-white bg-opacity-0 absolute inset-0 opacity-0 hover:opacity-100 duration-500 transition-all rounded-b-lg text-white z-10">
+          <Flex
+            className="bg-radix-green bottom-0 absolute inset-x-0"
+            justify="between"
+            align="center"
+          >
+            <Text size="4" className="pl-4 py-2">
+              {`@${author}`}
+            </Text>
+          </Flex>
+        </Box>
+      </Card>
+    </div>
   );
 }
 
