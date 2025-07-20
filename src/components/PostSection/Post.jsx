@@ -21,10 +21,9 @@ function Post({ content, author, width, height }) {
         className={`relative 
         w-[${width}] h-[${height}]
       text-white cursor-pointer hover:border-radix-green/30 
-        rounded-xl`}
-        style={{ backgroundColor: "#191919" }}
+        rounded-xl bg-ice-berg-dark`}
       >
-        <Box className="bg-dark-light p-4 z-0 max-h-[300px]">
+        <Box className="bg-ice-berg-dark p-4 z-0 max-h-[300px]">
           <Box
             dangerouslySetInnerHTML={{ __html: sanitizedPost }}
             onMouseUp={(event) => console.log(event.type)}

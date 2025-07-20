@@ -17,9 +17,6 @@ const breakpointColumnsObj = {
 function InfinitePostSection(props) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useGetInfinitePosts();
-  console.log("🚀 ~ InfinitePostSection ~ status:", status);
-
-  console.log("🚀 ~ InfinitePostSection ~ data:", data);
 
   if (status === "error") {
     return (

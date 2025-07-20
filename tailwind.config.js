@@ -16,7 +16,9 @@ export default {
       "dark": "#222222", 
       "dark-light": "#191919",
       "radix-green": "#30a46c",
-      "radix-grass": "#46a758"
+      "radix-grass": "#46a758",
+      "aurora": "#00141a",
+      "ice-berg-dark": "#161821"
       },
       fontFamily: {
         primary: ["Nunito"],
