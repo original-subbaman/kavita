@@ -6,6 +6,7 @@ const CommentForm = ({
   hasCancelButton = false,
   initialText = "",
   handleCancel,
+  isAuthenticated,
 }) => {
   const [text, setText] = useState(initialText);
   const isTextAreaDisabled = text.length === 0;
@@ -27,7 +28,10 @@ const CommentForm = ({
           value={text}
           className="h-40  "
           onChange={(event) => setText(event.target.value)}
-          placeholder="Add a comment..."
+          placeholder={
+            isAuthenticated ? "Add a comment..." : "Log in to comment"
+          }
+          disabled={!isAuthenticated}
         />
         <div className="flex justify-end">
           <Button

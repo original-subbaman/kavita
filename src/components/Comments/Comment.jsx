@@ -17,6 +17,7 @@ const Comment = ({
   updateComment,
   addComment,
   parentId = null,
+  isAuthenticated,
 }) => {
   const dispatch = useDispatch();
   const fiveMin = 300000;
@@ -24,7 +25,7 @@ const Comment = ({
   const timePassed = new Date() - new Date(comment.createdAt) > fiveMin;
   // If null (not logged in) this value is false
   const canDelete = currentUserId === comment.userId && !timePassed;
-  const canReport = currentUserId !== comment.userId;
+  const canReport = currentUserId !== comment.userId && isAuthenticated;
 
   const isReplying =
     activeComment &&

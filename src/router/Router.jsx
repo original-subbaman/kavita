@@ -15,39 +15,48 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 function CreateRouter() {
   return createBrowserRouter([
     {
+      element: <RootWrapper />,
       path: "/",
-      element: (
-        <RootWrapper>
-          <Home />
-        </RootWrapper>
-      ),
-    },
-    {
-      element: (
-        <ProtectedRoute>
-          <RootWrapper />
-        </ProtectedRoute>
-      ),
       children: [
+        {
+          index: true,
+          element: <Home />,
+        },
         {
           path: "post/:id",
           element: <PostDetail />,
         },
         {
           path: "inspiration",
-          element: <LanguageWall />,
+          element: (
+            <ProtectedRoute>
+              <LanguageWall />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "my-posts",
-          element: <MyPosts />,
+          element: (
+            <ProtectedRoute>
+              <MyPosts />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "profile",
-          element: <Profile />,
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "notifications",
-          element: <Notification />,
+          element: (
+            <ProtectedRoute>
+              <Notification />
+            </ProtectedRoute>
+          ),
         },
       ],
     },

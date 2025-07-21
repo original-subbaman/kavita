@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 export const getRandomDimensions = (count) => {
   const dimensions = [];
   for (let i = 0; i < count; i++) {

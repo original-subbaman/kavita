@@ -29,7 +29,7 @@ const CommentSection = ({
 }) => {
   const [activeComment, setActiveComment] = useState(null);
   const queryClient = useQueryClient();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const dispatch = useDispatch();
   const openDeleteComment = useSelector(
     (state) => state.postDetail.openDeleteComment
@@ -118,7 +118,11 @@ const CommentSection = ({
         onClose={() => dispatch(setError(false))}
       />
       {/* Comment Form */}
-      <CommentForm submitLabel="Post Comment" handleSubmit={addComment} />
+      <CommentForm
+        submitLabel="Post Comment"
+        handleSubmit={addComment}
+        isAuthenticated={isAuthenticated}
+      />
       {/* Comment List */}
       <Box as="div">
         {isFetching && <Loading message={"Fetching comments"} />}
@@ -128,12 +132,13 @@ const CommentSection = ({
             <Comment
               key={rootComment.id}
               comment={rootComment}
-              currentUserId={user.id}
+              currentUserId={user?.id}
               deleteComment={deleteComment}
               updateComment={updateComment}
               activeComment={activeComment}
               setActiveComment={setActiveComment}
               addComment={addComment}
+              isAuthenticated={isAuthenticated}
             />
           ))}
       </Box>

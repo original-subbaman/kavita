@@ -61,10 +61,7 @@ export async function fetchPostsPagination({ pageParam }) {
     }
 
     const { data, error } = await query;
-    console.log("🚀 ~ fetchPostsPagination ~ error:", error);
-    console.log("🚀 ~ fetchPostsPagination ~ data:", data);
 
-    console.log("🚀 ~ fetchPostsPagination ~ pageParam:", pageParam);
     if (error) {
       throw new Error(`Failed to fetch posts: ${error.message}`);
     }
@@ -162,8 +159,8 @@ export async function getPostById(id) {
  */
 export async function fetchPostAndLikeStatus(postId, userId) {
   try {
-    if (!postId || !userId) {
-      throw new Error("postId and userId are required");
+    if (!postId) {
+      throw new Error("postId is required");
     }
 
     // Fetch the post
@@ -178,6 +175,27 @@ export async function fetchPostAndLikeStatus(postId, userId) {
       throw new Error(`Failed to fetch post: ${postError.message}`);
     }
 
+    let like = null;
+
+    if (userId) {
+      like = await getPostLikeStatus(userId);
+    }
+
+    const hasLiked = like !== null;
+
+    return { post, hasLiked };
+  } catch (err) {
+    console.error("fetchPostAndLikeStatus failed:", err);
+    throw err;
+  }
+}
+
+async function getPostLikeStatus(userId) {
+  try {
+    if (!userId) {
+      throw new Error("userId is required");
+    }
+
     // Check if user has liked the post
     const { data: like, error: likeError } = await supabase
       .from("likes")
@@ -187,17 +205,13 @@ export async function fetchPostAndLikeStatus(postId, userId) {
       .maybeSingle();
 
     if (likeError && likeError.code !== "PGRST116") {
-      // PGRST116: "Results contain 0 rows" — expected if no like exists
       console.error("Error checking like status:", likeError.message);
       throw new Error(`Failed to check like status: ${likeError.message}`);
     }
 
-    const hasLiked = like !== null;
-
-    return { post, hasLiked };
-  } catch (err) {
-    console.error("fetchPostAndLikeStatus failed:", err);
-    throw err;
+    return like;
+  } catch (error) {
+    throw error;
   }
 }
 

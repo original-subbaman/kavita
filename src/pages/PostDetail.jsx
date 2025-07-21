@@ -10,29 +10,29 @@ import {
   Text,
 } from "@radix-ui/themes";
 import DOMPurify from "dompurify";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CommentSection from "../components/Comments/CommentSection";
 import ReportPostDialog from "../components/PostDetail/ReportPostDialog";
 import ResponseSnackbar from "../components/ResponseSnackbar";
-import RootWrapper from "../components/RootWrapper";
 import ScrollToTop from "../components/ScrollToTop";
 import SelectedText from "../components/SelectedText";
+import useAuth from "../hooks/auth/useAuth";
 import useRecordLanguage from "../hooks/language/useRecordLanguage";
+import useNotifyPostLike from "../hooks/notification/useNotifyPostLike";
+import useRemovePostNotification from "../hooks/notification/useRemovePostNotification";
 import useGetPost from "../hooks/post/useGetPost";
+import useReportPost from "../hooks/post/useReportPost";
 import UseToggleLikeOnPost from "../hooks/post/useToggleLikeOnPost";
 import { actionTypes } from "../reducers/responseReducer";
 import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { convertISOTimestamp } from "../utils/Date";
-import useAuth from "../hooks/auth/useAuth";
-import useReportPost from "../hooks/post/useReportPost";
-import useNotifyPostLike from "../hooks/notification/useNotifyPostLike";
-import useRemovePostNotification from "../hooks/notification/useRemovePostNotification";
 
 export default function PostDetail() {
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   let { id } = useParams();
 
   const openReportPost = useSelector(
@@ -99,16 +99,20 @@ export default function PostDetail() {
 
   const { data } = useGetPost({
     postId: id,
-    userId: user.id,
+    userId: user?.id,
     isUpdating: false,
   });
 
   const handleCaptureLanguage = () => {
-    recordLanguage({
-      language: selectedText,
-      postId: id,
-      userId: user.id, // replace by actual user id
-    });
+    if (isAuthenticated) {
+      recordLanguage({
+        language: selectedText,
+        postId: id,
+        userId: user?.id, // replace by actual user id
+      });
+      return;
+    }
+    navigate("/login");
   };
 
   function getSelectionText() {
@@ -119,7 +123,18 @@ export default function PostDetail() {
   }
 
   async function handleLikePost(postId, userId) {
-    toggleLike({ postId, userId: userId });
+    if (isAuthenticated) {
+      toggleLike({ postId, userId: userId });
+      return;
+    }
+    navigate("/login");
+  }
+
+  function handleReportClick() {
+    if (isAuthenticated) {
+      dispatch(setOpenReportPost(true));
+    }
+    navigate("/login");
   }
 
   const author = data?.post.user.user_name;
@@ -138,7 +153,7 @@ export default function PostDetail() {
             onClose={() => dispatch(setOpenReportPost(false))}
             onConfirm={reportPost}
             postId={id}
-            userId={user.id}
+            userId={user?.id}
           />
         </AlertDialogPortal>
       </AlertDialogRoot>
@@ -181,7 +196,7 @@ export default function PostDetail() {
           {/* Like Button */}
           <Button
             className="cursor-pointer"
-            onClick={() => handleLikePost(id, user.id)}
+            onClick={() => handleLikePost(id, user?.id)}
           >
             {hasLiked ? <HeartFilledIcon /> : <HeartIcon />}
             Like
@@ -190,7 +205,7 @@ export default function PostDetail() {
           <Button
             className="cursor-pointer"
             color="gray"
-            onClick={() => dispatch(setOpenReportPost(true))}
+            onClick={handleReportClick}
           >
             Report
           </Button>
