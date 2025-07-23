@@ -17,9 +17,11 @@ import useAddPost from "../hooks/post/useAddPost";
 import useGetPosts from "../hooks/post/useGetPosts";
 import { StaticDatePickerStyle } from "../utils/Date";
 import PostInputBox from "../components/PromptSection/PostInputBox";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [addPostDialog, setAddPostDialog] = useState(false);
   const [response, setResponse] = useState({
     success: false,
@@ -58,6 +60,14 @@ function Home() {
     setResponse({ error: false, success: false, message: "" });
   };
 
+  const handlePostInputClick = () => {
+    if (user) {
+      setAddPostDialog(true);
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <>
       {/* Success Snackbar */}
@@ -90,7 +100,7 @@ function Home() {
               onOpenChange={setAddPostDialog}
             >
               {/* {isToday && <AddPostButton />} */}
-              {isToday && <PostInputBox />}
+              {isToday && <PostInputBox onClick={handlePostInputClick} />}
               <InputAlertDialog
                 addPost={addPost}
                 prompt={"A quick brown fox jumped over the lazy dog"} // Replace with actual prompt from the backend

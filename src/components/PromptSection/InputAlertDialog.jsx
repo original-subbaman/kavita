@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import { AlertDialog, TextArea, Flex, Button, Text } from "@radix-ui/themes";
-import ResponseSnackbar from "../ResponseSnackbar";
+import { AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
+import { useState } from "react";
 import QuillEditor from "../Editor/QuillEditor";
+import ResponseSnackbar from "../ResponseSnackbar";
 function InputAlertDialog({ addPost, mutationState, prompt }) {
   const [post, setPost] = useState(prompt);
   const [error, setError] = useState({
