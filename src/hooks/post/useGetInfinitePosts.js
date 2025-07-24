@@ -10,6 +10,7 @@ const useGetInfinitePosts = () => {
     getNextPageParam: (lastPage, pages) => {
       return lastPage?.hasMore ? lastPage.nextCursor : undefined;
     },
+    refetchOnMount: "always",
     staleTime: 0,
   });
 };

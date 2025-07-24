@@ -35,8 +35,8 @@ function Home() {
     userId: user?.id,
     onSuccess: (data) => {
       setAddPostDialog(false);
-      queryClient.refetchQueries({
-        queryKey: ["get_latest_posts"],
+      queryClient.invalidateQueries({
+        queryKey: ["infinite_posts"],
       });
       setResponse((prev) => ({
         ...prev,
@@ -45,6 +45,7 @@ function Home() {
       }));
     },
     onError: (error) => {
+      console.log("🚀 ~ Home ~ error:", error);
       setResponse((prev) => ({
         ...prev,
         error: true,

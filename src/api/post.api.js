@@ -228,12 +228,15 @@ export async function addPost(post, userId) {
       throw new Error("Both post content and userId are required.");
     }
 
-    const { data, error } = await supabase.from("post_comment").insert([
-      {
-        post: post,
-        user_id: userId,
-      },
-    ]);
+    const { data, error } = await supabase
+      .from("post")
+      .insert([
+        {
+          post: post,
+          user_id: userId,
+        },
+      ])
+      .select();
 
     if (error) {
       console.error("Error inserting post_comment:", error.message);
@@ -244,7 +247,7 @@ export async function addPost(post, userId) {
       throw new Error("Insert succeeded but returned no data.");
     }
 
-    return data[0]; // Assuming a single insert
+    return data[0];
   } catch (err) {
     console.error("addPost failed:", err);
     throw err;
