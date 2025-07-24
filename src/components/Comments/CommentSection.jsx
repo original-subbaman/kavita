@@ -125,7 +125,7 @@ const CommentSection = ({
       />
       {/* Comment List */}
       <Box as="div">
-        {isFetching && <Loading message={"Fetching comments"} />}
+        {/* {isFetching && <Loading message={"Fetching comments"} />} */}
         {isError && <ErrorMessage message={"Failed to load comments"} />}
         {comments &&
           comments.map((rootComment) => (

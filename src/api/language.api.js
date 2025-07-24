@@ -29,6 +29,7 @@ export const recordLanguage = async ({ language, userId, postId }) => {
 
     return data;
   } catch (err) {
+    console.log("🚀 ~ recordLanguage ~ err:", err);
     throw err;
   }
 };

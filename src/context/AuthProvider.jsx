@@ -3,6 +3,7 @@ import { signIn } from "../api/auth.api";
 import { getUser } from "../api/user.api";
 import supabase from "../supabase_client/create_client";
 import { AuthContext } from "./AuthContext";
+import Loading from "../components/Loading";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Store the user state (null or user object)
@@ -16,23 +17,7 @@ export const AuthProvider = ({ children }) => {
         data: { session },
       } = await supabase.auth.getSession();
 
-      console.log("🚀 ~ fetchSessionAndUser ~ session:", session);
-      if (session?.user) {
-        try {
-          const userDetails = await getUser(session.user.id);
-          setSession(session);
-          setUser({ ...session.user, ...userDetails }); // Merge auth and DB user
-          setIsAuthenticated(true);
-        } catch (error) {
-          console.error("Failed to fetch user details:", error);
-          setUser(session.user); // fallback to auth user only
-        }
-      } else {
-        setSession(null);
-        setUser(null);
-        setIsAuthenticated(false);
-      }
-
+      await handleSession(session);
       setLoading(false);
     };
 
@@ -41,37 +26,41 @@ export const AuthProvider = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        try {
-          const userDetails = await getUser(session.user.id);
-          setSession(session);
-          setUser({ ...session.user, ...userDetails });
-        } catch (error) {
-          console.error(
-            "Failed to fetch user details on auth state change:",
-            error
-          );
-          setUser(session.user);
-        }
-      } else {
-        setSession(null);
-        setUser(null);
-      }
-
+      await handleSession(session);
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
+  const handleSession = async (session) => {
+    if (session?.user) {
+      try {
+        const userDetails = await getUser(session.user.id);
+        setSession(session);
+        setUser({ ...session.user, ...userDetails });
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+        setUser(session.user);
+      }
+    } else {
+      setSession(null);
+      setUser(null);
+      setIsAuthenticated(false);
+    }
+  };
+
   const login = async (email, password) => {
     try {
       setLoading(true);
-      const { user, session } = await signIn(email, password);
-      setUser(user);
-      setSession(session);
-      setIsAuthenticated(true);
+      const { error, session } = await signIn(email, password);
+      if (error) throw error;
+
+      await handleSession(session);
+      setLoading(false);
     } catch (error) {
+      console.log("🚀 ~ login ~ error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -89,6 +78,7 @@ export const AuthProvider = ({ children }) => {
       setSession(null);
       setIsAuthenticated(false);
     } catch (error) {
+      console.log("🚀 ~ logout ~ error:", error);
       throw error;
     }
   };
@@ -97,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{ user, loading, login, logout, session, isAuthenticated }}
     >
-      {children}
+      {!loading ? children : <Loading />}
     </AuthContext.Provider>
   );
 };

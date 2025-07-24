@@ -5,19 +5,17 @@ import { Box, Flex } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import InfinitePostSection from "../components/PostSection/InfinitePostSection";
-import AddPostButton from "../components/PromptSection/AddPostButton";
 import InputAlertDialog from "../components/PromptSection/InputAlertDialog";
+import PostInputBox from "../components/PromptSection/PostInputBox";
 import PromptSection from "../components/PromptSection/PromptSection";
 import PromptText from "../components/PromptSection/PromptText";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import ScrollToTop from "../components/ScrollToTop";
 import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
-import useGetPosts from "../hooks/post/useGetPosts";
 import { StaticDatePickerStyle } from "../utils/Date";
-import PostInputBox from "../components/PromptSection/PostInputBox";
-import { useNavigate } from "react-router-dom";
 
 function Home() {
   const { user } = useAuth();

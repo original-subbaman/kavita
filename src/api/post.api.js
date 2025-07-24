@@ -47,7 +47,7 @@ export async function fetchPosts({ date }) {
  * @throws {Error} - Throws if fetch fails.
  */
 export async function fetchPostsPagination({ pageParam }) {
-  const limit = 5;
+  const limit = 10;
 
   try {
     let query = supabase
@@ -178,7 +178,7 @@ export async function fetchPostAndLikeStatus(postId, userId) {
     let like = null;
 
     if (userId) {
-      like = await getPostLikeStatus(userId);
+      like = await getPostLikeStatus(userId, postId);
     }
 
     const hasLiked = like !== null;
@@ -190,7 +190,7 @@ export async function fetchPostAndLikeStatus(postId, userId) {
   }
 }
 
-async function getPostLikeStatus(userId) {
+async function getPostLikeStatus(userId, postId) {
   try {
     if (!userId) {
       throw new Error("userId is required");

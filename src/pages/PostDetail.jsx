@@ -101,6 +101,7 @@ export default function PostDetail() {
     postId: id,
     userId: user?.id,
     isUpdating: false,
+    staleTime: 0,
   });
 
   const handleCaptureLanguage = () => {
