@@ -14,6 +14,7 @@ import LoadingButton from "../components/LoadingButton";
 const Login = () => {
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState({
     success: false,
     error: false,
@@ -26,7 +27,7 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const { login, loading } = useAuth();
+  const { login } = useAuth();
 
   const handleForgotPassword = () => {};
 
@@ -37,12 +38,12 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       await login(data.email, data.password);
-      // If login is successful, navigate to home
+      setLoading(false);
       navigate("/");
     } catch (error) {
       let errorMessage;
-      // Handle specific error cases
       if (error.message.includes("Invalid login credentials")) {
         errorMessage = "Invalid email or password";
       } else if (error.message.includes("Email not confirmed")) {
@@ -55,6 +56,8 @@ const Login = () => {
         error: true,
         message: errorMessage,
       }));
+    } finally {
+      setLoading(false);
     }
   };
 

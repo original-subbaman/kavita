@@ -1,10 +1,9 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { signIn } from "../api/auth.api";
 import { getUser } from "../api/user.api";
+import FullScreenLoading from "../components/FullScreenLoading";
 import supabase from "../supabase_client/create_client";
 import { AuthContext } from "./AuthContext";
-import Loading from "../components/Loading";
-import FullScreenLoading from "../components/FullScreenLoading";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Store the user state (null or user object)
@@ -19,8 +18,6 @@ export const AuthProvider = ({ children }) => {
         error,
       } = await supabase.auth.getSession();
 
-      console.log("🚀 ~ fetchSessionAndUser ~ error:", error);
-      console.log("🚀 ~ fetchSessionAndUser ~ session:", session);
       await handleSession(session);
       setLoading(false);
     };
@@ -41,7 +38,6 @@ export const AuthProvider = ({ children }) => {
     if (session?.user) {
       try {
         const userDetails = await getUser(session.user.id);
-        console.log("🚀 ~ handleSession ~ userDetails:", userDetails);
         setSession(session);
         setUser({ ...session.user, ...userDetails });
         setIsAuthenticated(true);
@@ -58,7 +54,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      setLoading(true);
       const { error, session } = await signIn(email, password);
       if (error) throw error;
 
@@ -66,8 +61,6 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log("🚀 ~ login ~ error:", error);
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
