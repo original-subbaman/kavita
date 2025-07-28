@@ -4,6 +4,7 @@ import { getUser } from "../api/user.api";
 import supabase from "../supabase_client/create_client";
 import { AuthContext } from "./AuthContext";
 import Loading from "../components/Loading";
+import FullScreenLoading from "../components/FullScreenLoading";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Store the user state (null or user object)
@@ -15,8 +16,11 @@ export const AuthProvider = ({ children }) => {
     const fetchSessionAndUser = async () => {
       const {
         data: { session },
+        error,
       } = await supabase.auth.getSession();
 
+      console.log("🚀 ~ fetchSessionAndUser ~ error:", error);
+      console.log("🚀 ~ fetchSessionAndUser ~ session:", session);
       await handleSession(session);
       setLoading(false);
     };
@@ -37,6 +41,7 @@ export const AuthProvider = ({ children }) => {
     if (session?.user) {
       try {
         const userDetails = await getUser(session.user.id);
+        console.log("🚀 ~ handleSession ~ userDetails:", userDetails);
         setSession(session);
         setUser({ ...session.user, ...userDetails });
         setIsAuthenticated(true);
@@ -58,7 +63,6 @@ export const AuthProvider = ({ children }) => {
       if (error) throw error;
 
       await handleSession(session);
-      setLoading(false);
     } catch (error) {
       console.log("🚀 ~ login ~ error:", error);
       throw error;
@@ -87,7 +91,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{ user, loading, login, logout, session, isAuthenticated }}
     >
-      {!loading ? children : <Loading />}
+      {!loading ? children : <FullScreenLoading />}
     </AuthContext.Provider>
   );
 };

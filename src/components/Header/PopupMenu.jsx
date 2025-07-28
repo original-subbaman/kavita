@@ -7,7 +7,9 @@ function PopupMenu({ name }) {
 
   const handleLogout = async () => {
     try {
+      console.log("1st logged out");
       await logout();
+      console.log("logged out");
       navigate("/login", { replace: true });
     } catch (error) {
       console.error("Error logging out:", error.message);

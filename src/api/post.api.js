@@ -225,29 +225,27 @@ async function getPostLikeStatus(userId, postId) {
 export async function addPost(post, userId) {
   try {
     if (!post || !userId) {
-      throw new Error("Both post content and userId are required.");
+      throw new Error("Post and userId are required.");
     }
+    console.log("1", userId);
+    const { data, error } = await supabase.from("post").insert([
+      {
+        post: post,
+        user_id: userId,
+      },
+    ]);
 
-    const { data, error } = await supabase
-      .from("post")
-      .insert([
-        {
-          post: post,
-          user_id: userId,
-        },
-      ])
-      .select();
-
+    console.log("🚀 ~ addPost ~ data:", data);
     if (error) {
-      console.error("Error inserting post_comment:", error.message);
+      console.error("Error inserting post:", error.message);
       throw new Error(`Failed to add post: ${error.message}`);
     }
 
-    if (!data || data.length === 0) {
-      throw new Error("Insert succeeded but returned no data.");
-    }
+    // if (!data || data.length === 0) {
+    //   throw new Error("Insert succeeded but returned no data.");
+    // }
 
-    return data[0];
+    return true;
   } catch (err) {
     console.error("addPost failed:", err);
     throw err;

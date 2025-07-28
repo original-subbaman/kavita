@@ -2,6 +2,8 @@ import { AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import QuillEditor from "../Editor/QuillEditor";
 import ResponseSnackbar from "../ResponseSnackbar";
+
+const minWords = 10;
 function InputAlertDialog({ addPost, mutationState, prompt }) {
   const [post, setPost] = useState(prompt);
   const [error, setError] = useState({
@@ -23,28 +25,36 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
 
   const handleOnPostClick = async () => {
     const wordsInPost = post.split(" ").length;
+
     if (isPostEmpty()) {
       setSnackbar({ open: true, message: "Empty text field" });
-    } else if (wordsInPost < 50) {
+      return;
+    }
+
+    if (wordsInPost < minWords) {
       setError((prev) => ({
         ...prev,
         lowWordCount: true,
         message: "Your post must have at least 50 words before submitting",
       }));
-    } else if (!post.includes(prompt)) {
+      return;
+    }
+
+    if (!post.includes(prompt)) {
       setError((prev) => ({
         ...prev,
         invalidPrompt: true,
         message: "Your writing piece must include the prompt",
       }));
-    } else {
-      addPost({ post: post });
+      return;
     }
+    console.log("~ post:", post);
+    addPost({ post: post });
   };
 
   // Think about debounce later
   const onPostChange = (value) => {
-    if (post.split(" ").length > 50) {
+    if (post.split(" ").length > minWords) {
       setError((prev) => ({ ...prev, lowWordCount: false, message: "" }));
     }
     setPost(value);

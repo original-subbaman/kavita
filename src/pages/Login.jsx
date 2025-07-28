@@ -27,7 +27,6 @@ const Login = () => {
   } = useForm();
 
   const { login, loading } = useAuth();
-  console.log("🚀 ~ Login ~ loading:", loading);
 
   const handleForgotPassword = () => {};
 
@@ -39,8 +38,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-
-      // If login is successful, navigate to dashboard
+      // If login is successful, navigate to home
       navigate("/");
     } catch (error) {
       let errorMessage;
