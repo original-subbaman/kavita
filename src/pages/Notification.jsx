@@ -5,22 +5,24 @@ import useAuth from "../hooks/auth/useAuth";
 import useGetRecentNotifications from "../hooks/notification/useGetRecentNotifications";
 import useGetTodaysNotification from "../hooks/notification/useGetTodaysNotification";
 
+const pageSize = 10;
+
 function Notification() {
   const { user } = useAuth();
-  const [range, setRange] = useState({
+  const [pagination, setPagination] = useState({
     fromOffset: 0,
-    toOffset: 10,
+    toOffset: pageSize - 1,
   });
-  const [recentRange, setRecentRange] = useState({
+  const [paginationRecent, setPaginationRecent] = useState({
     fromOffset: 0,
-    toOffset: 10,
+    toOffset: pageSize - 1,
   });
 
   const { data: notifications, isFetching: isFetchingNotifications } =
     useGetTodaysNotification({
       userId: user.id,
-      fromOffset: range.fromOffset,
-      toOffset: range.toOffset,
+      fromOffset: pagination.fromOffset,
+      toOffset: pagination.toOffset,
     });
 
   const {
@@ -28,8 +30,8 @@ function Notification() {
     isFetching: isFetchingRecentNotifications,
   } = useGetRecentNotifications({
     userId: user.id,
-    fromOffset: recentRange.fromOffset,
-    toOffset: range.toOffset,
+    fromOffset: paginationRecent.fromOffset,
+    toOffset: pagination.toOffset,
   });
 
   return (
@@ -45,10 +47,16 @@ function Notification() {
             <NotificationSection
               title={"Today"}
               notifications={notifications || []}
+              pageSize={pageSize}
+              pagination={pagination}
+              setPagination={setPagination}
             />
             <NotificationSection
               title={"Recent"}
-              notifications={recentNotifications}
+              notifications={recentNotifications || []}
+              pageSize={pageSize}
+              pagination={paginationRecent}
+              setPagination={setPaginationRecent}
             />
           </>
         )}
