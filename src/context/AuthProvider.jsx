@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { signIn } from "../api/auth.api";
 import { getUser } from "../api/user.api";
 import FullScreenLoading from "../components/FullScreenLoading";
@@ -10,6 +10,27 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true); // Loading state to track auth status
   const [session, setSession] = useState();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleSession = useCallback(
+    async (session) => {
+      if (session?.user) {
+        try {
+          const userDetails = await getUser(session.user.id);
+          setSession(session);
+          setUser({ ...session.user, ...userDetails });
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error("Failed to fetch user details:", error);
+          setUser(session.user);
+        }
+      } else {
+        setSession(null);
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    },
+    [getUser]
+  );
 
   useEffect(() => {
     const fetchSessionAndUser = async () => {
@@ -30,27 +51,8 @@ export const AuthProvider = ({ children }) => {
       await handleSession(session);
       setLoading(false);
     });
-
     return () => subscription.unsubscribe();
-  }, []);
-
-  const handleSession = async (session) => {
-    if (session?.user) {
-      try {
-        const userDetails = await getUser(session.user.id);
-        setSession(session);
-        setUser({ ...session.user, ...userDetails });
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error("Failed to fetch user details:", error);
-        setUser(session.user);
-      }
-    } else {
-      setSession(null);
-      setUser(null);
-      setIsAuthenticated(false);
-    }
-  };
+  }, [handleSession]);
 
   const login = async (email, password) => {
     try {

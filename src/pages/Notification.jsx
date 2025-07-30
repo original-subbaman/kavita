@@ -1,56 +1,58 @@
-import clsx from "clsx";
+import { useState } from "react";
 import Loading from "../components/Loading";
+import NotificationSection from "../components/Notification/NotificationSection";
 import useAuth from "../hooks/auth/useAuth";
-import useGetNotificationForUser from "../hooks/notification/useGetNotificationForUser";
+import useGetRecentNotifications from "../hooks/notification/useGetRecentNotifications";
+import useGetTodaysNotification from "../hooks/notification/useGetTodaysNotification";
 
 function Notification() {
   const { user } = useAuth();
+  const [range, setRange] = useState({
+    fromOffset: 0,
+    toOffset: 10,
+  });
+  const [recentRange, setRecentRange] = useState({
+    fromOffset: 0,
+    toOffset: 10,
+  });
+
+  const { data: notifications, isFetching: isFetchingNotifications } =
+    useGetTodaysNotification({
+      userId: user.id,
+      fromOffset: range.fromOffset,
+      toOffset: range.toOffset,
+    });
 
   const {
-    data: notifications,
-    isFetching: isFetchingNotifications,
-    isFetched: isNotificationsFetched,
-  } = useGetNotificationForUser({
+    data: recentNotifications,
+    isFetching: isFetchingRecentNotifications,
+  } = useGetRecentNotifications({
     userId: user.id,
+    fromOffset: recentRange.fromOffset,
+    toOffset: range.toOffset,
   });
-  console.log("🚀 ~ Notification ~ notifications:", notifications);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <h1 className="text-green-700 text-2xl font-semibold mb-6">
         Notifications
       </h1>
-      {isFetchingNotifications && <Loading />}
-      <ul className="space-y-4">
-        {isNotificationsFetched && notifications.length === 0 && (
-          <p className="text-gray-500">You're all caught up 🎉</p>
+      <div className="flex flex-col gap-8">
+        {isFetchingNotifications || isFetchingRecentNotifications ? (
+          <Loading />
+        ) : (
+          <>
+            <NotificationSection
+              title={"Today"}
+              notifications={notifications || []}
+            />
+            <NotificationSection
+              title={"Recent"}
+              notifications={recentNotifications}
+            />
+          </>
         )}
-        {isNotificationsFetched &&
-          notifications.length > 0 &&
-          notifications.map((notification) => (
-            <li
-              key={notification.id}
-              className={clsx(
-                "p-4 rounded-lg shadow-sm border flex justify-between items-start transition",
-                notification.read
-                  ? "bg-gray-50 border-gray-200"
-                  : "bg-blue-50 border-blue-300"
-              )}
-            >
-              <div>
-                <h2
-                  className={clsx(
-                    "font-medium",
-                    notification.read ? "text-gray-700" : "text-blue-900"
-                  )}
-                >
-                  {notification.title}
-                </h2>
-                <p className="text-sm text-gray-600">{notification.message}</p>
-              </div>
-            </li>
-          ))}
-      </ul>
+      </div>
     </div>
   );
 }

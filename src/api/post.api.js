@@ -47,6 +47,7 @@ export async function fetchPosts({ date }) {
  * @throws {Error} - Throws if fetch fails.
  */
 export async function fetchPostsPagination({ pageParam }) {
+  console.log("🚀 ~ fetchPostsPagination ~ pageParam:", pageParam);
   const limit = 10;
 
   try {

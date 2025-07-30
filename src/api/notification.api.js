@@ -1,22 +1,36 @@
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import supabase from "../supabase_client/create_client";
 
+dayjs.extend(utc);
+
 /**
- * Fetches notifications for a specific user.
+ * Fetches notifications for a specific user for the current day.
  * @param {string} userId - The ID of the user to fetch notifications for.
  * @returns {Promise<Array>} - Array of notification objects.
  * @throws {Error} - Throws if userId is missing or fetch fails.
  */
-export async function getNotificationForUser(userId) {
+export async function getTodaysNotificationForUser(
+  userId,
+  fromOffset,
+  toOffset
+) {
   try {
     if (!userId) {
       throw new Error("Missing userId");
     }
 
+    const start = dayjs().startOf("day").utc().format();
+    const end = dayjs().endOf("day").utc().format();
+
     const { data, error } = await supabase
       .from("user_notification")
       .select("*")
       .eq("recipient_id", userId)
-      .order("created_at", { ascending: false });
+      .gte("created_at", start)
+      .lte("created_at", end)
+      .order("created_at", { ascending: false })
+      .range(fromOffset, toOffset);
 
     if (error) {
       console.error("Supabase error (getNotificationForUser):", error.message);
@@ -30,6 +44,46 @@ export async function getNotificationForUser(userId) {
     return data;
   } catch (err) {
     console.error("getNotificationForUser failed:", err);
+    throw err;
+  }
+}
+
+/**
+ * Fetches recent notifications for a user before today.
+ * @param {string} userId - The ID of the user to fetch notifications for.
+ * @param {number} fromOffset - The starting index for pagination.
+ * @param {number} toOffset - The ending index for pagination.
+ * @returns {Promise<Array>} - Array of notification objects.
+ * @throws {Error} - Throws if userId is missing or fetch fails.
+ */
+export async function getRecentNotifications(userId, fromOffset, toOffset) {
+  try {
+    if (!userId) {
+      throw new Error("Missing parameter userId");
+    }
+
+    const startOfToday = dayjs().startOf("day").utc().format();
+
+    const { data, error } = await supabase
+      .from("user_notification")
+      .select("*")
+      .eq("recipient_id", userId)
+      .lte("created_at", startOfToday)
+      .order("created_at", { ascending: false })
+      .range(fromOffset, toOffset);
+
+    if (error) {
+      console.error("Supabase error (getNotificationForUser):", error.message);
+      throw new Error(`Failed to fetch notifications: ${error.message}`);
+    }
+
+    if (!data) {
+      throw new Error("No data returned from Supabase.");
+    }
+
+    return data;
+  } catch (error) {
+    console.log("🚀 ~ getRecentNotifications ~ error:", error);
     throw err;
   }
 }
