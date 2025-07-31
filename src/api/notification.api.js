@@ -49,6 +49,41 @@ export async function getTodaysNotificationForUser(
 }
 
 /**
+ * Fetches the count of notifications for a specific user for the current day.
+ * @param {string} userId - The ID of the user to fetch notification count for.
+ * @returns {Promise<number>} - The count of today's notifications.
+ * @throws {Error} - Throws if userId is missing or fetch fails.
+ */
+export async function getTodaysNotificationCount(userId) {
+  try {
+    if (!userId) {
+      throw new Error("Missing userId");
+    }
+
+    const start = dayjs().startOf("day").utc().format();
+    const end = dayjs().endOf("day").utc().format();
+
+    const { error, count } = await supabase
+      .from("user_notification")
+      .select("", { count: "exact" })
+      .eq("recipient_id", userId)
+      .gte("created_at", start)
+      .lte("created_at", end)
+      .limit(1);
+
+    if (error) {
+      console.error("Supabase error (getNotificationForUser):", error.message);
+      throw new Error(`Failed to fetch notifications: ${error.message}`);
+    }
+
+    return count || 0;
+  } catch (error) {
+    console.log("🚀 ~ getTodaysNotificationCoun ~ error:", error);
+    throw error;
+  }
+}
+
+/**
  * Fetches recent notifications for a user before today.
  * @param {string} userId - The ID of the user to fetch notifications for.
  * @param {number} fromOffset - The starting index for pagination.

@@ -1,15 +1,18 @@
-import { Button, Text } from "@radix-ui/themes";
+import { Badge, IconButton } from "@mui/material";
+import { Text } from "@radix-ui/themes";
+import { IoIosNotifications } from "react-icons/io";
 import { NavLink, useLocation } from "react-router-dom";
+import useGetNotificationCount from "../../hooks/notification/useGetNotificationCount";
 import useAuth from "../../hooks/auth/useAuth";
 import LinkText from "./LinkText";
-import PopupMenu from "./PopupMenu";
-import { IconButton } from "@mui/material";
-import { IoIosNotifications } from "react-icons/io";
 import LoginButton from "./LoginButton";
+import PopupMenu from "./PopupMenu";
 function Header(props) {
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
   const userName = user?.user_metadata?.name;
+
+  const { data: count } = useGetNotificationCount(user.id);
 
   return (
     <header className="flex justify-between text-white bg-ice-berg-dark items-center h-16 px-10 drop-shadow-md sticky top-0 z-[100]">
@@ -35,7 +38,9 @@ function Header(props) {
         <div className="flex items-center gap-2">
           <NavLink to="/notifications">
             <IconButton sx={{ color: "white" }}>
-              <IoIosNotifications />
+              <Badge badgeContent={count} color="success">
+                <IoIosNotifications />
+              </Badge>
             </IconButton>
           </NavLink>
           <PopupMenu name={userName} />
