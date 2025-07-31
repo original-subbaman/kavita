@@ -24,7 +24,7 @@ import useNotifyPostLike from "../hooks/notification/useNotifyPostLike";
 import useRemovePostNotification from "../hooks/notification/useRemovePostNotification";
 import useGetPost from "../hooks/post/useGetPost";
 import useReportPost from "../hooks/post/useReportPost";
-import UseToggleLikeOnPost from "../hooks/post/useToggleLikeOnPost";
+import useToggleLikeOnPost from "../hooks/post/useToggleLikeOnPost";
 import { actionTypes } from "../reducers/responseReducer";
 import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
@@ -44,11 +44,12 @@ export default function PostDetail() {
 
   const closeAlert = () => dispatch(resetResponse());
 
-  const { mutate: toggleLike, isPending: isUpdating } = UseToggleLikeOnPost({
+  const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
     onSuccess: (data, variables, context) => {
       const { success, isLiked } = data;
+      const isSelfRecipient = recipientId === user.id;
 
-      if (success && isLiked) {
+      if (success && !isSelfRecipient && isLiked) {
         notifyLikePost({
           postId: id,
           recipientId: authorId,
@@ -57,7 +58,7 @@ export default function PostDetail() {
         });
       }
 
-      if (success && !isLiked) {
+      if (success && !isSelfRecipient && !isLiked) {
         rmPostNotification({
           postId: id,
           recipientId: authorId,
