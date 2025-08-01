@@ -45,7 +45,6 @@ function Home() {
       }));
     },
     onError: (error) => {
-      console.log("🚀 ~ Home ~ error:", error);
       setResponse((prev) => ({
         ...prev,
         error: true,

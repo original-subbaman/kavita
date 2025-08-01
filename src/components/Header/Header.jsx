@@ -7,12 +7,13 @@ import useAuth from "../../hooks/auth/useAuth";
 import LinkText from "./LinkText";
 import LoginButton from "./LoginButton";
 import PopupMenu from "./PopupMenu";
+
 function Header(props) {
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
   const userName = user?.user_metadata?.name;
 
-  const { data: count } = useGetNotificationCount(user.id);
+  const { data: count } = useGetNotificationCount(user?.id);
 
   return (
     <header className="flex justify-between text-white bg-ice-berg-dark items-center h-16 px-10 drop-shadow-md sticky top-0 z-[100]">
@@ -38,7 +39,7 @@ function Header(props) {
         <div className="flex items-center gap-2">
           <NavLink to="/notifications">
             <IconButton sx={{ color: "white" }}>
-              <Badge badgeContent={count} color="success">
+              <Badge badgeContent={count > 99 ? "99+" : count} color="success">
                 <IoIosNotifications />
               </Badge>
             </IconButton>

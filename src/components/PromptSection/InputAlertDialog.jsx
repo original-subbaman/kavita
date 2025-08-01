@@ -1,7 +1,7 @@
 import { AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
 import { useState } from "react";
-import QuillEditor from "../Editor/QuillEditor";
 import ResponseSnackbar from "../ResponseSnackbar";
+import TipTapEditor from "./TipTapEditor";
 
 const minWords = 10;
 function InputAlertDialog({ addPost, mutationState, prompt }) {
@@ -62,7 +62,7 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
 
   return (
     <AlertDialog.Content
-      className="w-[600px]"
+      className="w-[600px] "
       aria-describedby="Add your writing piece"
     >
       {snackbar.open && (
@@ -89,7 +89,10 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
         <Text color="red">{error.message}</Text>
       )}
       {/* Text Area */}
-      <QuillEditor value={post} onChange={onPostChange} />
+      <div>
+        <TipTapEditor initial={post} />
+      </div>
+      {/* <QuillEditor value={post} onChange={onPostChange} /> */}
       <Flex gap="3" mt="4" justify="end">
         <AlertDialog.Cancel>
           <Button variant="soft" color="gray">
