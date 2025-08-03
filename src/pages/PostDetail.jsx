@@ -144,6 +144,7 @@ export default function PostDetail() {
   const createdAt = data?.post.created_at;
   const post = DOMPurify.sanitize(data?.post.post);
   const hasLiked = data?.hasLiked;
+  const isAuthorCurrUser = user.id === authorId;
 
   return (
     <>
@@ -204,13 +205,15 @@ export default function PostDetail() {
             Like
           </Button>
           {/* Report Button */}
-          <Button
-            className="cursor-pointer"
-            color="gray"
-            onClick={handleReportClick}
-          >
-            Report
-          </Button>
+          {!isAuthorCurrUser && (
+            <Button
+              className="cursor-pointer"
+              color="gray"
+              onClick={handleReportClick}
+            >
+              Report
+            </Button>
+          )}
         </Box>
         <Box className="mb-8">
           <CommentSection
