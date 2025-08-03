@@ -7,6 +7,7 @@ import useAuth from "../hooks/auth/useAuth";
 import useGetPostCount from "../hooks/post/useGetPostCount";
 import useGetTotalLikes from "../hooks/user/useGetTotalLikes";
 import useGetLanguageCount from "../hooks/language/useGetLanguageCount";
+import useGetLongestStreak from "../hooks/user/useGetLongestStreak";
 function Profile() {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
@@ -38,6 +39,8 @@ function Profile() {
     useGetLanguageCount({
       userId: user.id,
     });
+  const { data: longestStreak, isFetching: isFetchingLongestStreak } =
+    useGetLongestStreak({ userId: user.id });
 
   return (
     <Container className="py-4">
@@ -58,7 +61,10 @@ function Profile() {
           title="language recorded"
           value={isFetchingLangCount ? 0 : languageCount}
         />
-        <StatCard title="current streak" value={3} />
+        <StatCard
+          title="longest streak"
+          value={isFetchingLongestStreak ? 0 : longestStreak[0].streak_length}
+        />
       </Grid>
     </Container>
   );

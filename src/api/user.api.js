@@ -89,8 +89,6 @@ export async function getUser(userId) {
  * @throws {Error} - Throws error if stored procedure fails.
  */
 export async function getUserActivityCount(userId, startDate, endDate) {
-  console.log("🚀 ~ getUserActivityCount ~ endDate:", endDate);
-  console.log("🚀 ~ getUserActivityCount ~ startDate:", startDate);
   try {
     const { data, error } = await supabase.rpc("get_posts_count_by_date", {
       user_uuid: userId,
@@ -106,6 +104,28 @@ export async function getUserActivityCount(userId, startDate, endDate) {
     return data;
   } catch (error) {
     console.error("Unexpected error in getUserActivityCount:", error);
+    throw error;
+  }
+}
+
+export async function getLongestStreak(userId) {
+  try {
+    if (!userId) {
+      throw new Error("Missing userId");
+    }
+
+    const { data, error } = await supabase.rpc("longest_post_streak", {
+      input_user_id: userId,
+    });
+
+    if (error) {
+      console.error("🚀 ~ getLongestStreak ~ error:", error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getLongestStreak:", error);
     throw error;
   }
 }
