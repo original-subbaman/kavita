@@ -110,9 +110,8 @@ function MenuBar({ editor }) {
   ];
 
   return (
-    <div className="flex flex-wrap gap-3 p-2 bg-gray-200 text-black rounded-t-sm h-10">
+    <div className="flex flex-wrap items-center gap-3 p-2 bg-gray-200 text-black rounded-t-sm h-10">
       {buttons.map((btn, idx) => {
-        console.log("🚀 ~ MenuBar ~ btn:", btn);
         return (
           <ToolbarButton
             key={idx}
@@ -129,10 +128,13 @@ function MenuBar({ editor }) {
     </div>
   );
 }
-function TipTapEditor({ initial }) {
+function TipTapEditor({ initial, onChange }) {
   const editor = useEditor({
     extensions: [StarterKit],
     content: initial,
+    onUpdate({ editor }) {
+      onChange(editor.getHTML());
+    },
   });
   return (
     <div>

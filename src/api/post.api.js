@@ -227,7 +227,7 @@ export async function addPost(post, userId) {
     if (!post || !userId) {
       throw new Error("Post and userId are required.");
     }
-    console.log("1", userId);
+
     const { data, error } = await supabase.from("post").insert([
       {
         post: post,
@@ -235,7 +235,6 @@ export async function addPost(post, userId) {
       },
     ]);
 
-    console.log("🚀 ~ addPost ~ data:", data);
     if (error) {
       console.error("Error inserting post:", error.message);
       throw new Error(`Failed to add post: ${error.message}`);

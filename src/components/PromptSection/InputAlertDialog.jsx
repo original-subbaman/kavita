@@ -35,7 +35,7 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
       setError((prev) => ({
         ...prev,
         lowWordCount: true,
-        message: "Your post must have at least 50 words before submitting",
+        message: `Your post must have at least ${minWords} words before submitting`,
       }));
       return;
     }
@@ -48,7 +48,6 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
       }));
       return;
     }
-    console.log("~ post:", post);
     addPost({ post: post });
   };
 
@@ -90,7 +89,7 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
       )}
       {/* Text Area */}
       <div>
-        <TipTapEditor initial={post} />
+        <TipTapEditor initial={post} onChange={onPostChange} />
       </div>
       {/* <QuillEditor value={post} onChange={onPostChange} /> */}
       <Flex gap="3" mt="4" justify="end">
