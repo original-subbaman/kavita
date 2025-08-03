@@ -497,6 +497,12 @@ export async function deleteComment(commentId) {
   }
 }
 
+/**
+ * Fetches the count of posts for a specific user.
+ * @param {string} userId - The ID of the user to fetch post count for.
+ * @returns {Promise<number>} - The count of posts for the user.
+ * @throws {Error} - Throws if userId is missing or fetch fails.
+ */
 export async function getPostCount(userId) {
   try {
     if (!userId) {

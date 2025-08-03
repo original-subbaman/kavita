@@ -1,14 +1,13 @@
-import { Card, Container, Grid } from "@radix-ui/themes";
+import { Container, Grid } from "@radix-ui/themes";
 import { useState } from "react";
-import UserDetailSection from "../components/ProfilePage/UserDetailSection";
-import RootWrapper from "../components/RootWrapper";
 import ActivitySection from "../components/ProfilePage/ActivitySection";
 import StatCard from "../components/ProfilePage/StatCard";
-import useGetPostCount from "../hooks/post/useGetPostCount";
+import UserDetailSection from "../components/ProfilePage/UserDetailSection";
 import useAuth from "../hooks/auth/useAuth";
+import useGetPostCount from "../hooks/post/useGetPostCount";
+import useGetTotalLikes from "../hooks/user/useGetTotalLikes";
 function Profile() {
   const { user } = useAuth();
-  console.log("🚀 ~ Profile ~ user:", user);
   const [profile, setProfile] = useState(null);
   const value = [
     { date: "2016/01/11", count: 2 },
@@ -31,6 +30,9 @@ function Profile() {
   const { data: postCount, isFetching: isFetchingPostCount } = useGetPostCount({
     userId: user.id,
   });
+  const { data: likeCount, isFetching: isFetchingLikeCount } = useGetTotalLikes(
+    { userId: user.id }
+  );
 
   return (
     <Container className="py-4">
@@ -43,8 +45,11 @@ function Profile() {
           title="total posts"
           value={isFetchingPostCount ? 0 : postCount}
         />
-        <StatCard title="total likes" value={3} />
-        <StatCard title="quotes recorded" value={3} />
+        <StatCard
+          title="total likes"
+          value={isFetchingLikeCount ? 0 : likeCount}
+        />
+        <StatCard title="language recorded" value={3} />
         <StatCard title="current streak" value={3} />
       </Grid>
     </Container>

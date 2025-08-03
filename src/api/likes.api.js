@@ -105,3 +105,27 @@ export async function toggleLike(postId, userId) {
     };
   }
 }
+
+export async function getTotalLikes(userId) {
+  try {
+    if (!userId) {
+      throw new Error("Missing userId");
+    }
+
+    const { count, error } = await supabase
+      .from("likes")
+      .select("", { count: "exact" })
+      .eq("user_id", userId)
+      .limit(1);
+
+    if (error) {
+      console.error("Supabase error (getTotalLikes):", error.message);
+      throw new Error(`Failed to fetch total likes: ${error.message}`);
+    }
+
+    return count || 0;
+  } catch (error) {
+    console.error("🚀 ~ getTotalLikes ~ error:", error);
+    throw error;
+  }
+}
