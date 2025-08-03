@@ -1,9 +1,8 @@
-import React from "react";
-import Post from "./Post";
-import { NavLink } from "react-router-dom";
 import { Box, Container, Heading } from "@radix-ui/themes";
 import Masonry from "react-responsive-masonry";
+import { NavLink } from "react-router-dom";
 import { getRandomDimensions } from "../../utils/Helper";
+import Post from "./Post";
 
 function PostSection({ posts }) {
   const dimensions = getRandomDimensions(posts ? posts.length : 0);

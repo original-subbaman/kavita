@@ -7,6 +7,7 @@ import QuoteSearchBox from "../components/QuoteSearchBox";
 import useAuth from "../hooks/auth/useAuth";
 import useGetUserPosts from "../hooks/post/useGetUserPosts";
 import useDebounceSearch from "../hooks/useDebounceSearch";
+import Loading from "../components/Loading";
 const MyPosts = () => {
   const { user } = useAuth();
   const [filterDate, setFilterDate] = useState({
@@ -16,7 +17,7 @@ const MyPosts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounceSearch(searchTerm);
 
-  const { data: posts } = useGetUserPosts({
+  const { data: posts, isFetching: isFetchingPosts } = useGetUserPosts({
     id: user.id,
     from: filterDate.from,
     to: filterDate.to,
@@ -28,19 +29,17 @@ const MyPosts = () => {
   };
 
   return (
-    <>
-      <Container my={"8"}>
-        <Box className="flex-1">
-          <QuoteSearchBox handleSearchChange={handleSearchChange} size="2" />
-        </Box>
-        <DateFilter
-          from={filterDate.from}
-          to={filterDate.to}
-          setFilterDate={setFilterDate}
-        />
-      </Container>
-      <PostSection posts={posts} />
-    </>
+    <Container my={"8"} size={"2"}>
+      <Box className="flex-1">
+        <QuoteSearchBox handleSearchChange={handleSearchChange} size="2" />
+      </Box>
+      <DateFilter
+        from={filterDate.from}
+        to={filterDate.to}
+        setFilterDate={setFilterDate}
+      />
+      {isFetchingPosts ? <Loading /> : <PostSection posts={posts} />}
+    </Container>
   );
 };
 
