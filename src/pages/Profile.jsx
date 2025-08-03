@@ -6,6 +6,7 @@ import UserDetailSection from "../components/ProfilePage/UserDetailSection";
 import useAuth from "../hooks/auth/useAuth";
 import useGetPostCount from "../hooks/post/useGetPostCount";
 import useGetTotalLikes from "../hooks/user/useGetTotalLikes";
+import useGetLanguageCount from "../hooks/language/useGetLanguageCount";
 function Profile() {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
@@ -33,6 +34,10 @@ function Profile() {
   const { data: likeCount, isFetching: isFetchingLikeCount } = useGetTotalLikes(
     { userId: user.id }
   );
+  const { data: languageCount, isFetching: isFetchingLangCount } =
+    useGetLanguageCount({
+      userId: user.id,
+    });
 
   return (
     <Container className="py-4">
@@ -49,7 +54,10 @@ function Profile() {
           title="total likes"
           value={isFetchingLikeCount ? 0 : likeCount}
         />
-        <StatCard title="language recorded" value={3} />
+        <StatCard
+          title="language recorded"
+          value={isFetchingLangCount ? 0 : languageCount}
+        />
         <StatCard title="current streak" value={3} />
       </Grid>
     </Container>

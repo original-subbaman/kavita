@@ -9,7 +9,7 @@ import supabase from "../supabase_client/create_client";
  * @returns {Promise<Array>} - Array containing the inserted language record.
  * @throws {Error} - Throws if insert fails or no data is returned.
  */
-export const recordLanguage = async ({ language, userId, postId }) => {
+export async function recordLanguage({ language, userId, postId }) {
   try {
     const { data, error } = await supabase.from("language").insert([
       {
@@ -32,7 +32,7 @@ export const recordLanguage = async ({ language, userId, postId }) => {
     console.log("🚀 ~ recordLanguage ~ err:", err);
     throw err;
   }
-};
+}
 
 /**
  * Fetches all language records for a user.
@@ -41,7 +41,7 @@ export const recordLanguage = async ({ language, userId, postId }) => {
  * @returns {Promise<Array>} - Array of language records.
  * @throws {Error} - Throws if fetch fails or no data is returned.
  */
-export const getLanguage = async ({ userId }) => {
+export async function getLanguage({ userId }) {
   try {
     const { data, error } = await supabase
       .from("language")
@@ -60,4 +60,34 @@ export const getLanguage = async ({ userId }) => {
   } catch (err) {
     throw err;
   }
-};
+}
+
+/**
+ * Fetches the count of language records for a specific user.
+ * @param {string} userId - The ID of the user to fetch language count for.
+ * @returns {Promise<number>} - The count of language records for the user.
+ * @throws {Error} - Throws if userId is missing or fetch fails.
+ */
+export async function getLanguageCount(userId) {
+  try {
+    if (!userId) {
+      throw new Error("Missing userId");
+    }
+
+    const { count, error } = await supabase
+      .from("language")
+      .select("", { count: "exact" })
+      .eq("user_id", userId)
+      .limit(1);
+
+    if (error) {
+      console.error("Supabase error (getLanguageCount):", error.message);
+      throw new Error(`Failed to fetch language count: ${error.message}`);
+    }
+
+    return count || 0;
+  } catch (error) {
+    console.error("🚀 ~ getLanguageCount ~ error:", error);
+    throw error;
+  }
+}
