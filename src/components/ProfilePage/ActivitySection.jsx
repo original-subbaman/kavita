@@ -11,8 +11,8 @@ function ActivitySection(props) {
 
   const { data, isLoading } = useGetUserActivityCount({
     userId: user.id,
-    startDate: getStartMonthDate("yyyy-MM-dd"),
-    endDate: getEndMonthDate("yyyy-MM-dd"),
+    startDate: getStartMonthDate(-6),
+    endDate: getEndMonthDate(0),
     select: (data) => {
       const values = data.map((item) => ({
         x: item.creation_date,

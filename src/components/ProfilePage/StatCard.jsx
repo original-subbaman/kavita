@@ -1,14 +1,17 @@
-import { Text } from "@radix-ui/themes";
-import React from "react";
+import { Card, Flex, Text } from "@radix-ui/themes";
 
 function StatCard({ title, value }) {
   return (
-    <div className="flex flex-col min-w-[10rem] p-4  bg-[#37393d] rounded-lg drop-shadow-md">
-      <Text size={"3"}>{value}</Text>
-      <Text size={"2"} weight={"thin"} className="text-gray-400">
-        {title}
-      </Text>
-    </div>
+    <Card className="min-w-[10rem] p-4  bg-[#212327] rounded-lg border-0">
+      <Flex direction="column" align="center">
+        <Text size={"6"} className="text-white">
+          {value}
+        </Text>
+        <Text size={"2"} weight={"thin"} className="text-gray-400">
+          {title}
+        </Text>
+      </Flex>
+    </Card>
   );
 }
 

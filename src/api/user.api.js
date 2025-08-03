@@ -89,6 +89,8 @@ export async function getUser(userId) {
  * @throws {Error} - Throws error if stored procedure fails.
  */
 export async function getUserActivityCount(userId, startDate, endDate) {
+  console.log("🚀 ~ getUserActivityCount ~ endDate:", endDate);
+  console.log("🚀 ~ getUserActivityCount ~ startDate:", startDate);
   try {
     const { data, error } = await supabase.rpc("get_posts_count_by_date", {
       user_uuid: userId,

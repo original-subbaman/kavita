@@ -1,4 +1,11 @@
-import { format, parse, parseISO, startOfMonth, endOfMonth } from "date-fns";
+import {
+  addMonths,
+  format,
+  parse,
+  parseISO,
+  startOfMonth,
+  endOfMonth,
+} from "date-fns";
 export function getDateToday() {
   const currentDate = new Date();
   const day = currentDate.getDate();
@@ -57,8 +64,12 @@ export const StaticDatePickerStyle = {
   },
 };
 
-export const getStartMonthDate = (dateFormat) =>
-  format(startOfMonth(new Date()), dateFormat);
+export const getStartMonthDate = (monthsFromNow, dateFormat = "yyyy-MM-dd") => {
+  const targetDate = addMonths(new Date(), monthsFromNow);
+  return format(startOfMonth(targetDate), dateFormat);
+};
 
-export const getEndMonthDate = (dateFormat) =>
-  format(endOfMonth(new Date()), dateFormat);
+export const getEndMonthDate = (monthsFromNow, dateFormat = "yyyy-MM-dd") => {
+  const targetDate = addMonths(new Date(), monthsFromNow);
+  return format(endOfMonth(targetDate), dateFormat);
+};

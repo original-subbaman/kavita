@@ -103,12 +103,6 @@ function UserDetailSection(props) {
             <LittleInfo title={"address"} info={address} />
             <LittleInfo title={"joined_on"} info={joinedOn} />
           </div>
-          <div className="flex gap-4 mt-4">
-            <StatCard title={"total_posts"} value={"304"} />
-            <StatCard title={"total_likes"} value={"304"} />
-            <StatCard title={"quotes_recorded"} value={"304"} />
-            <StatCard title={"current_streak"} value={"304"} />
-          </div>
         </div>
       </div>
     </ProfileSectionWrapper>

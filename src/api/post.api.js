@@ -496,3 +496,27 @@ export async function deleteComment(commentId) {
     throw err;
   }
 }
+
+export async function getPostCount(userId) {
+  try {
+    if (!userId) {
+      throw new Error("Missing userId");
+    }
+
+    const { error, count } = await supabase
+      .from("post")
+      .select("", { count: "exact" })
+      .eq("user_id", userId)
+      .limit(1);
+
+    if (error) {
+      console.error("Supabase error (getPostCount):", error.message);
+      throw new Error(`Failed to fetch post count: ${error.message}`);
+    }
+
+    return count || 0;
+  } catch (error) {
+    console.error("🚀 ~ getPostCount ~ error:", error);
+    throw error;
+  }
+}
