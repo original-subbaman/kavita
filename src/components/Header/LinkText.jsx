@@ -1,9 +1,10 @@
 import { Text } from "@radix-ui/themes";
 
-const LinkText = ({ isActive, children }) => {
+const LinkText = ({ isActive, size = "3", children }) => {
   return (
     <div>
       <Text
+        size={size}
         className={`hover:text-green-500 duration-300 transition-all ${
           isActive ? "text-green-500 font-bold" : "text-[#30a46c]"
         }`}
