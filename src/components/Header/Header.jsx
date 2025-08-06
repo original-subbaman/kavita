@@ -59,7 +59,9 @@ function Header({ toggleSideNav }) {
               </Badge>
             </IconButton>
           </NavLink>
-          <PopupMenu name={userName} />
+          <div className="hidden md:block">
+            <PopupMenu name={userName} />
+          </div>
         </div>
       ) : (
         <LoginButton />
