@@ -1,6 +1,6 @@
 import { Container } from "@radix-ui/themes";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Masonry from "react-responsive-masonry";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { NavLink } from "react-router-dom";
 import useGetInfinitePosts from "../../hooks/post/useGetInfinitePosts";
 import ErrorMessage from "../ErrorMessage";
@@ -9,9 +9,9 @@ import "./masonry-grid.css";
 import Post from "./Post";
 
 const breakpointColumnsObj = {
-  default: 3,
-  1100: 2,
-  700: 1,
+  900: 3,
+  750: 2,
+  350: 1,
 };
 
 function InfinitePostSection(props) {
@@ -36,28 +36,29 @@ function InfinitePostSection(props) {
         hasMore={hasNextPage}
         loader={<div className="text-white text-2xl"></div>}
       >
-        {posts && (
-          <Masonry
-            breakpointCols={breakpointColumnsObj}
-            className="my-masonry-grid"
-            columnClassName="my-masonry-grid_column"
-          >
-            {posts.map((post) => (
-              <NavLink
-                to={`/post/${post.id}`}
-                key={post.id}
-                style={{ margin: "0.5rem" }}
-              >
-                <Post
-                  content={post.post}
-                  author={post.user.user_name}
-                  width="100%" // Let Masonry decide width
-                  height="auto"
-                />
-              </NavLink>
-            ))}
-          </Masonry>
-        )}
+        <ResponsiveMasonry breakpointCols={breakpointColumnsObj}>
+          {posts && (
+            <Masonry
+              className="my-masonry-grid"
+              columnClassName="my-masonry-grid_column"
+            >
+              {posts.map((post) => (
+                <NavLink
+                  to={`/post/${post.id}`}
+                  key={post.id}
+                  style={{ width: "100%", margin: "0.5rem" }}
+                >
+                  <Post
+                    content={post.post}
+                    author={post.user.user_name}
+                    width="100%" // Let Masonry decide width
+                    height="auto"
+                  />
+                </NavLink>
+              ))}
+            </Masonry>
+          )}
+        </ResponsiveMasonry>
       </InfiniteScroll>
       {isFetchingNextPage && <Loading message={"Fetching more posts..."} />}
 

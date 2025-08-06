@@ -1,4 +1,3 @@
-import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { TextField } from "@radix-ui/themes";
 function PostInputBox({ onClick }) {
@@ -6,7 +5,7 @@ function PostInputBox({ onClick }) {
     <TextField.Root
       size={"2"}
       variant="soft"
-      className="w-full bg-[#303030] rounded-lg p-2  text-white"
+      className="w-full bg-[#303030] rounded-lg text-white p-2  "
       onClick={onClick}
     >
       <TextField.Slot>

@@ -98,7 +98,11 @@ function Home() {
               onOpenChange={setAddPostDialog}
             >
               {/* {isToday && <AddPostButton />} */}
-              {isToday && <PostInputBox onClick={handlePostInputClick} />}
+              {isToday && (
+                <Box className="w-[93%] md:w-full mx-4">
+                  <PostInputBox onClick={handlePostInputClick} />
+                </Box>
+              )}
               <InputAlertDialog
                 addPost={addPost}
                 prompt={"A quick brown fox jumped over the lazy dog"} // Replace with actual prompt from the backend
