@@ -69,7 +69,9 @@ function LanguageWall(props) {
 
   return (
     <Container className="mt-8" size={"2"}>
-      <QuoteSearchBox handleSearchChange={handleSearchChange} />
+      <Box className="mx-3 mb-4">
+        <QuoteSearchBox size="2" handleSearchChange={handleSearchChange} />
+      </Box>
       {isFetching && <Loading message={"Loading..."} />}
 
       {isLanguageFetched && quotes.length === 0 && (
@@ -83,7 +85,7 @@ function LanguageWall(props) {
       )}
 
       {isLanguageFetched && quotes.length > 0 && (
-        <Container className="text-white font-madimiOne" py={{ sm: "8" }}>
+        <Container className="text-white font-madimiOne mx-4" py={{ sm: "8" }}>
           {filteredList.map((quote, index) => (
             <Text
               mr={"3"}

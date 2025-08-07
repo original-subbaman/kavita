@@ -15,7 +15,7 @@ function PostSection({ posts }) {
         </Box>
       )}
       {posts && posts.length > 0 && (
-        <Masonry gutter="20px" columnsCount={isSmallScreen ? 1 : 2}>
+        <Masonry gutter="10px" columnsCount={isSmallScreen ? 1 : 2}>
           {posts.map((post, index) => (
             <NavLink to={`/post/${post.id}`} key={post.id}>
               <Post

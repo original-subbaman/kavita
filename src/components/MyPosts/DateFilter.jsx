@@ -4,7 +4,7 @@ import { Box, Flex, Text } from "@radix-ui/themes";
 import StyledDatePicker from "./StyledDatePicker";
 const DateFilter = ({ from, to, setFilterDate }) => {
   return (
-    <Box my={"3"}>
+    <Box my={"3"} className="mx-3 sm:mx-0">
       <Text className="self-center flex-1" color="green">
         Filter by date range
       </Text>
