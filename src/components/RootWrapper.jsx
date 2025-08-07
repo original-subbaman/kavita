@@ -4,11 +4,11 @@ import useAuth from "../hooks/auth/useAuth";
 import { useState } from "react";
 import MobileNav from "./Header/MobileNav";
 function RootWrapper({ showHeader = true, children }) {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [openSideNav, setOpenSideNav] = useState(false);
 
   return (
-    <main className="w-full font-primary min-h-screen bg-aurora">
+    <main className="w-full font-primary min-h-[100dvh] bg-aurora">
       {showHeader && (
         <Header toggleSideNav={() => setOpenSideNav((prev) => !prev)} />
       )}

@@ -8,6 +8,7 @@ import useGetPostCount from "../hooks/post/useGetPostCount";
 import useGetTotalLikes from "../hooks/user/useGetTotalLikes";
 import useGetLanguageCount from "../hooks/language/useGetLanguageCount";
 import useGetLongestStreak from "../hooks/user/useGetLongestStreak";
+
 function Profile() {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
@@ -43,7 +44,7 @@ function Profile() {
     useGetLongestStreak({ userId: user.id });
 
   return (
-    <Container className="py-4">
+    <Container className="flex flex-col justify-be mx-3 min-h-screen py-4">
       <UserDetailSection />
       <div className="my-4">
         <ActivitySection />

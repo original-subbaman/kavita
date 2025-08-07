@@ -81,23 +81,21 @@ function UserDetailSection(props) {
           <Button onClick={() => setOpenEdit(true)}>Update</Button>
         </div>
       </div>
-      <div className="flex gap-8 mt-4  h-full">
-        <div>
-          <Avatar
-            sizes=""
-            sx={{
-              width: 80,
-              height: 80,
-              bgcolor: "#30a46c",
-              fontSize: "1.8rem",
-            }}
-          >
-            {getInitialsOfName(name)}
-          </Avatar>
-        </div>
+      <div className="flex gap-8 mt-4">
+        <Avatar
+          sizes=""
+          sx={{
+            width: 80,
+            height: 80,
+            bgcolor: "#30a46c",
+            fontSize: "1.8rem",
+          }}
+        >
+          {getInitialsOfName(name)}
+        </Avatar>
         <div className="w-full">
           <Text size={"5"}>{name}</Text>
-          <div className="mt-4 flex justify-start gap-20 w-full">
+          <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap justify-start sm:gap-20 w-full">
             <LittleInfo title={"username"} info={username} />
             <LittleInfo title={"email"} info={email || ""} />
             <LittleInfo title={"address"} info={address} />
