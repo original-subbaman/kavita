@@ -176,18 +176,18 @@ export default function PostDetail() {
         severity={"success"}
         message={message}
       />
-      <Container>
+      <Container size={"2"} className="mx-3 md:mx-0">
         <Section size={"1"} className="text-center">
           <Heading className="text-white">{author}</Heading>
           <Text className="text-gray-500">
             Posted On: {convertISOTimestamp(createdAt)}
           </Text>
         </Section>
-        <Section className="rounded-md px-8 bg-gray-50 bg-opacity-5 mb-2">
-          <SelectedText
-            selectedText={selectedText}
-            captureLanguage={handleCaptureLanguage}
-          />
+        <SelectedText
+          selectedText={selectedText}
+          captureLanguage={handleCaptureLanguage}
+        />
+        <Section className="rounded-lg drop-shadow-lg py-10 px-4 md:px-8 bg-gray-100 bg-opacity-[0.01] mb-2">
           <Box
             dangerouslySetInnerHTML={{ __html: post }}
             onMouseMove={(event) => getSelectionText()}

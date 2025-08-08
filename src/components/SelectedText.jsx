@@ -2,19 +2,20 @@ import { Button } from "@radix-ui/themes";
 import { HeartIcon } from "@radix-ui/react-icons";
 function SelectedText({ selectedText, captureLanguage }) {
   return (
-    <div className="flex items-center  text-white bg-radix-grass/80 mb-4 backdrop-blur-lg rounded-lg text-center py-2">
-      <span className="flex-1 text-[20px]">
+    <div
+      className="flex flex-col gap-2 md:gap-0 md:flex-row items-center  
+      text-white border-[1px] border-radix-grass/80 
+      bg-gray-100 bg-opacity-[0.01]
+        mb-4 rounded-lg text-center py-2"
+    >
+      <span className="flex-1 md:text-[1rem]">
         {selectedText || "Highlight text to capture language"}
       </span>
       <Button
         onClick={captureLanguage}
         radius="full"
-        color="orange"
         disabled={!selectedText}
-        style={{
-          color: "white",
-          marginRight: "8px",
-        }}
+        className="text-white md:mr-2 bg-orange-500 hover:bg-orange-600 transition-colors duration-300"
       >
         <HeartIcon /> Capture
       </Button>
