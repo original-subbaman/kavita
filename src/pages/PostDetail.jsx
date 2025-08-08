@@ -192,7 +192,7 @@ export default function PostDetail() {
             dangerouslySetInnerHTML={{ __html: post }}
             onMouseMove={(event) => getSelectionText()}
             onMouseUp={(event) => window.getSelection().removeAllRanges()}
-            className="text-white text-start font-primary font-extralight whitespace-pre-line"
+            className="text-white text-start font-primary text-2xl font-extralight whitespace-pre-line"
           />
         </Section>
         <Box className="flex items-end justify-end   gap-4 my-0  max-h-['10px']">
