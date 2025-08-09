@@ -11,13 +11,16 @@ import supabase from "../supabase_client/create_client";
  */
 export async function recordLanguage({ language, userId, postId }) {
   try {
-    const { data, error } = await supabase.from("language").insert([
-      {
-        language: language,
-        post_id: postId,
-        user_id: userId,
-      },
-    ]);
+    const { data, error } = await supabase
+      .from("language")
+      .insert([
+        {
+          language: language,
+          post_id: postId,
+          user_id: userId,
+        },
+      ])
+      .select();
 
     if (error) {
       throw new Error(`Failed to record language: ${error.message}`);

@@ -65,7 +65,7 @@ export default function PostDetail() {
       const isSelfRecipient = authorId === user.id;
 
       if (success && !isSelfRecipient && isLiked) {
-        notifyLikePost({
+        createNotification({
           postId: id,
           recipientId: authorId,
           senderId: user.id,
@@ -86,7 +86,26 @@ export default function PostDetail() {
   });
 
   const { mutate: recordLanguage } = useRecordLanguage({
-    onSuccess: (data) => dispatch(setSuccess("Language captured successfully")),
+    onSuccess: (data) => {
+      let quote = "";
+
+      if (data && Array.isArray(data) && data.length > 0) {
+        quote = data[0]?.language;
+      }
+
+      if (quote && quote !== "") {
+        createNotification({
+          postId: id,
+          recipientId: authorId,
+          senderId: user.id,
+          message: `@${user.user_name} has captured a line from your writing piece: ${quote}`,
+          type: NotificationType.quote,
+          target: NotificationTarget.post,
+        });
+      }
+
+      dispatch(setSuccess("Language captured successfully"));
+    },
     onError: (error) => dispatch(setError("Error capturing language")),
   });
 
@@ -97,7 +116,7 @@ export default function PostDetail() {
     }
   );
 
-  const { mutate: notifyLikePost } = useCreateNotification(
+  const { mutate: createNotification } = useCreateNotification(
     () => {
       console.log("post notified");
     },
