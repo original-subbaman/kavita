@@ -20,7 +20,7 @@ import ScrollToTop from "../components/ScrollToTop";
 import SelectedText from "../components/SelectedText";
 import useAuth from "../hooks/auth/useAuth";
 import useRecordLanguage from "../hooks/language/useRecordLanguage";
-import useNotifyPostLike from "../hooks/notification/useNotifyPostLike";
+import useCreateNotification from "../hooks/notification/useCreateNotification";
 import useRemovePostNotification from "../hooks/notification/useRemovePostNotification";
 import useGetPost from "../hooks/post/useGetPost";
 import useReportPost from "../hooks/post/useReportPost";
@@ -29,6 +29,7 @@ import { actionTypes } from "../reducers/responseReducer";
 import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { convertISOTimestamp } from "../utils/Date";
+import { NotificationTarget, NotificationType } from "../utils/Constants";
 
 export default function PostDetail() {
   const navigate = useNavigate();
@@ -44,10 +45,24 @@ export default function PostDetail() {
 
   const closeAlert = () => dispatch(resetResponse());
 
+  const { data } = useGetPost({
+    postId: id,
+    userId: user?.id,
+    isUpdating: false,
+    staleTime: 0,
+  });
+
+  const author = data?.post.user.user_name;
+  const authorId = data?.post.user.id;
+  const createdAt = data?.post.created_at;
+  const post = DOMPurify.sanitize(data?.post.post);
+  const hasLiked = data?.hasLiked;
+  const isAuthorCurrUser = user.id === authorId;
+
   const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
     onSuccess: (data, variables, context) => {
       const { success, isLiked } = data;
-      const isSelfRecipient = recipientId === user.id;
+      const isSelfRecipient = authorId === user.id;
 
       if (success && !isSelfRecipient && isLiked) {
         notifyLikePost({
@@ -55,6 +70,8 @@ export default function PostDetail() {
           recipientId: authorId,
           senderId: user.id,
           message: `@${user.user_name} liked your post`,
+          type: NotificationType.like,
+          target: NotificationTarget.post,
         });
       }
 
@@ -80,7 +97,7 @@ export default function PostDetail() {
     }
   );
 
-  const { mutate: notifyLikePost } = useNotifyPostLike(
+  const { mutate: notifyLikePost } = useCreateNotification(
     () => {
       console.log("post notified");
     },
@@ -97,13 +114,6 @@ export default function PostDetail() {
       console.log(error);
     }
   );
-
-  const { data } = useGetPost({
-    postId: id,
-    userId: user?.id,
-    isUpdating: false,
-    staleTime: 0,
-  });
 
   const handleCaptureLanguage = () => {
     if (isAuthenticated) {
@@ -138,13 +148,6 @@ export default function PostDetail() {
     }
     navigate("/login");
   }
-
-  const author = data?.post.user.user_name;
-  const authorId = data?.post.user.id;
-  const createdAt = data?.post.created_at;
-  const post = DOMPurify.sanitize(data?.post.post);
-  const hasLiked = data?.hasLiked;
-  const isAuthorCurrUser = user.id === authorId;
 
   return (
     <>

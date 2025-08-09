@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import supabase from "../supabase_client/create_client";
+import { NotificationTarget, NotificationType } from "../utils/Constants";
 
 dayjs.extend(utc);
 
@@ -124,45 +125,82 @@ export async function getRecentNotifications(userId, fromOffset, toOffset) {
 }
 
 /**
+ * Checks if a notification with the given parameters already exists in the `user_notification` table.
+ *
+ * @async
+ * @function checkIsDuplicateNotification
+ * @param {string|number} postId - The ID of the post associated with the notification (mapped to `target_id`).
+ * @param {string|number} recipientId - The ID of the notification recipient.
+ * @param {string|number} senderId - The ID of the notification sender.
+ * @param {string} type - The type/category of the notification.
+ * @param {string} target - The target entity type (e.g., "post", "comment").
+ * @returns {Promise<boolean>} Resolves to `true` if a matching notification already exists, otherwise `false`.
+ * @throws {Error} If the database query fails.
+ */
+async function checkIsDuplicateNotification(
+  postId,
+  recipientId,
+  senderId,
+  type,
+  target
+) {
+  const { data: existingNotifications, error: fetchError } = await supabase
+    .from("user_notification")
+    .select("id")
+    .eq("recipient_id", recipientId)
+    .eq("sender_id", senderId)
+    .eq("target_id", postId)
+    .eq("type", type)
+    .eq("target_type", target);
+
+  if (fetchError) {
+    throw new Error(
+      fetchError.message || "Failed to check existing notification."
+    );
+  }
+
+  if (existingNotifications && existingNotifications.length > 0) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Creates a notification for a post like if one does not already exist.
  * @param {string} postId - The ID of the post that was liked.
  * @param {string} recipientId - The ID of the user receiving the notification.
  * @param {string} senderId - The ID of the user who liked the post.
  * @param {string} message - The notification message.
+ * @param {string} type - like, post or comment.
+ * @param {string} target - post or comment.
  * @returns {Promise<{success: boolean, message: string, data: object}>}
  * @throws {Error} - Throws if required parameters are missing or insert fails.
  */
-export async function createNotificationForPostLike(
+export async function createNotification(
   postId,
   recipientId,
   senderId,
-  message
+  message,
+  type,
+  target
 ) {
   try {
-    // Validate required params
-    if (!postId || !recipientId || !senderId || !message) {
+    if (!postId || !recipientId || !senderId || !message || !type || !target) {
       throw new Error(
-        "All parameters (postId, recipientId, senderId, message) are required."
+        "All parameters (postId, recipientId, senderId, message, type, target) are required."
       );
     }
 
-    // Check if notification already exists
-    const { data: existingNotifications, error: fetchError } = await supabase
-      .from("user_notification")
-      .select("id")
-      .eq("recipient_id", recipientId)
-      .eq("sender_id", senderId)
-      .eq("target_id", postId)
-      .eq("type", "like")
-      .eq("target_type", "post");
+    const isDuplicateNotification = await checkIsDuplicateNotification(
+      postId,
+      recipientId,
+      senderId,
+      NotificationType.quote,
+      NotificationTarget.post
+    );
 
-    if (fetchError) {
-      throw new Error(
-        fetchError.message || "Failed to check existing notification."
-      );
-    }
-
-    if (existingNotifications && existingNotifications.length > 0) {
+    if (isDuplicateNotification) {
       return {
         success: true,
         message: "Notification already exists",
@@ -179,15 +217,15 @@ export async function createNotificationForPostLike(
           recipient_id: recipientId,
           sender_id: senderId,
           message,
-          target_type: "post",
-          type: "like",
+          target_type: target,
+          type: type,
         },
       ])
       .select();
 
     if (error) {
       throw new Error(
-        error.message || "Failed to create notification for post like."
+        error.message || "Failed to create notification for quoting."
       );
     }
 
@@ -200,8 +238,13 @@ export async function createNotificationForPostLike(
       message: "Notification created successfully",
       data: data[0],
     };
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    console.log("🚀 ~ createNotificationForQuote ~ error:", error);
+    return {
+      success: false,
+      message: "An error occured",
+      error,
+    };
   }
 }
 

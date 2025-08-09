@@ -20,3 +20,14 @@ export const PasswordRules = {
       /[!@#$%^&*()]/.test(value) || "Must include a special character",
   },
 };
+
+export const NotificationType = {
+  like: "like",
+  comment: "comment",
+  quote: "quote",
+};
+
+export const NotificationTarget = {
+  post: "post",
+  comment: "comment",
+};

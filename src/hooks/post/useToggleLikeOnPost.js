@@ -34,6 +34,7 @@ const useToggleLikeOnPost = ({ onSuccess = () => {} }) => {
     },
     onSuccess: onSuccess,
     onError: (err, variables, context) => {
+      console.error("🚀 ~ useToggleLikeOnPost ~ err:", err);
       if (context?.querySnapshot) {
         queryClient.setQueryData([], context.querySnapshot);
       }
