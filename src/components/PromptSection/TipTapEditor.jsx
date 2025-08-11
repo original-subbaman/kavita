@@ -1,7 +1,11 @@
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
+import { useState } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import "./editor_styles.css";
 import { Tooltip } from "@mui/material";
+import { PaintBucket, X, XIcon } from "lucide-react";
+import { CirclePicker, SketchPicker } from "react-color";
+import { Button } from "@radix-ui/themes";
 
 const ToolbarButton = ({
   onClick,
@@ -12,26 +16,25 @@ const ToolbarButton = ({
   toolTip,
 }) => (
   <Tooltip title={toolTip ? toolTip : ""}>
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`
-      text-lg font-bold px-1 
+    <span>
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        className={`
+      font-primary text-lg font-bold px-1 
       ${isActive ? "bg-gray-500 text-white rounded" : ""}
-      ${
-        disabled
-          ? "opacity-50 cursor-not-allowed"
-          : "hover:bg-gray-400 rounded-sm"
-      }
+      ${disabled ? "opacity-50 cursor-not-allowed" : ""}
       ${className}
     `}
-    >
-      {children}
-    </button>
+      >
+        {children}
+      </button>
+    </span>
   </Tooltip>
 );
 
-function MenuBar({ editor }) {
+function MenuBar({ editor, bgColor, setBgColor }) {
+  const [showPicker, setShowPicker] = useState(false);
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
@@ -84,16 +87,19 @@ function MenuBar({ editor }) {
       label: "H1",
       action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
       active: editorState.isHeading1,
+      toolTip: "Heading 1",
     },
     {
       label: "H2",
       action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
       active: editorState.isHeading2,
+      toolTip: "Heading 2",
     },
     {
       label: "H5",
       action: () => editor.chain().focus().toggleHeading({ level: 5 }).run(),
       active: editorState.isHeading5,
+      toolTip: "Heading 5",
     },
     {
       label: "↺",
@@ -109,26 +115,65 @@ function MenuBar({ editor }) {
     },
   ];
 
+  function toggleCirclePicker() {
+    setShowPicker((prev) => !prev);
+  }
   return (
-    <div className="flex flex-wrap items-center gap-3 p-2 bg-gray-200 text-black rounded-t-sm h-10">
-      {buttons.map((btn, idx) => {
-        return (
-          <ToolbarButton
-            key={idx}
-            onClick={btn.action}
-            isActive={btn.active}
-            disabled={btn.disabled}
-            className={btn.className}
-            toolTip={btn?.toolTip}
+    <div>
+      <div className="flex flex-wrap items-center gap-3 p-2 bg-gray-200 text-black rounded-t-sm h-10">
+        {buttons.map((btn, idx) => {
+          return (
+            <ToolbarButton
+              key={idx}
+              onClick={btn.action}
+              isActive={btn.active}
+              disabled={btn.disabled}
+              className={btn.className}
+              toolTip={btn?.toolTip}
+            >
+              {btn.label}
+            </ToolbarButton>
+          );
+        })}
+
+        <ToolbarButton onClick={toggleCirclePicker} toolTip="Background Color">
+          <PaintBucket />
+        </ToolbarButton>
+      </div>
+      {showPicker && (
+        <div className="flex items-center bg-gray-800 w-full p-4 z-[100]">
+          <CirclePicker
+            color={bgColor}
+            colors={[
+              "#6B7280",
+              "#77172e",
+              "#1e3a8a",
+              "#065f46",
+              "#9c27b0",
+              "#f59e0b",
+              "#264d3b",
+              "#472e5b",
+            ]}
+            width="100%"
+            onChangeComplete={(color) => setBgColor(color.hex)}
+          />
+          <Button
+            variant="ghost"
+            onClick={toggleCirclePicker}
+            className="rounded-full w-7 h-7 p-0"
           >
-            {btn.label}
-          </ToolbarButton>
-        );
-      })}
+            <XIcon size={20} />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
+
+const DefaultBGColor = "#6B7280";
+
 function TipTapEditor({ initial, onChange }) {
+  const [bgColor, setBgColor] = useState(DefaultBGColor);
   const editor = useEditor({
     extensions: [StarterKit],
     content: initial,
@@ -136,9 +181,10 @@ function TipTapEditor({ initial, onChange }) {
       onChange(editor.getHTML());
     },
   });
+
   return (
     <div>
-      <MenuBar editor={editor} />
+      <MenuBar editor={editor} bgColor={bgColor} setBgColor={setBgColor} />
       <EditorContent editor={editor} />
     </div>
   );

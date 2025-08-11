@@ -62,9 +62,8 @@ export default function PostDetail() {
   const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
     onSuccess: (data, variables, context) => {
       const { success, isLiked } = data;
-      const isSelfRecipient = authorId === user.id;
 
-      if (success && !isSelfRecipient && isLiked) {
+      if (success && !isAuthorCurrUser && isLiked) {
         createNotification({
           postId: id,
           recipientId: authorId,
@@ -75,7 +74,7 @@ export default function PostDetail() {
         });
       }
 
-      if (success && !isSelfRecipient && !isLiked) {
+      if (success && !isAuthorCurrUser && !isLiked) {
         rmPostNotification({
           postId: id,
           recipientId: authorId,
@@ -93,7 +92,7 @@ export default function PostDetail() {
         quote = data[0]?.language;
       }
 
-      if (quote && quote !== "") {
+      if (!isAuthorCurrUser && quote && quote !== "") {
         createNotification({
           postId: id,
           recipientId: authorId,
