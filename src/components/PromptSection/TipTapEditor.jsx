@@ -1,11 +1,12 @@
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import "./editor_styles.css";
 import { Tooltip } from "@mui/material";
 import { PaintBucket, X, XIcon } from "lucide-react";
 import { CirclePicker, SketchPicker } from "react-color";
 import { Button } from "@radix-ui/themes";
+import { DocumentBackground } from "./DocumentBackground";
 
 const ToolbarButton = ({
   onClick,
@@ -33,6 +34,7 @@ const ToolbarButton = ({
   </Tooltip>
 );
 
+const DefaultBGColor = "#2e2b29";
 function MenuBar({ editor, bgColor, setBgColor }) {
   const [showPicker, setShowPicker] = useState(false);
   const editorState = useEditorState({
@@ -145,7 +147,7 @@ function MenuBar({ editor, bgColor, setBgColor }) {
           <CirclePicker
             color={bgColor}
             colors={[
-              "#6B7280",
+              DefaultBGColor,
               "#77172e",
               "#1e3a8a",
               "#065f46",
@@ -170,17 +172,32 @@ function MenuBar({ editor, bgColor, setBgColor }) {
   );
 }
 
-const DefaultBGColor = "#6B7280";
-
 function TipTapEditor({ initial, onChange }) {
   const [bgColor, setBgColor] = useState(DefaultBGColor);
   const editor = useEditor({
     extensions: [StarterKit],
     content: initial,
+    editorProps: {
+      attributes: {
+        style: `background-color: ${bgColor}`,
+      },
+    },
     onUpdate({ editor }) {
       onChange(editor.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (editor) {
+      editor.setOptions({
+        editorProps: {
+          attributes: {
+            style: `background-color: ${bgColor};`,
+          },
+        },
+      });
+    }
+  }, [bgColor, editor]);
 
   return (
     <div>
