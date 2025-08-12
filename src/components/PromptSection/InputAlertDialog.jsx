@@ -3,9 +3,11 @@ import { useState } from "react";
 import ResponseSnackbar from "../ResponseSnackbar";
 import TipTapEditor from "./TipTapEditor";
 
+export const DefaultBGColor = "#2e2b29";
 const minWords = 10;
 function InputAlertDialog({ addPost, mutationState, prompt }) {
   const [post, setPost] = useState(prompt);
+  const [bgColor, setBgColor] = useState(); // Default background color
   const [error, setError] = useState({
     lowWordCount: false,
     invalidPrompt: false,
@@ -40,15 +42,7 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
       return;
     }
 
-    if (!post.includes(prompt)) {
-      setError((prev) => ({
-        ...prev,
-        invalidPrompt: true,
-        message: "Your writing piece must include the prompt",
-      }));
-      return;
-    }
-    addPost({ post: post });
+    addPost({ post, bgColor });
   };
 
   // Think about debounce later
@@ -89,9 +83,13 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
       )}
       {/* Text Area */}
       <div>
-        <TipTapEditor initial={post} onChange={onPostChange} />
+        <TipTapEditor
+          initial={post}
+          onChange={onPostChange}
+          bgColor={bgColor}
+          setBgColor={setBgColor}
+        />
       </div>
-      {/* <QuillEditor value={post} onChange={onPostChange} /> */}
       <Flex gap="3" mt="4" justify="end">
         <AlertDialog.Cancel>
           <Button variant="soft" color="gray">

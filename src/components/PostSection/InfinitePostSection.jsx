@@ -51,6 +51,7 @@ function InfinitePostSection(props) {
                   <Post
                     content={post.post}
                     author={post.user.user_name}
+                    bgColor={post.bg_color}
                     width="100%" // Let Masonry decide width
                     height="auto"
                   />

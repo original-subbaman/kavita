@@ -1,7 +1,4 @@
-import React from "react";
-import { Card, Text, Flex, Box } from "@radix-ui/themes";
-import { HeartIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
-import { getRandomDimensions } from "../../utils/Helper";
+import { Box, Card, Flex, Text } from "@radix-ui/themes";
 import DOMPurify from "dompurify";
 function PostButton({ children }) {
   return (
@@ -10,20 +7,33 @@ function PostButton({ children }) {
     </button>
   );
 }
-function Post({ content, author, width, height }) {
+function Post({ content, author, width, height, bgColor }) {
   const sanitizedPost = DOMPurify.sanitize(content);
   return (
-    <div className="relative group cursor-pointer rounded-xl">
+    <div
+      className={`relative group cursor-pointer rounded-md`}
+      style={{
+        backgroundColor: bgColor || "var(--radix-ice-berg-dark)",
+      }}
+    >
       {/* Blurred border layer on hover */}
-      <div className="absolute -inset-[0.1px] bg-radix-green/30 border-radix-green rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-300 group-hover:duration-200"></div>
+      {/* <div className="absolute -inset-[0.1px] bg-radix-green/30 border-radix-green rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-300 group-hover:duration-200"></div> */}
       {/* Main card */}
       <Card
         className={`relative 
         w-[${width}] h-[${height}]
-      text-white cursor-pointer hover:border-radix-green/30 
-        rounded-xl bg-ice-berg-dark`}
+      text-white cursor-pointer 
+        rounded-md `}
+        style={{
+          backgroundColor: bgColor || "var(--radix-ice-berg-dark)",
+        }}
       >
-        <Box className="bg-ice-berg-dark p-4 z-0 max-h-[300px]">
+        <Box
+          className={`p-4 z-0 max-h-[300px]`}
+          style={{
+            backgroundColor: bgColor || "var(--radix-ice-berg-dark)",
+          }}
+        >
           <Box
             dangerouslySetInnerHTML={{ __html: sanitizedPost }}
             onMouseUp={(event) => console.log(event.type)}

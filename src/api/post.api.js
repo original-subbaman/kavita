@@ -61,6 +61,7 @@ export async function fetchPostsPagination({ pageParam }) {
     }
 
     const { data, error } = await query;
+    console.log("🚀 ~ fetchPostsPagination ~ data:", data);
 
     if (error) {
       throw new Error(`Failed to fetch posts: ${error.message}`);
@@ -222,16 +223,17 @@ async function getPostLikeStatus(userId, postId) {
  * @returns {Promise<Object>} - Inserted post comment object.
  * @throws {Error} - Throws if params are missing or insert fails.
  */
-export async function addPost(post, userId) {
+export async function addPost(post, userId, bgColor) {
   try {
     if (!post || !userId) {
       throw new Error("Post and userId are required.");
     }
 
-    const { data, error } = await supabase.from("post").insert([
+    const { error } = await supabase.from("post").insert([
       {
         post: post,
         user_id: userId,
+        bg_color: bgColor,
       },
     ]);
 
