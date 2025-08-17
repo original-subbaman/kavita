@@ -28,9 +28,8 @@ import useToggleLikeOnPost from "../hooks/post/useToggleLikeOnPost";
 import { actionTypes } from "../reducers/responseReducer";
 import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
-import { convertISOTimestamp } from "../utils/Date";
 import { NotificationTarget, NotificationType } from "../utils/Constants";
-import { jaJP } from "@mui/x-date-pickers/locales";
+import { convertISOTimestamp } from "../utils/Date";
 
 export default function PostDetail() {
   const navigate = useNavigate();
@@ -46,18 +45,20 @@ export default function PostDetail() {
 
   const closeAlert = () => dispatch(resetResponse());
 
-  const { data } = useGetPost({
+  const { data: post } = useGetPost({
     postId: id,
     userId: user?.id,
     isUpdating: false,
     staleTime: 0,
+    select: (response) => response.post,
   });
 
-  const author = data?.post.user.user_name;
-  const authorId = data?.post.user.id;
-  const createdAt = data?.post.created_at;
-  const post = DOMPurify.sanitize(data?.post.post);
-  const hasLiked = data?.hasLiked;
+  const author = post?.user.user_name;
+  const authorId = post?.user.id;
+  const createdAt = post?.created_at;
+  const content = DOMPurify.sanitize(post?.post);
+  const hasLiked = post?.hasLiked;
+  const contentBGColor = post?.bg_color;
   const isAuthorCurrUser = user.id === authorId;
 
   const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
@@ -230,9 +231,15 @@ export default function PostDetail() {
           selectedText={selectedText}
           captureLanguage={handleCaptureLanguage}
         />
-        <Section className="rounded-lg drop-shadow-lg py-10 px-4 md:px-8 bg-gray-100 bg-opacity-[0.01] mb-2">
+        <Section
+          className="rounded-lg drop-shadow-lg 
+        py-10 px-4 mb-2 md:px-8"
+          style={{
+            backgroundColor: contentBGColor || "var(--radix-ice-berg-dark)",
+          }}
+        >
           <Box
-            dangerouslySetInnerHTML={{ __html: post }}
+            dangerouslySetInnerHTML={{ __html: content }}
             onMouseMove={(event) => getSelectionText()}
             onMouseUp={(event) => window.getSelection().removeAllRanges()}
             className="text-white text-start font-primary text-2xl font-extralight whitespace-pre-line"
