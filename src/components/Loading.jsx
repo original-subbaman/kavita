@@ -1,7 +1,6 @@
-import React from "react";
+import { Text } from "@radix-ui/themes";
 import Lottie from "react-lottie";
 import animationData from "../lottie/loading.json";
-import { Text } from "@radix-ui/themes";
 
 function Loading({ message }) {
   const defaultOptions = {
