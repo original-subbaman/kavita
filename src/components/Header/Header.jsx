@@ -1,15 +1,13 @@
 import { Badge, IconButton } from "@mui/material";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button, Text } from "@radix-ui/themes";
 import { IoIosNotifications } from "react-icons/io";
 import { NavLink, useLocation } from "react-router-dom";
-import useGetNotificationCount from "../../hooks/notification/useGetNotificationCount";
 import useAuth from "../../hooks/auth/useAuth";
+import useGetNotificationCount from "../../hooks/notification/useGetNotificationCount";
 import LinkText from "./LinkText";
 import LoginButton from "./LoginButton";
 import PopupMenu from "./PopupMenu";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
-import MobileNav from "./MobileNav";
 
 function Header({ toggleSideNav }) {
   const location = useLocation();
@@ -19,7 +17,7 @@ function Header({ toggleSideNav }) {
   const { data: count } = useGetNotificationCount(user?.id);
 
   return (
-    <header className="flex justify-between text-white bg-ice-berg-dark items-center h-16 px-4 md:px-10 drop-shadow-md sticky top-0 z-[100]">
+    <header className="flex justify-between text-white bg-dark-light items-center h-16 px-4 md:px-10 drop-shadow-md sticky top-0 z-[100]">
       <Button
         variant="ghost"
         size="4"

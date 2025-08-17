@@ -8,7 +8,7 @@ function RootWrapper({ showHeader = true, children }) {
   const [openSideNav, setOpenSideNav] = useState(false);
 
   return (
-    <main className="w-full font-primary min-h-[100dvh] bg-aurora">
+    <main className="w-full font-primary min-h-[100dvh] bg-dark-light">
       {showHeader && (
         <Header toggleSideNav={() => setOpenSideNav((prev) => !prev)} />
       )}

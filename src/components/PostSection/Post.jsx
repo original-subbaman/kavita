@@ -9,11 +9,10 @@ function PostButton({ children }) {
   );
 }
 function Post({ content, author, createdAt, width, height, bgColor }) {
-  console.log("🚀 ~ Post ~ createdAt:", createdAt);
   const sanitizedPost = DOMPurify.sanitize(content);
   return (
     <div
-      className={`relative group cursor-pointer rounded-md`}
+      className={`relative group cursor-pointer rounded-md drop-shadow-md `}
       style={{
         backgroundColor: bgColor || "var(--radix-ice-berg-dark)",
       }}
@@ -21,12 +20,12 @@ function Post({ content, author, createdAt, width, height, bgColor }) {
       {/* Main card */}
       <Box
         size="none"
-        className={`w-[${width}] h-[${height}] text-white cursor-pointer rounded-md p-0 hover:shadow-xl`}
+        className={`w-[${width}] h-[${height}] text-white cursor-pointer rounded-md p-0 drop-shadow-2xl hover:shadow-xl`}
         style={{
           backgroundColor: bgColor || "var(--radix-ice-berg-dark)",
         }}
       >
-        <Box className="flex flex-row items-center gap-3 mb-4 p-2 bg-dark-light rounded-t-sm">
+        <Box className="flex flex-row items-center gap-3 mb-4 p-2 bg-dark-light border-t-[1px]  border-dark-light rounded-t-sm">
           <Avatar
             src="https://i.pravatar.cc/300"
             alt="User Avatar"

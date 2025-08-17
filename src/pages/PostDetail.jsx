@@ -30,6 +30,7 @@ import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { convertISOTimestamp } from "../utils/Date";
 import { NotificationTarget, NotificationType } from "../utils/Constants";
+import { jaJP } from "@mui/x-date-pickers/locales";
 
 export default function PostDetail() {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ export default function PostDetail() {
       const { success, isLiked } = data;
 
       if (success && !isAuthorCurrUser && isLiked) {
-        createNotification({
+        notifyUser({
           postId: id,
           recipientId: authorId,
           senderId: user.id,
@@ -93,7 +94,7 @@ export default function PostDetail() {
       }
 
       if (!isAuthorCurrUser && quote && quote !== "") {
-        createNotification({
+        notifyUser({
           postId: id,
           recipientId: authorId,
           senderId: user.id,
@@ -115,7 +116,7 @@ export default function PostDetail() {
     }
   );
 
-  const { mutate: createNotification } = useCreateNotification(
+  const { mutate: notifyUser } = useCreateNotification(
     () => {
       console.log("post notified");
     },
@@ -165,6 +166,27 @@ export default function PostDetail() {
       dispatch(setOpenReportPost(true));
     }
     navigate("/login");
+  }
+
+  function onPostComment(response) {
+    dispatch({
+      type: actionTypes.SET_SUCCESS,
+      payload: "Comment posted!",
+    });
+
+    const comment = response?.comment;
+    const message = `@${user.user_name} commented on your post${
+      comment ? `: ${comment}` : "."
+    }`;
+
+    notifyUser({
+      postId: id,
+      recipientId: authorId,
+      senderId: user.id,
+      message: message,
+      type: NotificationType.comment,
+      target: NotificationTarget.post,
+    });
   }
 
   return (
@@ -239,12 +261,7 @@ export default function PostDetail() {
         <Box className="mb-8">
           <CommentSection
             postId={id}
-            onPostComment={() =>
-              dispatch({
-                type: actionTypes.SET_SUCCESS,
-                payload: "Comment posted!",
-              })
-            }
+            onPostComment={onPostComment}
             onPostCommentError={() =>
               dispatch({
                 type: actionTypes.SET_ERROR,

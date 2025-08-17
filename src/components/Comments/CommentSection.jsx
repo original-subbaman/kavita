@@ -14,12 +14,12 @@ import {
 } from "../../slice/postDetailSlice";
 import { setError, setSuccess } from "../../slice/responseSlice";
 import ErrorMessage from "../ErrorMessage";
-import Loading from "../Loading";
 import DeleteCommentDialog from "../PostDetail/DeleteCommentDialog";
 import ReportCommentDialog from "../PostDetail/ReportCommentDialog";
 import ResponseSnackbar from "../ResponseSnackbar";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
+import { NotificationTarget, NotificationType } from "../../utils/Constants";
 
 const CommentSection = ({
   postId,
@@ -47,8 +47,8 @@ const CommentSection = ({
   } = useLoadComments({ postId: postId });
 
   const { mutate } = usePostComment({
-    onSuccess: () => {
-      onPostComment();
+    onSuccess: (response) => {
+      onPostComment(response);
       queryClient.refetchQueries({ queryKey: ["load_comments", postId] });
     },
     onError: () => {
