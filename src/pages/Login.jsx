@@ -41,7 +41,8 @@ const Login = () => {
       setLoading(true);
       await login(data.email, data.password);
       setLoading(false);
-      navigate("/");
+      navigate("/", { replace: true });
+      window.location.reload();
     } catch (error) {
       let errorMessage;
       if (error.message.includes("Invalid login credentials")) {
