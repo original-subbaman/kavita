@@ -59,12 +59,11 @@ export default function PostDetail() {
   const content = DOMPurify.sanitize(post?.post);
   const hasLiked = post?.hasLiked;
   const contentBGColor = post?.bg_color;
-  const isAuthorCurrUser = user.id === authorId;
+  const isAuthorCurrUser = user?.id === authorId;
 
   const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
     onSuccess: (data, variables, context) => {
       const { success, isLiked } = data;
-
       if (success && !isAuthorCurrUser && isLiked) {
         notifyUser({
           postId: id,
