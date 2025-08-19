@@ -14,7 +14,7 @@ function Header({ toggleSideNav }) {
   const { user, isAuthenticated } = useAuth();
   const userName = user?.user_metadata?.name;
 
-  const { data: count } = useGetNotificationCount(user?.id);
+  const { data: count } = useGetNotificationCount(user?.id, 0);
 
   return (
     <header className="flex justify-between text-white bg-dark-light items-center h-16 px-4 md:px-10 drop-shadow-md sticky top-0 z-[100]">

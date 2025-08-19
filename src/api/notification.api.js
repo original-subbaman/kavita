@@ -55,22 +55,17 @@ export async function getTodaysNotificationForUser(
  * @returns {Promise<number>} - The count of today's notifications.
  * @throws {Error} - Throws if userId is missing or fetch fails.
  */
-export async function getTodaysNotificationCount(userId) {
+export async function getNotificationCount(userId) {
   try {
     if (!userId) {
       throw new Error("Missing userId");
     }
 
-    const start = dayjs().startOf("day").utc().format();
-    const end = dayjs().endOf("day").utc().format();
-
     const { error, count } = await supabase
       .from("user_notification")
-      .select("", { count: "exact" })
+      .select("", { count: "exact", head: true })
       .eq("recipient_id", userId)
-      .gte("created_at", start)
-      .lte("created_at", end)
-      .limit(1);
+      .eq("is_seen", false);
 
     if (error) {
       console.error("Supabase error (getNotificationForUser):", error.message);
@@ -293,4 +288,38 @@ export async function removeNotificationForPost(postId, recipientId, senderId) {
   }
 }
 
-function createNotificationForComment(postId, recipientId, senderId, message) {}
+/**
+ * Marks all unseen notifications as seen for a given user.
+ * @function updateNotificationSeenState
+ * @param {Object} params - Function parameters.
+ * @param {string|number} params.userId - The ID of the user whose notifications should be marked as seen.
+ * @returns {Promise<{success: boolean, message: string, error?: Error}>}
+ */
+export async function updateNotificationSeenState({ userId }) {
+  try {
+    if (!userId) {
+      throw new Error("Missing parameter: userId");
+    }
+
+    const { data, error } = await supabase
+      .from("user_notification")
+      .update({ is_seen: true })
+      .eq("recipient_id", userId)
+      .eq("is_seen", false);
+    if (error) {
+      throw new Error(error.message || "Failed to update notification");
+    }
+
+    return {
+      success: true,
+      message: "Notification 'seen' state updated",
+    };
+  } catch (error) {
+    console.log("🚀 ~ updateNotificationSeenState ~ error:", error);
+    return {
+      success: false,
+      message: "An error occured",
+      error,
+    };
+  }
+}

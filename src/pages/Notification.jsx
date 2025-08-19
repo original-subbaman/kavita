@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../components/Loading";
 import NotificationSection from "../components/Notification/NotificationSection";
 import useAuth from "../hooks/auth/useAuth";
 import useGetRecentNotifications from "../hooks/notification/useGetRecentNotifications";
 import useGetTodaysNotification from "../hooks/notification/useGetTodaysNotification";
+import useUpdateNotificationSeenState from "../hooks/notification/useUpdateNotificationSeenState";
+import { useQueryClient } from "@tanstack/react-query";
 
 const pageSize = 10;
 
 function Notification() {
   const { user } = useAuth();
+  const userId = user?.id;
+  const queryClient = useQueryClient();
   const [pagination, setPagination] = useState({
     fromOffset: 0,
     toOffset: pageSize - 1,
@@ -33,6 +37,23 @@ function Notification() {
     fromOffset: paginationRecent.fromOffset,
     toOffset: pagination.toOffset,
   });
+
+  const { mutate: updateNotificationState } = useUpdateNotificationSeenState({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["notification_count", userId],
+      });
+    },
+    onError: (error) => {
+      console.log("🚀 ~ Notification ~ error:", error);
+    },
+  });
+
+  useEffect(() => {
+    if (userId) {
+      updateNotificationState({ userId: userId });
+    }
+  }, [userId]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
