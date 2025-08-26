@@ -19,16 +19,6 @@ function Profile() {
     { date: "2016/01/14", count: 5 },
     { date: "2016/02/11", count: 20 },
   ];
-  const handleProfileClick = () => {
-    document.getElementById("upload_profile").click();
-  };
-  const handleProfileImageSelect = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imgURL = URL.createObjectURL(file);
-      setProfile(imgURL);
-    }
-  };
 
   const { data: postCount, isFetching: isFetchingPostCount } = useGetPostCount({
     userId: user.id,

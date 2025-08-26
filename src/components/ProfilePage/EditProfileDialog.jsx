@@ -1,15 +1,18 @@
-import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
-import React, { useRef } from "react";
+import { Button, Dialog, Flex, Text, Box } from "@radix-ui/themes";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import CustomTextField from "../CustomTextField";
+import UploadProfile from "./UploadProfile";
 function EditProfileDialog({
   open,
   setOpen,
   userId,
   user,
   updateUser,
+  updateProfile,
   loading,
 }) {
+  const [profile, setProfile] = useState();
   const {
     formState: { errors },
     control,
@@ -25,9 +28,13 @@ function EditProfileDialog({
       formRef.current.requestSubmit();
     }
   };
+
   const onSubmit = (data) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
     updateUser({ userId: userId, user: data });
+    console.log("🚀 ~ onSubmit ~ profile:", profile);
+    if (profile) {
+      updateProfile({ userId, profile });
+    }
   };
 
   return (
@@ -38,6 +45,9 @@ function EditProfileDialog({
           Make changes to your profile.
         </Dialog.Description>
         <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
+          <Box className="flex justify-center">
+            <UploadProfile profile={profile} setProfile={setProfile} />
+          </Box>
           <Flex direction="column" gap="3">
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
@@ -59,6 +69,7 @@ function EditProfileDialog({
                 name={"user_name"}
                 placeholder={"Enter your username"}
                 control={control}
+                defaultValue={user?.user_name}
                 error={errors?.user_name?.message}
                 rules={{ required: "Username is required" }}
               />
@@ -71,6 +82,7 @@ function EditProfileDialog({
                 name={"address"}
                 placeholder={"Enter your address"}
                 control={control}
+                defaultValue={user?.address}
                 error={errors?.address?.message}
                 rules={{ required: "Address is required" }}
               />

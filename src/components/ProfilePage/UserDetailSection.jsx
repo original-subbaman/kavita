@@ -11,6 +11,7 @@ import useGetUser from "../../hooks/user/useGetUser";
 import useUpdateUser from "../../hooks/user/useUpdateUser";
 import ResponseSnackbar from "../ResponseSnackbar";
 import { useQueryClient } from "@tanstack/react-query";
+import useUploadProfile from "../../hooks/user/useUploadProfile";
 
 function UserDetailSection(props) {
   const { user } = useAuth();
@@ -33,6 +34,13 @@ function UserDetailSection(props) {
     onError: onUpdateError,
   });
 
+  const { mutate: updateProfile } = useUploadProfile({
+    onSuccess: (res) => {
+      console.log("🚀 ~ UserDetailSection ~ res:", res);
+    },
+    onError: onUpdateError,
+  });
+
   const { data, isFetched } = useGetUser({ userId: user.id });
 
   let joinedOn = "";
@@ -47,6 +55,7 @@ function UserDetailSection(props) {
   const handleResponseClose = () => {
     setResponse({ success: false, error: false });
   };
+
   return (
     <ProfileSectionWrapper height={"15rem"}>
       {/* Success Snackbar */}
@@ -64,14 +73,17 @@ function UserDetailSection(props) {
         severity={"error"}
       />
       {/* Edit Profile Dialog */}
-      <EditProfileDialog
-        open={openEdit}
-        setOpen={setOpenEdit}
-        userId={user.id}
-        user={{ address, user_name: username, name }}
-        updateUser={updateUser}
-        loading={isUpdating}
-      />
+      {openEdit && user && (
+        <EditProfileDialog
+          open={openEdit}
+          setOpen={setOpenEdit}
+          userId={user.id}
+          user={{ address, user_name: username, name }}
+          updateUser={updateUser}
+          updateProfile={updateProfile}
+          loading={isUpdating}
+        />
+      )}
       <div className="flex justify-between">
         <div className="flex gap-2">
           <div className="w-1 h-8 bg-radix-green rounded-full"></div>

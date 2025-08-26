@@ -1,4 +1,5 @@
 import supabase from "../supabase_client/create_client";
+import { v4 as uuid } from "uuid";
 
 /**
  * Checks if a given username is available (i.e., not already taken).
@@ -34,6 +35,9 @@ export async function isUserNameAvailable({ username }) {
  */
 export async function updateUser({ userId, user }) {
   try {
+    if (!userId) throw new Error("userId is required");
+    if (!user) throw new Error("user data is required");
+
     const { data, error } = await supabase
       .from("user")
       .update(user)
@@ -126,6 +130,41 @@ export async function getLongestStreak(userId) {
     return data;
   } catch (error) {
     console.error("Unexpected error in getLongestStreak:", error);
+    throw error;
+  }
+}
+
+export async function uploadProfile(userId, profile) {
+  console.log("🚀 ~ uploadProfile ~ profile:", profile);
+  try {
+    if (!userId) throw new Error("userId is missing");
+    if (!profile) throw new Error("profile is required");
+
+    if (!profile.type.startsWith("image/")) {
+      throw new Error("Only image files are allowed");
+    }
+
+    if (profile.size > 1024 * 1024) {
+      throw new Error("Image size must be under 2MB");
+    }
+
+    const fileExt = profile.name.split(".").pop();
+    const fileName = `${uuid()}.${fileExt}`;
+    const filePath = `${userId}/${fileName}`;
+
+    const { error } = await supabase.storage
+      .from("profile_images")
+      .upload(`${userId}/${uuid()}`, profile);
+
+    if (error) throw error;
+
+    const { data: publicData } = supabase.storage
+      .from("profile_images")
+      .getPublicUrl(filePath);
+
+    return { path: filePath, url: publicData.publicUrl };
+  } catch (error) {
+    console.error("🚀 ~ uploadProfile ~ error:", error);
     throw error;
   }
 }
