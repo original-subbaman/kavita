@@ -2,15 +2,17 @@ import { Badge, IconButton } from "@mui/material";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button, Text } from "@radix-ui/themes";
 import { IoIosNotifications } from "react-icons/io";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetNotificationCount from "../../hooks/notification/useGetNotificationCount";
 import LinkText from "./LinkText";
 import LoginButton from "./LoginButton";
 import PopupMenu from "./PopupMenu";
+import quill from "../../assets/quill.png";
 
 function Header({ toggleSideNav }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const userName = user?.user_metadata?.name;
 
@@ -26,9 +28,16 @@ function Header({ toggleSideNav }) {
       >
         <HamburgerMenuIcon className="w-8 h-8" />
       </Button>
-      <Text size="6" className="hidden md:block">
-        CWS
-      </Text>
+
+      <Button
+        size="4"
+        variant="ghost"
+        className="hidden cursor-pointer hover:bg-transparent hover:shadow-none md:flex md:items-center md:gap-1 font-cal_sans text-radix-green text-2xl"
+        onClick={() => navigate("/")}
+      >
+        Kavita
+        <img src={quill} className="w-6 h-6" />
+      </Button>
       {isAuthenticated && (
         <>
           <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-8">

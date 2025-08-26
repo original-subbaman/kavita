@@ -23,6 +23,7 @@ export default {
       fontFamily: {
         primary: ["Nunito"],
         lora: ["lora", "serif"],
+        cal_sans: ["Cal Sans", "sans-serif"]
       },
     },
   },
