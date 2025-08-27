@@ -5,8 +5,6 @@ import Loading from "../components/Loading";
 
 const ProtectedRoute = ({ children }) => {
   const { user, session, loading } = useAuth();
-  console.log("🚀 ~ ProtectedRoute ~ loading:", loading);
-  console.log("🚀 ~ ProtectedRoute ~ session:", !session);
 
   if (loading) {
     return <Loading />;

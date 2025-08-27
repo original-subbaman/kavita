@@ -13,20 +13,32 @@ import ResponseSnackbar from "../ResponseSnackbar";
 import { useQueryClient } from "@tanstack/react-query";
 import useUploadProfile from "../../hooks/user/useUploadProfile";
 
+const defaultErrMsg = "Unexpected error! Please try again later";
+
 function UserDetailSection(props) {
   const { user } = useAuth();
   const { name, email } = user.user_metadata;
   const [openEdit, setOpenEdit] = useState(false);
-  const [response, setResponse] = useState({ success: false, error: false });
+  const [response, setResponse] = useState({
+    success: false,
+    error: false,
+    message: "",
+  });
   const queryClient = useQueryClient();
 
   const onUpdateSuccess = (data) => {
-    setResponse((prev) => ({ ...prev, success: true }));
+    // setResponse((prev) => ({ ...prev, success: true }));
     queryClient.invalidateQueries({ queryKey: ["user_get_user", user.id] });
-    setOpenEdit(false);
+    // setOpenEdit(false);
   };
   const onUpdateError = (error) => {
-    setResponse((prev) => ({ ...prev, error: true }));
+    console.log("🚀 ~ onUpdateError ~ error:", error);
+    const errMsg = error.response.data?.message;
+    setResponse((prev) => ({
+      ...prev,
+      error: true,
+      message: errMsg || defaultErrMsg,
+    }));
   };
 
   const { mutate: updateUser, isPending: isUpdating } = useUpdateUser({
@@ -34,19 +46,21 @@ function UserDetailSection(props) {
     onError: onUpdateError,
   });
 
-  const { mutate: updateProfile } = useUploadProfile({
-    onSuccess: (res) => {
-      console.log("🚀 ~ UserDetailSection ~ res:", res);
-    },
-    onError: onUpdateError,
-  });
+  const { mutate: updateProfile, isPending: isUploadingProfile } =
+    useUploadProfile({
+      onSuccess: (res) => {
+        console.log("🚀 ~ UserDetailSection ~ res:", res);
+      },
+      onError: () => onUpdateError,
+    });
 
-  const { data, isFetched } = useGetUser({ userId: user.id });
+  const { data, isFetched: isUserFetched } = useGetUser({ userId: user.id });
 
   let joinedOn = "";
   let username = "";
   let address = "";
-  if (isFetched) {
+
+  if (isUserFetched) {
     joinedOn = new Date(data.created_at).toLocaleDateString("en-IN");
     username = data.user_name;
     address = data.address;
@@ -69,11 +83,11 @@ function UserDetailSection(props) {
       <ResponseSnackbar
         open={response.error}
         onClose={handleResponseClose}
-        message={"Unexpected error! Please try again later"}
+        message={response.message}
         severity={"error"}
       />
       {/* Edit Profile Dialog */}
-      {openEdit && user && (
+      {openEdit && isUserFetched && (
         <EditProfileDialog
           open={openEdit}
           setOpen={setOpenEdit}
@@ -81,7 +95,7 @@ function UserDetailSection(props) {
           user={{ address, user_name: username, name }}
           updateUser={updateUser}
           updateProfile={updateProfile}
-          loading={isUpdating}
+          loading={isUpdating || isUploadingProfile ? "true" : "false"}
         />
       )}
       <div className="flex justify-between">

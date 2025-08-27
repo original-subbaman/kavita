@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import CustomTextField from "../CustomTextField";
 import UploadProfile from "./UploadProfile";
+
 function EditProfileDialog({
   open,
   setOpen,
@@ -23,12 +24,6 @@ function EditProfileDialog({
 
   const formRef = useRef(null);
 
-  const triggerSubmit = () => {
-    if (formRef.current) {
-      formRef.current.requestSubmit();
-    }
-  };
-
   const onSubmit = (data) => {
     updateUser({ userId: userId, user: data });
     console.log("🚀 ~ onSubmit ~ profile:", profile);
@@ -39,7 +34,7 @@ function EditProfileDialog({
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Content maxWidth="450px">
+      <Dialog.Content maxwidth="450px">
         <Dialog.Title>Edit Profile</Dialog.Title>
         <Dialog.Description size="2" mb="4">
           Make changes to your profile.
@@ -88,18 +83,17 @@ function EditProfileDialog({
               />
             </label>
           </Flex>
-        </form>
-
-        <Flex gap="3" mt="4" justify="end">
-          <Dialog.Close>
-            <Button variant="soft" color="gray">
-              Cancel
+          <Flex gap="3" mt="4" justify="end">
+            <Dialog.Close>
+              <Button variant="soft" color="gray">
+                Cancel
+              </Button>
+            </Dialog.Close>
+            <Button loading={loading} type="submit">
+              Save
             </Button>
-          </Dialog.Close>
-          <Button loading={loading} onClick={triggerSubmit}>
-            Save
-          </Button>
-        </Flex>
+          </Flex>
+        </form>
       </Dialog.Content>
     </Dialog.Root>
   );

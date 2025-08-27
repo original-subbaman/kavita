@@ -36,7 +36,7 @@ export async function isUserNameAvailable({ username }) {
 export async function updateUser({ userId, user }) {
   try {
     if (!userId) throw new Error("userId is required");
-    if (!user) throw new Error("user data is required");
+    if (!user) throw new Error("User data is required");
 
     const { data, error } = await supabase
       .from("user")
@@ -134,6 +134,16 @@ export async function getLongestStreak(userId) {
   }
 }
 
+/**
+ * @async
+ * @function uploadProfile
+ * @param {string} userId - The unique ID of the user.
+ * @param {File} profile - The profile image file to upload (must be an image under 2MB).
+ * @returns {Promise<{ path: string }>} An object containing the storage file path of the uploaded image.
+ *
+ * @throws {Error} If validation fails, the upload fails, or the database update fails.
+ *
+ */
 export async function uploadProfile(userId, profile) {
   console.log("🚀 ~ uploadProfile ~ profile:", profile);
   try {
@@ -149,18 +159,29 @@ export async function uploadProfile(userId, profile) {
     }
 
     const fileExt = profile.name.split(".").pop();
-    const fileName = `${uuid()}.${fileExt}`;
+    const fileName = `profile.${fileExt}`;
     const filePath = `${userId}/${fileName}`;
 
     const { error } = await supabase.storage
       .from("profile_images")
-      .upload(`${userId}/${uuid()}`, profile);
+      .upload(filePath, profile, { upsert: true });
 
     if (error) throw error;
 
     const { data: publicData } = supabase.storage
       .from("profile_images")
       .getPublicUrl(filePath);
+
+    const { error: updateError } = await supabase
+      .from("user")
+      .update({ profile_url: filePath })
+      .eq("id", userId)
+      .select();
+
+    if (updateError) {
+      await supabase.storage.from("profile_images").remove([filePath]);
+      throw error;
+    }
 
     return { path: filePath, url: publicData.publicUrl };
   } catch (error) {
