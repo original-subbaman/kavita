@@ -145,7 +145,6 @@ export async function getLongestStreak(userId) {
  *
  */
 export async function uploadProfile(userId, profile) {
-  console.log("🚀 ~ uploadProfile ~ profile:", profile);
   try {
     if (!userId) throw new Error("userId is missing");
     if (!profile) throw new Error("profile is required");
@@ -186,6 +185,42 @@ export async function uploadProfile(userId, profile) {
     return { path: filePath, url: publicData.publicUrl };
   } catch (error) {
     console.error("🚀 ~ uploadProfile ~ error:", error);
+    throw error;
+  }
+}
+
+/**
+ * Fetches the public profile image URL for a given user.
+ * @async
+ * @function getProfile
+ * @param {string} userId - The unique identifier of the user.
+ * @returns {Promise<string>} The public URL of the user's profile image.
+ *
+ * @throws {Error} If `userId` is not provided.
+ * @throws {Error} If the database query fails.
+ * @throws {Error} If no profile URL is found for the user.
+ *
+ */
+export async function getProfile(userId) {
+  try {
+    if (!userId) throw new Error("userId is required");
+
+    const { data, error } = await supabase
+      .from("user")
+      .select("profile_url")
+      .eq("id", userId)
+      .single();
+
+    if (error) throw error;
+    if (!data?.profile_url) throw new Error("No profile URL found");
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("profile_images").getPublicUrl(data.profile_url);
+
+    return publicUrl;
+  } catch (error) {
+    console.log("🚀 ~ getProfile ~ error:", error);
     throw error;
   }
 }

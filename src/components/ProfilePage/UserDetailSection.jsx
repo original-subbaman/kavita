@@ -12,6 +12,7 @@ import useUpdateUser from "../../hooks/user/useUpdateUser";
 import ResponseSnackbar from "../ResponseSnackbar";
 import { useQueryClient } from "@tanstack/react-query";
 import useUploadProfile from "../../hooks/user/useUploadProfile";
+import useGetProfile from "../../hooks/user/useGetProfile";
 
 const defaultErrMsg = "Unexpected error! Please try again later";
 
@@ -55,6 +56,8 @@ function UserDetailSection(props) {
     });
 
   const { data, isFetched: isUserFetched } = useGetUser({ userId: user.id });
+
+  const { data: profile } = useGetProfile({ userId: user.id });
 
   let joinedOn = "";
   let username = "";
@@ -109,6 +112,7 @@ function UserDetailSection(props) {
       </div>
       <div className="flex gap-8 mt-4">
         <Avatar
+          src={profile}
           sizes=""
           sx={{
             width: 80,
