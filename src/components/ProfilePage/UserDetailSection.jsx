@@ -27,12 +27,12 @@ function UserDetailSection(props) {
   const queryClient = useQueryClient();
 
   const onUpdateSuccess = (data) => {
-    // setResponse((prev) => ({ ...prev, success: true }));
+    console.log("🚀 ~ onUpdateSuccess ~ data:", data);
+    setResponse((prev) => ({ ...prev, success: true }));
     queryClient.invalidateQueries({ queryKey: ["user_get_user", user.id] });
-    // setOpenEdit(false);
+    setOpenEdit(false);
   };
   const onUpdateError = (error) => {
-    console.log("🚀 ~ onUpdateError ~ error:", error);
     const errMsg = error.response.data?.message;
     setResponse((prev) => ({
       ...prev,

@@ -24,9 +24,8 @@ function EditProfileDialog({
 
   const formRef = useRef(null);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     updateUser({ userId: userId, user: data });
-    console.log("🚀 ~ onSubmit ~ profile:", profile);
     if (profile) {
       updateProfile({ userId, profile });
     }

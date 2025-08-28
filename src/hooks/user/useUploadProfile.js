@@ -3,7 +3,9 @@ import { uploadProfile } from "../../api/user.api";
 
 const useUploadProfile = ({ onSuccess, onError }) => {
   return useMutation({
-    mutationFn: ({ userId, profile }) => uploadProfile(userId, profile),
+    mutationFn: ({ userId, profile }) => {
+      return uploadProfile(userId, profile);
+    },
     onSuccess,
     onError,
   });
