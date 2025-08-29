@@ -1,5 +1,3 @@
-import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Root as AlertDialogRoot } from "@radix-ui/react-alert-dialog";
 import { Box, Flex } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,7 +13,6 @@ import ResponseSnackbar from "../components/ResponseSnackbar";
 import ScrollToTop from "../components/ScrollToTop";
 import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
-import { StaticDatePickerStyle } from "../utils/Date";
 
 function Home() {
   const { user } = useAuth();
@@ -114,20 +111,7 @@ function Home() {
           <InfinitePostSection />
         </Box>
         {/** filter */}
-        <Box className="flex-1 my-8 color-white hidden sm:flex flex-col items-center  ">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <StaticDatePicker
-              value={date}
-              onChange={(value) => setDate(value)}
-              disableFuture
-              slotProps={{
-                toolbar: { hidden: true },
-                actionBar: ({ wrapperVariant }) => ({ actions: [] }),
-              }}
-              sx={StaticDatePickerStyle}
-            />
-          </LocalizationProvider>
-        </Box>
+        <Box className="flex-1 my-8 color-white hidden sm:flex flex-col items-center  "></Box>
       </Flex>
       <ScrollToTop />
     </>

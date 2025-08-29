@@ -51,6 +51,7 @@ function InfinitePostSection(props) {
                   <Post
                     content={post.post}
                     author={post.user.user_name}
+                    authorImg={post.author_img}
                     createdAt={post.created_at}
                     bgColor={post.bg_color}
                     width="100%" // Let Masonry decide width

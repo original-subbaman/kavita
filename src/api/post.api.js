@@ -52,7 +52,7 @@ export async function fetchPostsPagination({ pageParam }) {
   try {
     let query = supabase
       .from("post")
-      .select("*, user (id, name, user_name)")
+      .select("*, user (id, name, user_name, profile_url)")
       .order("created_at", { ascending: false })
       .limit(limit);
 
@@ -61,7 +61,6 @@ export async function fetchPostsPagination({ pageParam }) {
     }
 
     const { data, error } = await query;
-    console.log("🚀 ~ fetchPostsPagination ~ data:", data);
 
     if (error) {
       throw new Error(`Failed to fetch posts: ${error.message}`);
@@ -74,8 +73,23 @@ export async function fetchPostsPagination({ pageParam }) {
     const nextCursor =
       data.length === limit ? data[data.length - 1].created_at : undefined;
 
+    const postsWithUserProfile = data.map((post) => {
+      if (!post?.user.profile_url) {
+        return { ...post, profile_url: null };
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from("profile_images")
+        .getPublicUrl(post.user.profile_url);
+
+      return {
+        ...post,
+        author_img: publicUrlData?.publicUrl ?? null,
+      };
+    });
+
     return {
-      data,
+      data: postsWithUserProfile,
       nextCursor,
       hasMore: !!nextCursor,
     };

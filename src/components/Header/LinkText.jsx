@@ -12,7 +12,7 @@ const LinkText = ({ isActive, size = "3", children }) => {
         {children}
       </Text>
       {isActive && (
-        <div className="animate-width-grow h-1 bg-radix-grass rounded-sm"></div>
+        <div className="animate-width-grow h-[1px] bg-radix-grass rounded-sm"></div>
       )}
     </div>
   );

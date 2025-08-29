@@ -32,7 +32,10 @@ function Header({ toggleSideNav }) {
       <Button
         size="4"
         variant="ghost"
-        className="hidden cursor-pointer hover:bg-transparent hover:shadow-none md:flex md:items-center md:gap-1 font-cal_sans text-radix-green text-2xl"
+        className="hidden cursor-pointer hover:bg-transparent 
+        hover:shadow-none md:flex md:items-center 
+        md:gap-1 font-primary text-radix-green 
+        text-2xl font-bold"
         onClick={() => navigate("/")}
       >
         Kavita

@@ -11,14 +11,6 @@ import useGetLongestStreak from "../hooks/user/useGetLongestStreak";
 
 function Profile() {
   const { user } = useAuth();
-  const [profile, setProfile] = useState(null);
-  const value = [
-    { date: "2016/01/11", count: 2 },
-    { date: "2016/01/12", count: 2 },
-    { date: "2016/01/13", count: 2 },
-    { date: "2016/01/14", count: 5 },
-    { date: "2016/02/11", count: 20 },
-  ];
 
   const { data: postCount, isFetching: isFetchingPostCount } = useGetPostCount({
     userId: user.id,

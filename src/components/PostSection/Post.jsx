@@ -8,7 +8,15 @@ function PostButton({ children }) {
     </button>
   );
 }
-function Post({ content, author, createdAt, width, height, bgColor }) {
+function Post({
+  content,
+  author,
+  authorImg,
+  createdAt,
+  width,
+  height,
+  bgColor,
+}) {
   const sanitizedPost = DOMPurify.sanitize(content);
   return (
     <div
@@ -26,11 +34,7 @@ function Post({ content, author, createdAt, width, height, bgColor }) {
         }}
       >
         <Box className="flex flex-row items-center gap-3 mb-4 p-2 bg-dark-light border-t-[1px]  border-dark-light rounded-t-sm">
-          <Avatar
-            src="https://i.pravatar.cc/300"
-            alt="User Avatar"
-            fallback="JD"
-          />
+          <Avatar src={authorImg} alt="User Avatar" fallback="JD" />
           <Flex direction={"column"}>
             <Text className="text-base text-radix-slate-12">{author}</Text>
             <span className="text-xs text-radix-slate-11">
