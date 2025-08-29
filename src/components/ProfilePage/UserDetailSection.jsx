@@ -1,18 +1,17 @@
-import React, { useState } from "react";
-import ProfileSectionWrapper from "./ProfileSectionWrapper";
-import { Button, Text } from "@radix-ui/themes";
 import { Avatar } from "@mui/material";
+import { Button, Text } from "@radix-ui/themes";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import useAuth from "../../hooks/auth/useAuth";
-import { getInitialsOfName } from "../../utils/Helper";
-import LittleInfo from "./LittleInfo";
-import StatCard from "./StatCard";
-import EditProfileDialog from "./EditProfileDialog";
+import useGetProfile from "../../hooks/user/useGetProfile";
 import useGetUser from "../../hooks/user/useGetUser";
 import useUpdateUser from "../../hooks/user/useUpdateUser";
-import ResponseSnackbar from "../ResponseSnackbar";
-import { useQueryClient } from "@tanstack/react-query";
 import useUploadProfile from "../../hooks/user/useUploadProfile";
-import useGetProfile from "../../hooks/user/useGetProfile";
+import { getInitialsOfName } from "../../utils/Helper";
+import ResponseSnackbar from "../ResponseSnackbar";
+import EditProfileDialog from "./EditProfileDialog";
+import LittleInfo from "./LittleInfo";
+import ProfileSectionWrapper from "./ProfileSectionWrapper";
 
 const defaultErrMsg = "Unexpected error! Please try again later";
 
@@ -28,11 +27,10 @@ function UserDetailSection(props) {
   const queryClient = useQueryClient();
 
   const onUpdateSuccess = (data) => {
-    console.log("🚀 ~ onUpdateSuccess ~ data:", data);
     setResponse((prev) => ({ ...prev, success: true }));
     queryClient.invalidateQueries({ queryKey: ["user_get_user", user.id] });
-    setOpenEdit(false);
   };
+
   const onUpdateError = (error) => {
     const errMsg = error.response.data?.message;
     setResponse((prev) => ({
@@ -50,9 +48,9 @@ function UserDetailSection(props) {
   const { mutate: updateProfile, isPending: isUploadingProfile } =
     useUploadProfile({
       onSuccess: (res) => {
-        console.log("🚀 ~ UserDetailSection ~ res:", res);
+        queryClient.invalidateQueries({ queryKey: ["get_profile", user.id] });
       },
-      onError: () => onUpdateError,
+      onError: onUpdateError,
     });
 
   const { data, isFetched: isUserFetched } = useGetUser({ userId: user.id });
@@ -95,7 +93,7 @@ function UserDetailSection(props) {
           open={openEdit}
           setOpen={setOpenEdit}
           userId={user.id}
-          user={{ address, user_name: username, name }}
+          user={{ address, user_name: username, name, profile: profile }}
           updateUser={updateUser}
           updateProfile={updateProfile}
           loading={isUpdating || isUploadingProfile ? "true" : "false"}

@@ -1,9 +1,8 @@
 import { UploadIcon } from "@radix-ui/react-icons";
 import { Box, Text } from "@radix-ui/themes";
 import { useRef, useState } from "react";
-const UploadProfile = ({ profile, setProfile }) => {
+const UploadProfile = ({ preview, setPreview, setProfile }) => {
   const fileInputRef = useRef();
-  const [preview, setPreview] = useState();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];

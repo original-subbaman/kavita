@@ -14,6 +14,8 @@ function EditProfileDialog({
   loading,
 }) {
   const [profile, setProfile] = useState();
+  const [preview, setPreview] = useState(user?.profile);
+
   const {
     formState: { errors },
     control,
@@ -25,10 +27,15 @@ function EditProfileDialog({
   const formRef = useRef(null);
 
   const onSubmit = async (data) => {
+    delete data["profile"];
     updateUser({ userId: userId, user: data });
+
     if (profile) {
       updateProfile({ userId, profile });
     }
+
+    setOpen(false);
+    setPreview(null);
   };
 
   return (
@@ -40,7 +47,11 @@ function EditProfileDialog({
         </Dialog.Description>
         <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
           <Box className="flex justify-center">
-            <UploadProfile profile={profile} setProfile={setProfile} />
+            <UploadProfile
+              preview={preview}
+              setPreview={setPreview}
+              setProfile={setProfile}
+            />
           </Box>
           <Flex direction="column" gap="3">
             <label>
