@@ -30,7 +30,7 @@ const MyPosts = () => {
   };
 
   return (
-    <Container my={"8"} size={"2"} className="mx-2">
+    <Container size={"2"} className="mx-2">
       <Box className="flex-1 mx-3 sm:mx-0">
         <QuoteSearchBox handleSearchChange={handleSearchChange} size="2" />
       </Box>
