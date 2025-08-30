@@ -21,7 +21,7 @@
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/themes": "^2.0.3",
     "@reduxjs/toolkit": "^2.4.0",
-    "@supabase/supabase-js": "^2.45.1",
+    "@supabase/supabase-js": "^2.56.1",
     "@tanstack/react-query": "^5.51.23",
     "@tiptap/pm": "^3.0.7",
     "@tiptap/react": "^3.0.7",

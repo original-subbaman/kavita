@@ -1,5 +1,5 @@
 import { Root as AlertDialogRoot } from "@radix-ui/react-alert-dialog";
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -13,6 +13,7 @@ import ResponseSnackbar from "../components/ResponseSnackbar";
 import ScrollToTop from "../components/ScrollToTop";
 import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
+import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 
 function Home() {
   const { user } = useAuth();
@@ -50,6 +51,8 @@ function Home() {
       setAddPostDialog(false);
     },
   });
+
+  const { data: prompt, isLoading: isFetchingPrompt } = useGetWeeklyTheme();
 
   const handleClose = () => {
     setResponse({ error: false, success: false, message: "" });
@@ -89,12 +92,18 @@ function Home() {
         {/** Posts Section */}
         <Box className="flex-1 md:w-[800px]">
           <PromptSection>
-            <PromptText />
+            {/* Writing theme */}
+            <WritingThemeTitle />
+            {isFetchingPrompt ? (
+              <LoadingTheme />
+            ) : (
+              <PromptText prompt={prompt?.prompt} />
+            )}
+            {/* Input box */}
             <AlertDialogRoot
               open={addPostDialog}
               onOpenChange={setAddPostDialog}
             >
-              {/* {isToday && <AddPostButton />} */}
               {isToday && (
                 <Box className="w-[93%] md:w-full mx-4">
                   <PostInputBox onClick={handlePostInputClick} />
@@ -117,5 +126,17 @@ function Home() {
     </>
   );
 }
+
+const WritingThemeTitle = () => (
+  <Text className="text-left text-white text-md font-primary w-full ">
+    ✨ This week’s writing theme:
+  </Text>
+);
+
+const LoadingTheme = () => (
+  <Text size={"6"} className="animate-fade-pulse text-radix-green">
+    Fetching theme...
+  </Text>
+);
 
 export default Home;

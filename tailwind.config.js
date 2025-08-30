@@ -7,10 +7,15 @@ export default {
         widthGrow: {
           '0%': { width: "0%"},
           '100%': { width: '40%'}
+        },
+        fadePulse: {
+          '0%, 100%': { opacity: '0.3' },
+          '50%': { opacity: '1' },
         }
       },
       animation: {
-        'width-grow': 'widthGrow 0.3s ease-out forwards' 
+        'width-grow': 'widthGrow 0.3s ease-out forwards', 
+        'fade-pulse': 'fadePulse 2s ease-in-out infinite',
       },
       colors: {
       "dark": "#222222", 

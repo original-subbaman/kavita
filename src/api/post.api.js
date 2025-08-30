@@ -542,3 +542,22 @@ export async function getPostCount(userId) {
     throw error;
   }
 }
+
+export async function getWritingTheme() {
+  try {
+    const { data, error } = await supabase
+      .from("weekly_theme")
+      .select("week_start, writing_themes (id, prompt)")
+      .order("week_start", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return { prompt: data?.writing_themes.prompt };
+  } catch (error) {
+    throw error;
+  }
+}

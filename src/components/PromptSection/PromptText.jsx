@@ -1,14 +1,15 @@
-import React from "react";
-import { Strong, Text } from "@radix-ui/themes";
-function PromptText(props) {
+import { Box, Text } from "@radix-ui/themes";
+function PromptText({ prompt }) {
   return (
-    <Text
-      align="center"
-      size={{ xs: "4", md: "8" }}
-      className="font-primary text-bold text-green-700"
-    >
-      The quick brown fox jumps over the lazy dog...
-    </Text>
+    <Box className="flex flex-col items-start gap-2 w-full">
+      <Text
+        align="center"
+        size={{ xs: "4", md: "8" }}
+        className="w-full font-primary text-center text-bold text-green-700"
+      >
+        {prompt}
+      </Text>
+    </Box>
   );
 }
 
