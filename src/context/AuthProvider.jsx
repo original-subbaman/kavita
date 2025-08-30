@@ -39,6 +39,12 @@ export const AuthProvider = ({ children }) => {
         error,
       } = await supabase.auth.getSession();
 
+      if (error) {
+        console.error("Failed to get session:", error);
+        setLoading(false);
+        return;
+      }
+
       await handleSession(session);
       setLoading(false);
     };
@@ -48,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      await handleSession(session);
+      handleSession(session);
       setLoading(false);
     });
     return () => subscription.unsubscribe();
