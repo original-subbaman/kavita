@@ -41,7 +41,11 @@ const MyPosts = () => {
           setFilterDate={setFilterDate}
         />
       </Box>
-      {isFetchingPosts ? <Loading /> : <PostSection posts={posts} />}
+      {isFetchingPosts ? (
+        <Loading />
+      ) : (
+        <PostSection posts={posts} showMenu={true} />
+      )}
     </Container>
   );
 };

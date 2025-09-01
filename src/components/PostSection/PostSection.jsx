@@ -10,7 +10,7 @@ const NoPost = () => (
   </Box>
 );
 
-function PostSection({ posts }) {
+function PostSection({ posts, showMenu = false }) {
   const dimensions = getRandomDimensions(posts ? posts.length : 0);
   const isSmallScreen = window.matchMedia("(max-width: 639px)").matches;
   const isEmptyPosts = posts.length === 0;
@@ -21,15 +21,15 @@ function PostSection({ posts }) {
       ) : (
         <Masonry gutter="10px" columnsCount={isSmallScreen ? 1 : 2}>
           {posts.map((post, index) => (
-            <NavLink to={`/post/${post.id}`} key={post.id}>
-              <Post
-                content={post.post}
-                author={post.user.user_name}
-                width={dimensions[index].width}
-                height={dimensions[index].height}
-                createdAt={post.created_at}
-              />
-            </NavLink>
+            <Post
+              content={post.post}
+              author={post.user.user_name}
+              width={dimensions[index].width}
+              height={dimensions[index].height}
+              createdAt={post.created_at}
+              bgColor={post.bg_color}
+              showMenu={showMenu}
+            />
           ))}
         </Masonry>
       )}
