@@ -10,10 +10,11 @@ const NoPost = () => (
   </Box>
 );
 
-function PostSection({ posts, showMenu = false }) {
+function PostSection({ posts, hidePost, deletePost, showMenu = false }) {
   const dimensions = getRandomDimensions(posts ? posts.length : 0);
   const isSmallScreen = window.matchMedia("(max-width: 639px)").matches;
   const isEmptyPosts = posts.length === 0;
+
   return (
     <Container className="px-3 my-2 sm:p-0">
       {isEmptyPosts ? (
@@ -22,13 +23,17 @@ function PostSection({ posts, showMenu = false }) {
         <Masonry gutter="10px" columnsCount={isSmallScreen ? 1 : 2}>
           {posts.map((post, index) => (
             <Post
+              id={post.id}
               content={post.post}
               author={post.user.user_name}
+              isHidden={post.is_hidden}
               width={dimensions[index].width}
               height={dimensions[index].height}
               createdAt={post.created_at}
               bgColor={post.bg_color}
               showMenu={showMenu}
+              hidePost={hidePost}
+              deletePost={deletePost}
             />
           ))}
         </Masonry>

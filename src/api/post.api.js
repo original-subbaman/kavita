@@ -53,6 +53,7 @@ export async function fetchPostsPagination({ pageParam }) {
     let query = supabase
       .from("post")
       .select("*, user (id, name, user_name, profile_url)")
+      .eq("is_hidden", false)
       .order("created_at", { ascending: false })
       .limit(limit);
 
@@ -543,6 +544,54 @@ export async function getPostCount(userId) {
   }
 }
 
+/**
+ * Hides a post by setting `is_hidden` to true in the "post" table.
+ *
+ * @param {Object} params
+ * @param {string} params.postId - The ID of the post to hide.
+ * @returns {Promise<{id: string, is_hidden: boolean}>} The updated post record.
+ * @throws {Error} If postId is missing or the update fails.
+ */
+export async function togglePostVisibility({ postId, isHidden }) {
+  try {
+    if (!postId) {
+      throw new Error("Missing postId");
+    }
+
+    if (isHidden === undefined || isHidden === null) {
+      throw new Error("isHidden value is required");
+    }
+
+    if (typeof isHidden !== "boolean") {
+      throw new Error("Invalid isHidden value");
+    }
+
+    const { data, error } = await supabase
+      .from("post")
+      .update({
+        is_hidden: isHidden,
+      })
+      .eq("id", postId);
+
+    if (error) {
+      console.error("🚀 ~ hidePost ~ error:", error);
+      throw error;
+    }
+
+    return isHidden ? "Post hidden successfully" : "Post made visible";
+  } catch (error) {
+    console.log("🚀 ~ hidePost ~ error:", error);
+    throw error;
+  }
+}
+
+/**
+ * Fetches the most recent writing theme from the "weekly_theme" table.
+ * @async
+ * @function getWritingTheme
+ * @returns {Promise<{prompt: string | undefined}>}
+ * @throws {Error} If the Supabase query fails or an unexpected error occurs.
+ */
 export async function getWritingTheme() {
   try {
     const { data, error } = await supabase

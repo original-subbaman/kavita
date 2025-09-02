@@ -4,23 +4,9 @@ import { timeAgoUTC } from "../../utils/Helper";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { PostActionMenu } from "../MyPosts/PostActionMenu";
-function PostButton({ children }) {
-  return (
-    <button className="bg-transparent duration-300 transition-all hover:bg-radix-grass flex items-center justify-center w-12 h-12">
-      {children}
-    </button>
-  );
-}
-
-const ShowMenuButon = ({ onClick }) => {
-  return (
-    <IconButton variant="ghost" className="rounded-full" onClick={onClick}>
-      <DotsVerticalIcon />
-    </IconButton>
-  );
-};
 
 function Post({
+  id,
   content,
   author,
   authorImg,
@@ -28,15 +14,13 @@ function Post({
   width,
   height,
   bgColor,
+  isHidden,
   showMenu = false,
+  hidePost,
+  deletePost,
 }) {
-  const [openMenu, setOpenMenu] = useState(false);
   const sanitizedPost = DOMPurify.sanitize(content);
-  const handleShowMenu = (e) => {
-    console.log("🚀 ~ handleShowMenu ~ e:", e);
-    e.stopPropagation();
-    setOpenMenu((prev) => !prev);
-  };
+  const handleHidePost = () => hidePost({ postId: id, isHidden: !isHidden });
 
   return (
     <div
@@ -69,9 +53,10 @@ function Post({
             </Flex>
           </Box>
           {showMenu && (
-            <>
-              <PostActionMenu onClick={handleShowMenu} />
-            </>
+            <PostActionMenu
+              isHidden={isHidden}
+              handleHidePost={handleHidePost}
+            />
           )}
         </Box>
 
