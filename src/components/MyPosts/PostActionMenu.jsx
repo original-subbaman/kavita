@@ -14,10 +14,8 @@ export function PostActionMenu({
 }) {
   return (
     <Popover.Root>
-      <Popover.Trigger>
-        <IconButton variant="ghost" className="rounded-full">
-          <DotsVerticalIcon />
-        </IconButton>
+      <Popover.Trigger className="rounded-full hover:bg-radix-green/50 p-2">
+        <DotsVerticalIcon />
       </Popover.Trigger>
       <Popover.Content
         align="end"
@@ -26,7 +24,7 @@ export function PostActionMenu({
       >
         {/* Visibility Toggle */}
         <Popover.Close className="w-full">
-          <button
+          <div
             variant="ghost"
             className="flex items-center gap-2 
           w-full rounded px-3 py-2 
@@ -44,12 +42,12 @@ export function PostActionMenu({
                 Hide
               </>
             )}
-          </button>
+          </div>
         </Popover.Close>
 
         {/* Delete Post */}
         <Popover.Close className="w-full">
-          <button
+          <div
             className="flex items-center gap-2
           w-full rounded px-3 py-2 text-left 
           text-sm text-red-600 hover:bg-red-50 
@@ -58,7 +56,7 @@ export function PostActionMenu({
           >
             <TrashIcon />
             Delete
-          </button>
+          </div>
         </Popover.Close>
         <Popover.Arrow className="fill-white dark:fill-gray-900" />
       </Popover.Content>

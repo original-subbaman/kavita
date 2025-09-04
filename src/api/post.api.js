@@ -610,3 +610,35 @@ export async function getWritingTheme() {
     throw error;
   }
 }
+
+/**
+ * Delete post
+ * @async
+ * @function getWritingTheme
+ * @returns {Promise<{prompt: string | undefined}>}
+ * @throws {Error} If the Supabase query fails or an unexpected error occurs.
+ */
+export async function deletePost({ userId, postId }) {
+  console.log("🚀 ~ deletePost ~ postId:", postId);
+  console.log("🚀 ~ deletePost ~ userId:", userId);
+  try {
+    if (!userId || !postId) {
+      throw new Error("Missing userId or postId");
+    }
+
+    const { error } = await supabase
+      .from("post")
+      .delete()
+      .eq("id", postId)
+      .eq("user_id", userId);
+
+    if (error) {
+      throw error;
+    }
+
+    return { success: true, message: "Post deleted successfully" };
+  } catch (error) {
+    console.log("🚀 ~ deletePost ~ error:", error);
+    throw error;
+  }
+}

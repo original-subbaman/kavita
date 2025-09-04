@@ -10,6 +10,7 @@ function Post({
   id,
   content,
   author,
+  authorId,
   authorImg,
   createdAt,
   width,
@@ -20,9 +21,11 @@ function Post({
   hidePost,
   deletePost,
 }) {
+  console.log("🚀 ~ Post ~ authorId:", authorId);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const sanitizedPost = DOMPurify.sanitize(content);
   const handleHidePost = () => hidePost({ postId: id, isHidden: !isHidden });
+  const onDeletPost = () => deletePost({ postId: id, userId: authorId });
   const handleDeletePost = () => setOpenDeleteDialog(true);
 
   return (
@@ -33,7 +36,11 @@ function Post({
       }}
     >
       {openDeleteDialog && (
-        <DeleteDialog open={openDeleteDialog} setOpen={setOpenDeleteDialog} />
+        <DeleteDialog
+          open={openDeleteDialog}
+          setOpen={setOpenDeleteDialog}
+          onDelete={onDeletPost}
+        />
       )}
       {/* Main card */}
       <Box

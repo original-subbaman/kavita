@@ -10,9 +10,12 @@ import useDebounceSearch from "../hooks/useDebounceSearch";
 import Loading from "../components/Loading";
 import useHidePost from "../hooks/post/useHidePost";
 import ResponseSnackbar from "../components/ResponseSnackbar";
+import useDeletePost from "../hooks/post/useDeletePost";
+import { useQueryClient } from "@tanstack/react-query";
 
 const MyPosts = () => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [response, setResponse] = useState({
     success: false,
     error: false,
@@ -33,20 +36,38 @@ const MyPosts = () => {
     search: debounceSearch,
   });
 
+  const handleOnSuccess = (msg) => {
+    setResponse((prev) => ({
+      ...prev,
+      success: true,
+      msg: msg || "Success",
+    }));
+    queryClient.invalidateQueries({
+      queryKey: [
+        "get_user_posts",
+        user.id,
+        filterDate.from,
+        filterDate.to,
+        debounceSearch,
+      ],
+    });
+  };
+
+  const handleOnError = () =>
+    setResponse((prev) => ({
+      ...prev,
+      error: true,
+      msg: "Something went wrong",
+    }));
+
+  const { mutate: deletePost } = useDeletePost({
+    onSuccess: (res) => handleOnSuccess("Post deleted successfully"),
+    onError: handleOnError,
+  });
+
   const { mutate: hidePost } = useHidePost({
-    onSuccess: (res) => {
-      return setResponse((prev) => ({
-        ...prev,
-        success: true,
-        msg: res || "Success",
-      }));
-    },
-    onError: () =>
-      setResponse((prev) => ({
-        ...prev,
-        error: true,
-        msg: "Something went wrong",
-      })),
+    onSuccess: (res) => handleOnSuccess(res),
+    onError: handleOnError,
   });
 
   const handleSearchChange = (e) => {
@@ -89,7 +110,12 @@ const MyPosts = () => {
       {isFetchingPosts ? (
         <Loading />
       ) : (
-        <PostSection posts={posts} showMenu={true} hidePost={hidePost} />
+        <PostSection
+          posts={posts}
+          showMenu={true}
+          hidePost={hidePost}
+          deletePost={deletePost}
+        />
       )}
     </Container>
   );
