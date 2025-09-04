@@ -4,6 +4,7 @@ import { timeAgoUTC } from "../../utils/Helper";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { PostActionMenu } from "../MyPosts/PostActionMenu";
+import DeleteDialog from "../MyPosts/DeleteDialog";
 
 function Post({
   id,
@@ -19,8 +20,10 @@ function Post({
   hidePost,
   deletePost,
 }) {
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const sanitizedPost = DOMPurify.sanitize(content);
   const handleHidePost = () => hidePost({ postId: id, isHidden: !isHidden });
+  const handleDeletePost = () => setOpenDeleteDialog(true);
 
   return (
     <div
@@ -29,6 +32,9 @@ function Post({
         backgroundColor: bgColor || "var(--radix-ice-berg-dark)",
       }}
     >
+      {openDeleteDialog && (
+        <DeleteDialog open={openDeleteDialog} setOpen={setOpenDeleteDialog} />
+      )}
       {/* Main card */}
       <Box
         size="none"
@@ -56,6 +62,7 @@ function Post({
             <PostActionMenu
               isHidden={isHidden}
               handleHidePost={handleHidePost}
+              handleDeletePost={handleDeletePost}
             />
           )}
         </Box>
