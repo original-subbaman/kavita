@@ -33,11 +33,16 @@ export const AuthProvider = ({ children }) => {
   );
 
   useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+
     const fetchSessionAndUser = async () => {
       const {
         data: { session },
         error,
       } = await supabase.auth.getSession();
+
+      if (!mounted) return;
 
       if (error) {
         console.error("Failed to get session:", error);
@@ -54,10 +59,14 @@ export const AuthProvider = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!mounted) return;
       handleSession(session);
       setLoading(false);
     });
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [handleSession]);
 
   const login = async (email, password) => {
