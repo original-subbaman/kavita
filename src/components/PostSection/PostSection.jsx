@@ -21,19 +21,21 @@ function PostSection({ posts, showMenu = false }) {
       ) : (
         <Masonry gutter="10px" columnsCount={isSmallScreen ? 1 : 2}>
           {posts.map((post, index) => (
-            <Post
-              key={post.id}
-              id={post.id}
-              content={post.post}
-              author={post.user.user_name}
-              authorId={post.user.id}
-              isHidden={post.is_hidden}
-              width={dimensions[index].width}
-              height={dimensions[index].height}
-              createdAt={post.created_at}
-              bgColor={post.bg_color}
-              showMenu={showMenu}
-            />
+            <Box className={`${post.is_hidden ? "opacity-40" : ""}`}>
+              <Post
+                key={post.id}
+                id={post.id}
+                content={post.post}
+                author={post.user.user_name}
+                authorId={post.user.id}
+                isHidden={post.is_hidden}
+                width={dimensions[index].width}
+                height={dimensions[index].height}
+                createdAt={post.created_at}
+                bgColor={post.bg_color}
+                showMenu={showMenu}
+              />
+            </Box>
           ))}
         </Masonry>
       )}
