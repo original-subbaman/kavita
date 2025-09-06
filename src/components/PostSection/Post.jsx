@@ -1,10 +1,9 @@
-import { Avatar, Box, Flex, IconButton, Text } from "@radix-ui/themes";
+import { Avatar, Box, Flex, Text } from "@radix-ui/themes";
 import DOMPurify from "dompurify";
+import usePostActions from "../../hooks/post/usePostActions";
 import { timeAgoUTC } from "../../utils/Helper";
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
 import { PostActionMenu } from "../MyPosts/PostActionMenu";
-import DeleteDialog from "../MyPosts/DeleteDialog";
+import { PostActions } from "../../context/PostActionContext";
 
 function Post({
   id,
@@ -18,15 +17,22 @@ function Post({
   bgColor,
   isHidden,
   showMenu = false,
-  hidePost,
-  deletePost,
 }) {
-  console.log("🚀 ~ Post ~ authorId:", authorId);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const { onPostAction } = usePostActions();
   const sanitizedPost = DOMPurify.sanitize(content);
-  const handleHidePost = () => hidePost({ postId: id, isHidden: !isHidden });
-  const onDeletPost = () => deletePost({ postId: id, userId: authorId });
-  const handleDeletePost = () => setOpenDeleteDialog(true);
+
+  const handleDeletePost = () =>
+    onPostAction({ action: PostActions.delete, postId: id, data: authorId });
+
+  const handleEditPost = () =>
+    onPostAction({
+      action: PostActions.edit,
+      postId: id,
+      data: { content, bgColor },
+    });
+
+  const handleHidePost = () =>
+    onPostAction({ action: PostActions.hide, postId: id, data: !isHidden });
 
   return (
     <div
@@ -35,13 +41,6 @@ function Post({
         backgroundColor: bgColor || "var(--radix-ice-berg-dark)",
       }}
     >
-      {openDeleteDialog && (
-        <DeleteDialog
-          open={openDeleteDialog}
-          setOpen={setOpenDeleteDialog}
-          onDelete={onDeletPost}
-        />
-      )}
       {/* Main card */}
       <Box
         size="none"
@@ -69,6 +68,7 @@ function Post({
             <PostActionMenu
               isHidden={isHidden}
               handleHidePost={handleHidePost}
+              handleEditPost={handleEditPost}
               handleDeletePost={handleDeletePost}
             />
           )}

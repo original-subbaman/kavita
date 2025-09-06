@@ -5,9 +5,20 @@ import TipTapEditor from "./TipTapEditor";
 
 export const DefaultBGColor = "#2e2b29";
 const minWords = 10;
-function InputAlertDialog({ addPost, mutationState, prompt }) {
-  const [post, setPost] = useState(prompt);
-  const [bgColor, setBgColor] = useState(); // Default background color
+
+function InputAlertDialog({
+  postId,
+  userId,
+  content,
+  savedColor,
+  mutation,
+  mutationState,
+  prompt,
+  isEdit = false,
+}) {
+  const [post, setPost] = useState(content || prompt);
+  const [bgColor, setBgColor] = useState(savedColor); // Default background color
+  console.log("🚀 ~ InputAlertDialog ~ savedColor:", savedColor);
   const [error, setError] = useState({
     lowWordCount: false,
     invalidPrompt: false,
@@ -23,6 +34,12 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
       return true;
     }
     return false;
+  };
+
+  const reset = () => {
+    setPost();
+    setBgColor();
+    setError({ lowWordCount: false, invalidPrompt: false, message: "" });
   };
 
   const handleOnPostClick = async () => {
@@ -41,8 +58,17 @@ function InputAlertDialog({ addPost, mutationState, prompt }) {
       }));
       return;
     }
-
-    addPost({ post, bgColor });
+    if (!isEdit) {
+      mutation({ post, bgColor });
+    } else {
+      mutation({
+        post,
+        postId,
+        userId,
+        bgColor,
+      });
+    }
+    reset();
   };
 
   // Think about debounce later

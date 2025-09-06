@@ -268,6 +268,32 @@ export async function addPost(post, userId, bgColor) {
   }
 }
 
+export async function updatePost(post, postId, userId, bgColor) {
+  try {
+    if (!post || !userId) {
+      throw new Error("Post and userId are required.");
+    }
+    const updatePayload = { post };
+    if (bgColor !== undefined) updatePayload.bg_color = bgColor;
+
+    const { error } = await supabase
+      .from("post")
+      .update(updatePayload)
+      .eq("user_id", userId)
+      .eq("id", postId);
+
+    if (error) {
+      console.error("Error updating post:", error.message);
+      throw new Error(`Failed to update post: ${error.message}`);
+    }
+
+    return { success: true, message: "Post updated successfully" };
+  } catch (error) {
+    console.error("🚀 ~ updatePost ~ error:", error);
+    throw new Error(`Failed to update post: ${error.message}`);
+  }
+}
+
 /**
  * Adds a comment to a post in the database.
  *

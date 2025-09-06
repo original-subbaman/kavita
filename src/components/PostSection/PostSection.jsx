@@ -1,6 +1,5 @@
 import { Box, Container, Heading } from "@radix-ui/themes";
 import Masonry from "react-responsive-masonry";
-import { NavLink } from "react-router-dom";
 import { getRandomDimensions } from "../../utils/Helper";
 import Post from "./Post";
 
@@ -10,7 +9,7 @@ const NoPost = () => (
   </Box>
 );
 
-function PostSection({ posts, hidePost, deletePost, showMenu = false }) {
+function PostSection({ posts, showMenu = false }) {
   const dimensions = getRandomDimensions(posts ? posts.length : 0);
   const isSmallScreen = window.matchMedia("(max-width: 639px)").matches;
   const isEmptyPosts = posts.length === 0;
@@ -34,8 +33,6 @@ function PostSection({ posts, hidePost, deletePost, showMenu = false }) {
               createdAt={post.created_at}
               bgColor={post.bg_color}
               showMenu={showMenu}
-              hidePost={hidePost}
-              deletePost={deletePost}
             />
           ))}
         </Masonry>

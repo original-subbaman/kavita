@@ -4,12 +4,14 @@ import {
   DotsVerticalIcon,
   EyeNoneIcon,
   EyeOpenIcon,
+  Pencil1Icon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 
 export function PostActionMenu({
   isHidden = false,
   handleHidePost,
+  handleEditPost,
   handleDeletePost,
 }) {
   return (
@@ -42,6 +44,20 @@ export function PostActionMenu({
                 Hide
               </>
             )}
+          </div>
+        </Popover.Close>
+
+        {/* Edit Post */}
+        <Popover.Close className="w-full">
+          <div
+            variant="ghost"
+            className="flex items-center gap-2 
+          w-full rounded px-3 py-2 
+          text-left text-sm hover:bg-[#16261b]"
+            onClick={handleEditPost}
+          >
+            <Pencil1Icon />
+            Edit
           </div>
         </Popover.Close>
 

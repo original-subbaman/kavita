@@ -14,6 +14,7 @@ import ScrollToTop from "../components/ScrollToTop";
 import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
 import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
+import { PostActionsProvider } from "../context/PostActionContext";
 
 function Home() {
   const { user } = useAuth();
@@ -110,14 +111,15 @@ function Home() {
                 </Box>
               )}
               <InputAlertDialog
-                addPost={addPost}
+                mutation={addPost}
                 prompt={"A quick brown fox jumped over the lazy dog"} // Replace with actual prompt from the backend
                 mutationState={isPosting}
               />
             </AlertDialogRoot>
           </PromptSection>
-          {/* {isPostsFetched && <PostSection posts={posts} />} */}
-          <InfinitePostSection />
+          <PostActionsProvider onPostAction={() => {}}>
+            <InfinitePostSection />
+          </PostActionsProvider>
         </Box>
         {/** filter */}
         <Box className="flex-1 my-8 color-white hidden sm:flex flex-col items-center  "></Box>
