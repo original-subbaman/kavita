@@ -54,6 +54,7 @@ function Home() {
   });
 
   const { data: prompt, isLoading: isFetchingPrompt } = useGetWeeklyTheme();
+  console.log("🚀 ~ Home ~ prompt:", prompt);
 
   const handleClose = () => {
     setResponse({ error: false, success: false, message: "" });
@@ -112,7 +113,7 @@ function Home() {
               )}
               <InputAlertDialog
                 mutation={addPost}
-                prompt={"A quick brown fox jumped over the lazy dog"} // Replace with actual prompt from the backend
+                prompt={prompt?.prompt} // Replace with actual prompt from the backend
                 mutationState={isPosting}
               />
             </AlertDialogRoot>

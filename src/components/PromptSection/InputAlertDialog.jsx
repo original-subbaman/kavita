@@ -18,7 +18,6 @@ function InputAlertDialog({
 }) {
   const [post, setPost] = useState(content || prompt);
   const [bgColor, setBgColor] = useState(savedColor); // Default background color
-  console.log("🚀 ~ InputAlertDialog ~ savedColor:", savedColor);
   const [error, setError] = useState({
     lowWordCount: false,
     invalidPrompt: false,
@@ -28,6 +27,8 @@ function InputAlertDialog({
     open: false,
     message: "",
   });
+
+  const title = prompt ? `Writing theme: ${prompt}` : isEdit ? "Edit post" : "";
 
   const isPostEmpty = () => {
     if (post.length === 0 || /^\s*$/.test(post)) {
@@ -93,8 +94,8 @@ function InputAlertDialog({
           message={snackbar.message}
         />
       )}
-      <AlertDialog.Title className="text-white text-xl font-bold">
-        Today's Prompt: Once upon a time...
+      <AlertDialog.Title className="text-white text-lg font-normal">
+        {title}
       </AlertDialog.Title>
       {/* Error Messages */}
       {!error.lowWordCount ||
