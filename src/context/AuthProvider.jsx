@@ -34,35 +34,49 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
 
     const fetchSessionAndUser = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
+      try {
+        setLoading(true);
 
-      if (!mounted) return;
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
 
-      if (error) {
-        console.error("Failed to get session:", error);
-        setLoading(false);
-        return;
+        if (!mounted) return;
+
+        if (error) {
+          console.error("Failed to get session:", error);
+          return;
+        }
+
+        await handleSession(session);
+      } catch (err) {
+        if (mounted) {
+          console.error("Unexpected error during session fetch:", err);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
       }
-
-      await handleSession(session);
-      setLoading(false);
     };
-
-    fetchSessionAndUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
-      handleSession(session);
-      setLoading(false);
+
+      try {
+        await handleSession(session);
+      } catch (err) {
+        console.error("Error handling auth state change:", err);
+      }
     });
+
+    fetchSessionAndUser();
+
     return () => {
       mounted = false;
       subscription.unsubscribe();

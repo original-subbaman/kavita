@@ -37,12 +37,12 @@ function InfinitePostSection(props) {
         loader={<div className="text-white text-2xl"></div>}
       >
         <ResponsiveMasonry breakpointCols={breakpointColumnsObj}>
-          {posts && (
-            <Masonry
-              className="my-masonry-grid"
-              columnClassName="my-masonry-grid_column"
-            >
-              {posts.map((post) => (
+          <Masonry
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {posts ? (
+              posts.map((post) => (
                 <NavLink
                   to={`/post/${post.id}`}
                   key={post.id}
@@ -58,9 +58,11 @@ function InfinitePostSection(props) {
                     height="auto"
                   />
                 </NavLink>
-              ))}
-            </Masonry>
-          )}
+              ))
+            ) : (
+              <></>
+            )}
+          </Masonry>
         </ResponsiveMasonry>
       </InfiniteScroll>
       {isFetchingNextPage && <Loading message={"Fetching more posts..."} />}
