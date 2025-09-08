@@ -51,12 +51,16 @@ function PopupMenu({ name }) {
       </div>
       <Popover.Content>
         <Flex direction="column" gap="2">
-          <Button variant="ghost" onClick={() => navigate("/profile")}>
-            Profile
-          </Button>
-          <Button variant="ghost" onClick={handleLogout}>
-            Log out
-          </Button>
+          <Popover.Close>
+            <Button variant="ghost" onClick={() => navigate("/profile")}>
+              Profile
+            </Button>
+          </Popover.Close>
+          <Popover.Close>
+            <Button variant="ghost" onClick={handleLogout}>
+              Log out
+            </Button>
+          </Popover.Close>
         </Flex>
       </Popover.Content>
     </Popover.Root>

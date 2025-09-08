@@ -21,9 +21,11 @@ function PostSection({ posts, showMenu = false }) {
       ) : (
         <Masonry gutter="10px" columnsCount={isSmallScreen ? 1 : 2}>
           {posts.map((post, index) => (
-            <Box className={`${post.is_hidden ? "opacity-40" : ""}`}>
+            <Box
+              key={post.id}
+              className={`${post.is_hidden ? "opacity-40" : ""}`}
+            >
               <Post
-                key={post.id}
                 id={post.id}
                 content={post.post}
                 author={post.user.user_name}

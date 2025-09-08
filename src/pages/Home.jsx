@@ -54,7 +54,6 @@ function Home() {
   });
 
   const { data: prompt, isLoading: isFetchingPrompt } = useGetWeeklyTheme();
-  console.log("🚀 ~ Home ~ prompt:", prompt);
 
   const handleClose = () => {
     setResponse({ error: false, success: false, message: "" });
