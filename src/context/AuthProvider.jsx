@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
       if (!mounted) return;
 
       try {
-        await handleSession(session);
+        handleSession(session);
       } catch (err) {
         console.error("Error handling auth state change:", err);
       }

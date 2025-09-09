@@ -100,4 +100,19 @@ async function signIn(email, password) {
   }
 }
 
-export { signIn, signUpWithEmail, updateProfileData };
+async function sendResetPasswordMail({ email }) {
+  try {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+
+    if (error) {
+      console.error("Error sending reset email:", error.message);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, message: "Reset mail sent successfully" };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { signIn, signUpWithEmail, updateProfileData, sendResetPasswordMail };

@@ -29,7 +29,7 @@ const Login = () => {
 
   const { login } = useAuth();
 
-  const handleForgotPassword = () => {};
+  const handleForgotPassword = () => navigate("/forgot-password");
 
   const togglePasswordVisibility = () => setPasswordVisible((prev) => !prev);
 

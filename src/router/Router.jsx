@@ -11,6 +11,7 @@ import PostDetail from "../pages/PostDetail.jsx";
 import Profile from "../pages/Profile.jsx";
 import Signup from "../pages/Signup.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import ForgotPassword from "../pages/ForgotPassword.jsx";
 
 function CreateRouter() {
   return createBrowserRouter([
@@ -66,6 +67,7 @@ function CreateRouter() {
       element: <Login />,
     },
     { path: "/signup", element: <Signup /> },
+    { path: "/forgot-password", element: <ForgotPassword /> },
     { path: "*", element: <PageNotFound /> },
   ]);
 }
