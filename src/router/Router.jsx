@@ -1,3 +1,4 @@
+import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import RootWrapper from "../components/RootWrapper.jsx";
 import Home from "../pages/Home.jsx";
@@ -11,7 +12,9 @@ import PostDetail from "../pages/PostDetail.jsx";
 import Profile from "../pages/Profile.jsx";
 import Signup from "../pages/Signup.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-import ForgotPassword from "../pages/ForgotPassword.jsx";
+
+const ForgotPassword = lazy(() => import("../pages/ForgotPassword.jsx"));
+const ResetPassword = lazy(() => import("../pages/ResetPassword.jsx"));
 
 function CreateRouter() {
   return createBrowserRouter([
@@ -68,6 +71,7 @@ function CreateRouter() {
     },
     { path: "/signup", element: <Signup /> },
     { path: "/forgot-password", element: <ForgotPassword /> },
+    { path: "/reset-password", element: <ResetPassword /> },
     { path: "*", element: <PageNotFound /> },
   ]);
 }

@@ -102,7 +102,9 @@ async function signIn(email, password) {
 
 async function sendResetPasswordMail({ email }) {
   try {
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "http://localhost:5173/reset-password",
+    });
 
     if (error) {
       console.error("Error sending reset email:", error.message);

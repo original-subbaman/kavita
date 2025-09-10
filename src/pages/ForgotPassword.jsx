@@ -8,7 +8,6 @@ import LoginWrapper from "../components/Login_Signup/LoginWrapper";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import useResetPasswordMail from "../hooks/auth/useResetPasswordMail";
-import { ContinuousColorLegend } from "@mui/x-charts";
 
 const ForgotPassword = () => {
   const [response, setResponse] = useState(null);

@@ -13,7 +13,6 @@ import LoadingButton from "../components/LoadingButton";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState({
     success: false,
@@ -30,8 +29,6 @@ const Login = () => {
   const { login } = useAuth();
 
   const handleForgotPassword = () => navigate("/forgot-password");
-
-  const togglePasswordVisibility = () => setPasswordVisible((prev) => !prev);
 
   const handleResponseClose = () =>
     setResponse({ success: false, error: false, message: "" });
@@ -93,10 +90,8 @@ const Login = () => {
           <PasswordTextField
             name={"password"}
             control={control}
-            isVisible={passwordVisible}
             rules={{ required: "Please enter your password" }}
             error={errors?.password?.message}
-            togglePasswordVisibility={togglePasswordVisibility}
           />
         </Flex>
         <Flex justify={"end"} my={"3"}>
