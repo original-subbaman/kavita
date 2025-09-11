@@ -80,6 +80,10 @@ async function signIn(email, password) {
       password,
     });
 
+    if (error) {
+      throw error;
+    }
+
     const { data: username } = await supabase
       .from("user")
       .select("user_name")

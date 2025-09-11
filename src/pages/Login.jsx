@@ -41,6 +41,7 @@ const Login = () => {
       navigate("/", { replace: true });
       window.location.reload();
     } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error);
       let errorMessage;
       if (error.message.includes("Invalid login credentials")) {
         errorMessage = "Invalid email or password";

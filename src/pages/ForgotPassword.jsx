@@ -8,9 +8,11 @@ import LoginWrapper from "../components/Login_Signup/LoginWrapper";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import useResetPasswordMail from "../hooks/auth/useResetPasswordMail";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [response, setResponse] = useState(null);
+  const navigate = useNavigate();
   const {
     handleSubmit,
     control,
@@ -20,9 +22,12 @@ const ForgotPassword = () => {
   const { mutate: sendResetMail, isPending } = useResetPasswordMail({
     onSuccess: () => {
       console.log("mail sent successfully");
+      setResponse({
+        type: "success",
+        message: "Email sent successfully. Redirecting...",
+      });
     },
     onError: (err) => {
-      console.log("🚀 ~ ForgotPassword ~ err:", err);
       setResponse({
         type: "error",
         message: "Error sending reset password mail",
@@ -34,12 +39,19 @@ const ForgotPassword = () => {
     sendResetMail(data);
   }
 
+  function handleCloseResponse() {
+    setResponse(null);
+    if (response?.type === "success") {
+      navigate("/login", { replace: true });
+    }
+  }
+
   return (
     <LoginWrapper title={"Forgot Password"}>
       {response && (
         <ResponseSnackbar
           open
-          onClose={() => setResponse(null)}
+          onClose={handleCloseResponse}
           severity={response?.type}
           message={response?.message}
         />
