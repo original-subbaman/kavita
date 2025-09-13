@@ -1,4 +1,5 @@
 import { Container } from "@radix-ui/themes";
+import { motion } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { NavLink } from "react-router-dom";
@@ -35,6 +36,7 @@ function InfinitePostSection(props) {
         next={() => fetchNextPage()}
         hasMore={hasNextPage}
         loader={<div className="text-white text-2xl"></div>}
+        style={{ overflow: "hidden" }}
       >
         <ResponsiveMasonry breakpointCols={breakpointColumnsObj}>
           <Masonry
@@ -43,21 +45,22 @@ function InfinitePostSection(props) {
           >
             {posts ? (
               posts.map((post) => (
-                <NavLink
-                  to={`/post/${post.id}`}
+                <motion.div
+                  initial={{ y: 30, opacity: 0, filter: "blur(10px)" }}
+                  animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                  style={{ width: "100%" }}
                   key={post.id}
-                  style={{ width: "100%", margin: "0.5rem" }}
                 >
-                  <Post
-                    content={post.post}
-                    author={post.user.user_name}
-                    authorImg={post.author_img}
-                    createdAt={post.created_at}
-                    bgColor={post.bg_color}
-                    width="100%" // Let Masonry decide width
-                    height="auto"
-                  />
-                </NavLink>
+                  <NavLink to={`/post/${post.id}`} style={{ width: "100%" }}>
+                    <Post
+                      content={post.post}
+                      author={post.user.user_name}
+                      authorImg={post.author_img}
+                      createdAt={post.created_at}
+                      bgColor={post.bg_color}
+                    />
+                  </NavLink>
+                </motion.div>
               ))
             ) : (
               <></>

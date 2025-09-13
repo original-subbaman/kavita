@@ -9,6 +9,6 @@
   background-clip: padding-box;
 }
 
-.my-masonry-grid_column > a {
+.my-masonry-grid_column a {
   margin: 16px;
 }
