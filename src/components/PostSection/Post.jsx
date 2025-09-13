@@ -79,7 +79,7 @@ function Post({
           <Box
             dangerouslySetInnerHTML={{ __html: sanitizedPost }}
             onMouseUp={(event) => console.log(event.type)}
-            className="cursor-pointer"
+            className="cursor-pointer "
             wrap={"wrap"}
           />
         </Box>

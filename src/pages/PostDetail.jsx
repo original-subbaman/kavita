@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Container,
+  Flex,
   Heading,
   Section,
   Text,
@@ -30,6 +31,26 @@ import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { NotificationTarget, NotificationType } from "../utils/Constants";
 import { convertISOTimestamp } from "../utils/Date";
+import { motion } from "framer-motion";
+import BackButton from "../components/BackButton";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05, // Delay between letters
+    },
+  },
+};
+
+const letterVariants = {
+  hidden: { y: "100%", opacity: 0 },
+  visible: {
+    y: "0%",
+    opacity: 1,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
 
 export default function PostDetail() {
   const navigate = useNavigate();
@@ -220,29 +241,51 @@ export default function PostDetail() {
         message={message}
       />
       <Container size={"2"} className="mx-3 md:mx-0">
-        <Section size={"1"} className="text-center">
-          <Heading className="text-white">{author}</Heading>
-          <Text className="text-gray-500">
-            Posted On: {convertISOTimestamp(createdAt)}
-          </Text>
+        {/* Author Section */}
+        <Section size={"1"} className="text-start">
+          <Flex gap={"2"} align={"start"}>
+            <BackButton size="3" />
+            <Box>
+              {author ? (
+                <AnimatedText text={author || ""} />
+              ) : (
+                <div className="h-[28px]"></div>
+              )}
+              <Text className="text-gray-500">
+                Posted On: {convertISOTimestamp(createdAt)}
+              </Text>
+            </Box>
+          </Flex>
         </Section>
+        {/* Capture Language Section */}
         <SelectedText
           selectedText={selectedText}
           captureLanguage={handleCaptureLanguage}
         />
+        {/* Post Section */}
         <Section
-          className="rounded-lg drop-shadow-lg 
-        py-10 px-4 mb-2 md:px-8"
+          className="
+        min-h-[50vh]
+        rounded-lg drop-shadow-lg 
+        py-10 px-4 
+        mb-2 md:px-8"
           style={{
             backgroundColor: contentBGColor || "var(--radix-ice-berg-dark)",
           }}
         >
-          <Box
-            dangerouslySetInnerHTML={{ __html: content }}
-            onMouseMove={(event) => getSelectionText()}
-            onMouseUp={(event) => window.getSelection().removeAllRanges()}
-            className="text-white text-start font-primary text-2xl font-extralight whitespace-pre-line"
-          />
+          {content && (
+            <motion.div
+              initial={{ opacity: 0, filter: "blur(10px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+            >
+              <Box
+                dangerouslySetInnerHTML={{ __html: content || "" }}
+                onMouseMove={(event) => getSelectionText()}
+                onMouseUp={(event) => window.getSelection().removeAllRanges()}
+                className="text-white text-start font-primary text-2xl  whitespace-pre-line"
+              />
+            </motion.div>
+          )}
         </Section>
         <Box className="flex items-end justify-end   gap-4 my-0  max-h-['10px']">
           {/* Like Button */}
@@ -278,5 +321,26 @@ export default function PostDetail() {
         </Box>
       </Container>
     </>
+  );
+}
+
+function AnimatedText({ text }) {
+  return (
+    <motion.div
+      className="flex overflow-hidden font-primary font-bold text-lg text-white"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          variants={letterVariants}
+          style={{ display: "inline-block" }}
+        >
+          {char}
+        </motion.span>
+      ))}
+    </motion.div>
   );
 }

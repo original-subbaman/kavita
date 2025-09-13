@@ -4,8 +4,8 @@ function SelectedText({ selectedText, captureLanguage }) {
   return (
     <div
       className="flex flex-col gap-2 md:gap-0 md:flex-row items-center  
-      text-white border-[1px] border-radix-grass/80 
-      bg-gray-100 bg-opacity-[0.01]
+      text-white
+      bg-gray-500 bg-opacity-[0.2]
         mb-4 rounded-lg text-center py-2"
     >
       <span className="flex-1 md:text-[1rem]">
