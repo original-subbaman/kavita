@@ -1,5 +1,9 @@
 import { AlertDialogPortal } from "@radix-ui/react-alert-dialog";
-import { HeartFilledIcon, HeartIcon } from "@radix-ui/react-icons";
+import {
+  ArrowTopRightIcon,
+  HeartFilledIcon,
+  HeartIcon,
+} from "@radix-ui/react-icons";
 import {
   AlertDialogRoot,
   Box,
@@ -210,6 +214,10 @@ export default function PostDetail() {
     });
   }
 
+  function navigateToAuthorProfile() {
+    navigate(`/author/${authorId}`);
+  }
+
   return (
     <>
       <ScrollToTop />
@@ -247,7 +255,17 @@ export default function PostDetail() {
             <BackButton size="3" />
             <Box>
               {author ? (
-                <AnimatedText text={author || ""} />
+                <Box className="flex items-center gap-4">
+                  <AnimatedText text={author || ""} />
+                  <Button
+                    variant="ghost"
+                    size={"2"}
+                    color="orange"
+                    onClick={navigateToAuthorProfile}
+                  >
+                    View More <ArrowTopRightIcon />
+                  </Button>
+                </Box>
               ) : (
                 <div className="h-[28px]"></div>
               )}
