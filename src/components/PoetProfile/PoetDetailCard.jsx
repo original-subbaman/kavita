@@ -1,7 +1,9 @@
 import { PlusIcon } from "@radix-ui/react-icons";
+import { getInitialsOfName } from "../../utils/Helper";
 import { Box, Avatar, Button } from "@radix-ui/themes";
 
 const PoetDetailCard = ({
+  profile = "",
   username = "username",
   name = "John Doe",
   bio = "Hakuna Matata! This is my bio.",
@@ -12,7 +14,10 @@ const PoetDetailCard = ({
     <Box className="bg-[#212327] rounded-xl p-8 mb-8 w-full">
       <div className="flex flex-col md:flex-row gap-6 items-start">
         {/* Avatar */}
-        <Avatar className="h-24 w-24" src="" />
+        <Avatar
+          className="h-24 w-24"
+          src={profile || getInitialsOfName(name)}
+        />
 
         {/* Profile Info */}
         <div className="flex-1">
