@@ -46,16 +46,19 @@ export async function fetchPosts({ date }) {
  * @returns {Promise<{data: Array, nextCursor: string|undefined, hasMore: boolean}>}
  * @throws {Error} - Throws if fetch fails.
  */
-export async function fetchPostsPagination({ pageParam }) {
+export async function fetchPostsPagination({ pageParam, userId }) {
   const limit = 10;
-
   try {
     let query = supabase
       .from("post")
       .select("*, user (id, name, user_name, profile_url)")
-      .eq("is_hidden", false)
-      .order("created_at", { ascending: false })
-      .limit(limit);
+      .eq("is_hidden", false);
+
+    if (userId) {
+      query = query.eq("user_id", userId);
+    }
+
+    query = query.order("created_at", { ascending: false }).limit(limit);
 
     if (pageParam) {
       query = query.lt("created_at", pageParam);

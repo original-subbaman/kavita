@@ -3,22 +3,24 @@ import { motion } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { NavLink } from "react-router-dom";
-import useGetInfinitePosts from "../../hooks/post/useGetInfinitePosts";
 import ErrorMessage from "../ErrorMessage";
 import Loading from "../Loading";
 import "./masonry-grid.css";
 import Post from "./Post";
 
-const breakpointColumnsObj = {
-  900: 3,
-  750: 2,
-  350: 1,
-};
-
-function InfinitePostSection(props) {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useGetInfinitePosts();
-
+function InfinitePostSection({
+  data,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  status,
+  breakpointColumnsObj = {
+    900: 3,
+    750: 2,
+    350: 1,
+  },
+  containerStyles,
+}) {
   if (status === "error") {
     return (
       <ErrorMessage message={"Error loading posts. Try refreshing the page."} />
@@ -30,7 +32,7 @@ function InfinitePostSection(props) {
   }, []);
 
   return (
-    <Container className="px-3 sm:p-0 md:w-[800px]">
+    <Container className={`px-3 sm:p-0 ${containerStyles}`}>
       <InfiniteScroll
         dataLength={posts ? posts.length : 0}
         next={() => fetchNextPage()}

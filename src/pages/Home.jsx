@@ -15,6 +15,7 @@ import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
 import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import { PostActionsProvider } from "../context/PostActionContext";
+import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 
 function Home() {
   const { user } = useAuth();
@@ -29,6 +30,9 @@ function Home() {
   const [date, setDate] = useState(dayjs(new Date()));
   const isToday = date.isSame(today, "day");
   const queryClient = useQueryClient();
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useGetInfinitePosts({});
 
   const { mutate: addPost, isPending: isPosting } = useAddPost({
     userId: user?.id,
@@ -118,7 +122,14 @@ function Home() {
             </AlertDialogRoot>
           </PromptSection>
           <PostActionsProvider onPostAction={() => {}}>
-            <InfinitePostSection />
+            <InfinitePostSection
+              data={data}
+              hasNextPage={hasNextPage}
+              fetchNextPage={fetchNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              status={status}
+              containerStyles={"md:w-[800px]"}
+            />
           </PostActionsProvider>
         </Box>
         {/** filter */}
