@@ -1,13 +1,12 @@
 import { Container, Grid } from "@radix-ui/themes";
-import { useState } from "react";
 import ActivitySection from "../components/ProfilePage/ActivitySection";
 import StatCard from "../components/ProfilePage/StatCard";
 import UserDetailSection from "../components/ProfilePage/UserDetailSection";
 import useAuth from "../hooks/auth/useAuth";
-import useGetPostCount from "../hooks/post/useGetPostCount";
-import useGetTotalLikes from "../hooks/user/useGetTotalLikes";
 import useGetLanguageCount from "../hooks/language/useGetLanguageCount";
+import useGetPostCount from "../hooks/post/useGetPostCount";
 import useGetLongestStreak from "../hooks/user/useGetLongestStreak";
+import useGetTotalLikes from "../hooks/user/useGetTotalLikes";
 
 function Profile() {
   const { user } = useAuth();

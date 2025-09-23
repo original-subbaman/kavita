@@ -60,7 +60,7 @@ function Post({
             <Flex direction={"column"}>
               <Text className="text-base text-radix-slate-12">{author}</Text>
               <span className="text-xs text-radix-slate-11">
-                {timeAgoUTC(createdAt)} ago
+                {timeAgoUTC(createdAt)}
               </span>
             </Flex>
           </Box>

@@ -17,7 +17,7 @@ function InputAlertDialog({
   isEdit = false,
 }) {
   const [post, setPost] = useState(content || prompt);
-  const [bgColor, setBgColor] = useState(savedColor); // Default background color
+  const [bgColor, setBgColor] = useState(savedColor || DefaultBGColor); // Default background color
   const [error, setError] = useState({
     lowWordCount: false,
     invalidPrompt: false,
@@ -74,7 +74,7 @@ function InputAlertDialog({
 
   // Think about debounce later
   const onPostChange = (value) => {
-    if (post.split(" ").length > minWords) {
+    if (value.split(" ").length > minWords) {
       setError((prev) => ({ ...prev, lowWordCount: false, message: "" }));
     }
     setPost(value);

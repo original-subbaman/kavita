@@ -92,6 +92,18 @@ function EditProfileDialog({
                 rules={{ required: "Address is required" }}
               />
             </label>
+            <label>
+              <Text as="div" size="2" mb="1" weight="bold">
+                Bio
+              </Text>
+              <CustomTextField
+                name={"bio"}
+                placeholder={"Bio"}
+                control={control}
+                defaultValue={user?.bio}
+                error={errors?.bio?.message}
+              />
+            </label>
           </Flex>
           <Flex gap="3" mt="4" justify="end">
             <Dialog.Close>

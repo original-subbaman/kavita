@@ -195,7 +195,6 @@ export async function uploadProfile(userId, profile) {
  * @function getProfile
  * @param {string} userId - The unique identifier of the user.
  * @returns {Promise<string>} The public URL of the user's profile image.
- *
  * @throws {Error} If `userId` is not provided.
  * @throws {Error} If the database query fails.
  * @throws {Error} If no profile URL is found for the user.
@@ -220,7 +219,106 @@ export async function getProfile(userId) {
 
     return publicUrl;
   } catch (error) {
-    console.log("🚀 ~ getProfile ~ error:", error);
+    console.error("🚀 ~ getProfile ~ error:", error);
+    throw error;
+  }
+}
+
+/**
+ * @param {Object} params - Function parameters.
+ * @param {string} params.followerId - The UUID of the user who is following.
+ * @param {string} params.followedId - The UUID of the user being followed.
+ * @returns {Promise<{ success: boolean, message: string }>} - Resolves with a success object.
+ * @throws {Error} - Throws if `followerId` or `followedId` are missing,
+ *                   or if the Supabase insert fails.
+ */
+export async function followUser({ followerId, followedId }) {
+  try {
+    if (!followerId || !followedId) {
+      throw new Error("Missing values: followerId or followedId");
+    }
+
+    const { data, error } = await supabase.from("followers").insert([
+      {
+        follower_id: followerId,
+        followed_id: followedId,
+      },
+    ]);
+
+    if (error) {
+      throw new Error("Error following author: ", error);
+    }
+
+    return { success: true, message: "Followed successfully" };
+  } catch (error) {
+    console.error("🚀 ~ followUser ~ error:", error);
+    throw error;
+  }
+}
+
+/**
+ * Checks if a follower → followed relationship exists in the `followers` table.
+ * @function hasFollowed
+ * @param {Object} params - Function parameters.
+ * @param {string} params.followerId - The UUID of the user who may be following.
+ * @param {string} params.followedId - The UUID of the user who may be followed.
+ * @returns {Promise<boolean>} - Resolves with `true` if the relationship exists,
+ *                               `false` otherwise.
+ * @throws {Error} - Throws if required parameters are missing or if the Supabase query fails.
+ *
+ */
+export async function hasFollowed({ followerId, followedId }) {
+  try {
+    if (!followedId || !followerId) {
+      throw new Error("Missing values: followerId or followedId");
+    }
+
+    const { data, error } = await supabase
+      .from("followers")
+      .select("follower_id")
+      .eq("follower_id", followerId)
+      .eq("followed_id", followedId)
+      .maybeSingle(); // returns null if not found
+
+    if (error) {
+      console.error("Error checking follow:", error);
+      throw error;
+    }
+
+    return !!data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * @async
+ * @function unfollowUser
+ * @param {Object} params - Function parameters.
+ * @param {string} params.followerId - The UUID of the user who wants to unfollow.
+ * @param {string} params.followedId - The UUID of the user being unfollowed.
+ * @returns {Promise<{ success: boolean, message: string }>} - Resolves with a success object.
+ * @throws {Error} - Throws if required parameters are missing or if the Supabase delete fails.
+ */
+export async function unfollowUser({ followerId, followedId }) {
+  try {
+    if (!followerId || !followedId) {
+      throw new Error("Missing values: followerId or followedId");
+    }
+
+    const { error } = await supabase
+      .from("followers")
+      .delete()
+      .eq("follower_id", followerId)
+      .eq("followed_id", followedId);
+
+    if (error) {
+      throw new Error(`Error unfollowing user: ${error.message}`);
+    }
+
+    return { success: true, message: "Unfollowed successfully" };
+  } catch (error) {
+    console.error("🚀 ~ unfollowUser ~ error:", error);
     throw error;
   }
 }

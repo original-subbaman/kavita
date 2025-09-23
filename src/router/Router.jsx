@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import RootWrapper from "../components/RootWrapper.jsx";
+import AuthorProfile from "../pages/AuthorProfile.jsx";
 import Home from "../pages/Home.jsx";
 import LanguageWall from "../pages/LanguageWall.jsx";
 import Login from "../pages/Login.jsx";
@@ -12,7 +13,6 @@ import PostDetail from "../pages/PostDetail.jsx";
 import Profile from "../pages/Profile.jsx";
 import Signup from "../pages/Signup.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-import PoetProfile from "../pages/PoetProfile.jsx";
 
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword.jsx"));
 const ResetPassword = lazy(() => import("../pages/ResetPassword.jsx"));
@@ -57,7 +57,7 @@ function CreateRouter() {
         },
         {
           path: "author/:id",
-          element: <PoetProfile />,
+          element: <AuthorProfile />,
         },
         {
           path: "notifications",
