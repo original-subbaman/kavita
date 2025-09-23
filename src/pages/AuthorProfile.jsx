@@ -15,6 +15,7 @@ import useGetUser from "../hooks/user/useGetUser";
 import useHasFollowed from "../hooks/user/useHasFollowed";
 import useUnfollowUser from "../hooks/user/useUnfollowUser";
 import { useQueryClient } from "@tanstack/react-query";
+import useFollowerCount from "../hooks/user/useFollowerCount";
 
 const AuthorProfile = () => {
   const params = useParams();
@@ -28,6 +29,10 @@ const AuthorProfile = () => {
   const { data: author } = useGetUser({ userId: authorUserId });
   const { data: profile } = useGetProfile({ userId: authorUserId });
   const { data: postCount } = useGetPostCount({ userId: authorUserId });
+  const { data: followerCount } = useFollowerCount({
+    userId: authorUserId,
+    staleTime: 0,
+  });
   const { data: hasFollowed } = useHasFollowed({
     followerId: currentUserId,
     followedId: authorUserId,
@@ -49,6 +54,10 @@ const AuthorProfile = () => {
     queryClient.invalidateQueries({
       queryKey: ["has_followed", currentUserId, authorUserId],
     });
+
+    if (action && typeof action === "function") {
+      action();
+    }
   };
   const onError = (message) => {
     setResponse({
@@ -59,12 +68,22 @@ const AuthorProfile = () => {
 
   const { mutate: followUser, isPending: isFollowing } = useFollowUser({
     onSuccess: () =>
-      onSuccess(`You have started following: ${author?.user_name}`),
+      onSuccess(`You have started following: ${author?.user_name}`, () =>
+        queryClient.invalidateQueries({
+          queryKey: ["follower_count", authorUserId],
+        })
+      ),
     onError: () => onError("Unable to follow user. Please try again later."),
   });
 
   const { mutate: unfollowUser, isPending: isUnfollowing } = useUnfollowUser({
-    onSuccess: () => onSuccess(`Unfollowed successfully`),
+    onSuccess: () =>
+      onSuccess(
+        `Unfollowed successfully`,
+        queryClient.invalidateQueries({
+          queryKey: ["follower_count", authorUserId],
+        })
+      ),
     onError: () => onError("Unable to unfollowe user. Please try again later."),
   });
 
@@ -104,7 +123,7 @@ const AuthorProfile = () => {
           name={author?.name || ""}
           poems={postCount || 0}
           bio={author?.bio}
-          followers={100}
+          followers={followerCount}
           isUserAuthor={isUserAuthor}
           showFollowButton={showFollowButton}
           onFollowUser={handleFollowUser}

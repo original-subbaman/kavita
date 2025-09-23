@@ -322,3 +322,25 @@ export async function unfollowUser({ followerId, followedId }) {
     throw error;
   }
 }
+
+export async function getFollowerCount({ userId }) {
+  try {
+    if (!userId) {
+      throw new Error("Missing parameter: userId");
+    }
+
+    const { count, error } = await supabase
+      .from("followers")
+      .select("*", { count: "exact", head: true })
+      .eq("followed_id", userId);
+
+    if (error) {
+      throw error;
+    }
+
+    return count;
+  } catch (error) {
+    console.error("🚀 ~ getFollowerCount ~ error:", error);
+    throw error;
+  }
+}
