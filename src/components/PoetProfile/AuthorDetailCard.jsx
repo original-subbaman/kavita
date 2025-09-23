@@ -27,6 +27,7 @@ const AuthorDetailCard = ({
   poems = "100",
   followers = "0",
   showFollowButton = true,
+  isUserAuthor = false,
   onFollowUser = () => {},
   onUnfollowUser = () => {},
 }) => {
@@ -44,10 +45,14 @@ const AuthorDetailCard = ({
           <div>
             <div className="flex items-center gap-4 ">
               <h1 className="text-2xl text-white">{name}</h1>
-              {showFollowButton ? (
-                <FollowButton onClick={onFollowUser} />
-              ) : (
-                <UnfollowButton onClick={onUnfollowUser} />
+              {!isUserAuthor && (
+                <div>
+                  {showFollowButton ? (
+                    <FollowButton onClick={onFollowUser} />
+                  ) : (
+                    <UnfollowButton onClick={onUnfollowUser} />
+                  )}
+                </div>
               )}
             </div>
             <p className="text-gray-400">@{username}</p>

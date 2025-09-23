@@ -83,6 +83,7 @@ const AuthorProfile = () => {
   }
 
   const showFollowButton = currentUserId !== authorUserId && !hasFollowed;
+  const isUserAuthor = currentUserId === authorUserId;
 
   return (
     <Container className="min-h-screen py-10" size={"2"}>
@@ -104,6 +105,7 @@ const AuthorProfile = () => {
           poems={postCount || 0}
           bio={author?.bio}
           followers={100}
+          isUserAuthor={isUserAuthor}
           showFollowButton={showFollowButton}
           onFollowUser={handleFollowUser}
           onUnfollowUser={handleUnfollowUser}
