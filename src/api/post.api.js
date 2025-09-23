@@ -559,6 +559,7 @@ export async function getPostCount(userId) {
       .from("post")
       .select("", { count: "exact" })
       .eq("user_id", userId)
+      .eq("is_hidden", false)
       .limit(1);
 
     if (error) {
