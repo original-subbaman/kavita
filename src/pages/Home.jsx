@@ -17,6 +17,7 @@ import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
 import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
+import PopularThemes from "../components/Home/PopularThemes";
 
 function Home() {
   const { user } = useAuth();
@@ -126,8 +127,11 @@ function Home() {
             </AlertDialogRoot>
           </PromptSection>
           {/* Filters */}
-          <Box className="mb-4">
-            <PostFilter setOption={setFilter} />
+          <Box className="flex flex-col gap-4 mb-4">
+            <PopularThemes />
+            <div className="self-end">
+              <PostFilter setOption={setFilter} />
+            </div>
           </Box>
           {/* Post Section */}
           <PostActionsProvider onPostAction={() => {}}>

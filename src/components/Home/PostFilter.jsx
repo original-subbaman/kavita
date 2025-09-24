@@ -5,12 +5,16 @@ import {
   DropdownMenuRoot,
   DropdownMenuContent,
 } from "@radix-ui/themes";
+import { Filter } from "lucide-react";
 
 const PostFilter = ({ setOption }) => {
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger>
-        <Button variant="soft">Filter</Button>
+        <Button variant="soft">
+          <Filter size={14} />
+          Filter
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem
