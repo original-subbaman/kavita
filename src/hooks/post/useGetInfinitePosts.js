@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchPostsPagination } from "../../api/post.api";
 
-const useGetInfinitePosts = ({ userId }) => {
+const useGetInfinitePosts = ({ userId, filter }) => {
   return useInfiniteQuery({
-    queryKey: ["infinite_posts", userId],
+    queryKey: ["infinite_posts", userId, filter],
     queryFn: async ({ pageParam }) => {
-      return await fetchPostsPagination({ pageParam, userId });
+      return await fetchPostsPagination({ pageParam, userId, filter });
     },
     getNextPageParam: (lastPage, pages) => {
       return lastPage?.hasMore ? lastPage.nextCursor : undefined;

@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PostFilter from "../components/Home/PostFilter";
 import InfinitePostSection from "../components/PostSection/InfinitePostSection";
 import InputAlertDialog from "../components/PromptSection/InputAlertDialog";
 import PostInputBox from "../components/PromptSection/PostInputBox";
@@ -11,16 +12,19 @@ import PromptSection from "../components/PromptSection/PromptSection";
 import PromptText from "../components/PromptSection/PromptText";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import ScrollToTop from "../components/ScrollToTop";
+import { PostActionsProvider } from "../context/PostActionContext";
 import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
-import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
-import { PostActionsProvider } from "../context/PostActionContext";
 import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
+import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 
 function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [addPostDialog, setAddPostDialog] = useState(false);
+  const [filter, setFilter] = useState({
+    feedType: "all",
+  });
   const [response, setResponse] = useState({
     success: false,
     error: false,
@@ -29,10 +33,11 @@ function Home() {
   const today = dayjs(new Date());
   const [date, setDate] = useState(dayjs(new Date()));
   const isToday = date.isSame(today, "day");
+
   const queryClient = useQueryClient();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useGetInfinitePosts({});
+    useGetInfinitePosts({ userId: user?.id, filter: filter.feedType });
 
   const { mutate: addPost, isPending: isPosting } = useAddPost({
     userId: user?.id,
@@ -97,7 +102,6 @@ function Home() {
         {/** Posts Section */}
         <Box className="flex-1 md:w-[800px]">
           <PromptSection>
-            {/* Writing theme */}
             <WritingThemeTitle />
             {isFetchingPrompt ? (
               <LoadingTheme />
@@ -116,11 +120,16 @@ function Home() {
               )}
               <InputAlertDialog
                 mutation={addPost}
-                prompt={prompt?.prompt} // Replace with actual prompt from the backend
+                prompt={prompt?.prompt}
                 mutationState={isPosting}
               />
             </AlertDialogRoot>
           </PromptSection>
+          {/* Filters */}
+          <Box className="mb-4">
+            <PostFilter setOption={setFilter} />
+          </Box>
+          {/* Post Section */}
           <PostActionsProvider onPostAction={() => {}}>
             <InfinitePostSection
               data={data}

@@ -46,7 +46,7 @@ export async function fetchPosts({ date }) {
  * @returns {Promise<{data: Array, nextCursor: string|undefined, hasMore: boolean}>}
  * @throws {Error} - Throws if fetch fails.
  */
-export async function fetchPostsPagination({ pageParam, userId }) {
+export async function fetchPostsPagination({ pageParam, userId, filter }) {
   const limit = 10;
   try {
     let query = supabase
@@ -54,8 +54,27 @@ export async function fetchPostsPagination({ pageParam, userId }) {
       .select("*, user (id, name, user_name, profile_url)")
       .eq("is_hidden", false);
 
-    if (userId) {
+    // fetch one user's post
+    if (userId && !filter) {
       query = query.eq("user_id", userId);
+    }
+
+    // fetch from followed users
+    if (filter === "following" && userId) {
+      const { data: following, error: followingError } = await supabase
+        .from("followers")
+        .select("followed_id")
+        .eq("follower_id", userId);
+
+      if (followingError) throw followingError;
+
+      const followingIds = following?.map((f) => f.followed_id) || [];
+
+      if (followingIds.length > 0) {
+        query = query.in("user_id", followingIds);
+      } else {
+        return { data: [], nextCursor: undefined, hasMore: false };
+      }
     }
 
     query = query.order("created_at", { ascending: false }).limit(limit);
