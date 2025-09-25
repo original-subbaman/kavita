@@ -25,6 +25,7 @@ function Home() {
   const [addPostDialog, setAddPostDialog] = useState(false);
   const [filter, setFilter] = useState({
     feedType: "all",
+    theme: null,
   });
   const [response, setResponse] = useState({
     success: false,
@@ -36,6 +37,8 @@ function Home() {
   const isToday = date.isSame(today, "day");
 
   const queryClient = useQueryClient();
+
+  const { data: prompt, isLoading: isFetchingPrompt } = useGetWeeklyTheme();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useGetInfinitePosts({ userId: user?.id, filter: filter.feedType });
@@ -63,8 +66,6 @@ function Home() {
     },
   });
 
-  const { data: prompt, isLoading: isFetchingPrompt } = useGetWeeklyTheme();
-
   const handleClose = () => {
     setResponse({ error: false, success: false, message: "" });
   };
@@ -76,6 +77,11 @@ function Home() {
       navigate("/login");
     }
   };
+
+  const themes = ["Love", "Loss", "Hope", "Friendship"];
+  if (prompt) {
+    themes.unshift(prompt);
+  }
 
   return (
     <>
@@ -107,7 +113,7 @@ function Home() {
             {isFetchingPrompt ? (
               <LoadingTheme />
             ) : (
-              <PromptText prompt={prompt?.prompt} />
+              <PromptText prompt={prompt} />
             )}
             {/* Input box */}
             <AlertDialogRoot
@@ -121,14 +127,18 @@ function Home() {
               )}
               <InputAlertDialog
                 mutation={addPost}
-                prompt={prompt?.prompt}
+                prompt={prompt}
                 mutationState={isPosting}
               />
             </AlertDialogRoot>
           </PromptSection>
           {/* Filters */}
           <Box className="flex flex-col gap-4 mb-4">
-            <PopularThemes />
+            <PopularThemes
+              seletedTheme={filter.theme || prompt}
+              setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
+              themes={themes}
+            />
             <div className="self-end">
               <PostFilter setOption={setFilter} />
             </div>

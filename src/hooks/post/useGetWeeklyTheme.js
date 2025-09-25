@@ -7,6 +7,7 @@ const useGetWeeklyTheme = () => {
     queryFn: () => getWritingTheme(),
     staleTime: Infinity,
     refetchOnMount: true,
+    select: (data) => data.prompt,
   });
 };
 
