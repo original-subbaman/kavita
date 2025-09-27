@@ -46,21 +46,27 @@ export async function fetchPosts({ date }) {
  * @returns {Promise<{data: Array, nextCursor: string|undefined, hasMore: boolean}>}
  * @throws {Error} - Throws if fetch fails.
  */
-export async function fetchPostsPagination({ pageParam, userId, filter }) {
-  const limit = 10;
+export async function fetchPostsPagination({
+  pageParam,
+  userId,
+  feedType,
+  theme,
+}) {
+  const limit = 50;
   try {
     let query = supabase
       .from("post")
       .select("*, user (id, name, user_name, profile_url)")
+      // .eq("writing_theme", theme)
       .eq("is_hidden", false);
 
     // fetch one user's post
-    if (userId && !filter) {
+    if (userId && !feedType) {
       query = query.eq("user_id", userId);
     }
 
     // fetch from followed users
-    if (filter === "following" && userId) {
+    if (feedType === "following" && userId) {
       const { data: following, error: followingError } = await supabase
         .from("followers")
         .select("followed_id")
@@ -82,6 +88,8 @@ export async function fetchPostsPagination({ pageParam, userId, filter }) {
     if (pageParam) {
       query = query.lt("created_at", pageParam);
     }
+
+    console.log(query);
 
     const { data, error } = await query;
 
@@ -654,7 +662,7 @@ export async function getWritingTheme() {
       throw error;
     }
 
-    return { prompt: data?.writing_themes.prompt };
+    return { id: data?.writing_themes.id, prompt: data?.writing_themes.prompt };
   } catch (error) {
     throw error;
   }

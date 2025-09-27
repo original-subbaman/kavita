@@ -1,28 +1,9 @@
 import { Box, Chip } from "@mui/material";
-import { useState } from "react";
-
-const COLORS = [
-  "#E57373", // red
-  "#64B5F6", // blue
-  "#81C784", // green
-  "#FFD54F", // yellow
-  "#BA68C8", // purple
-  "#4DB6AC", // teal
-  "#FF8A65", // orange
-  "#A1887F", // brown
-  "#90A4AE", // gray
-  "#F06292", // pink
-];
-
-const getRandomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)];
 
 const ThemeChip = ({ label, variant = "outlined", onClick }) => {
-  const randomColor = getRandomColor();
-
   return (
     <Chip
       label={label}
-      size="small"
       clickable
       variant={variant}
       onClick={onClick}
@@ -40,9 +21,8 @@ const PopularThemes = ({
   setTheme,
   themes = ["Love", "Loss", "Hope", "Friendship"],
 }) => {
-  console.log("🚀 ~ PopularThemes ~ seletedTheme:", seletedTheme);
   return (
-    <Box display="flex" gap={1} flexWrap="wrap">
+    <Box display="flex" gap={1} flexWrap="wrap" mx={2}>
       {themes.map((t) => {
         return (
           <ThemeChip

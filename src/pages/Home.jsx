@@ -27,6 +27,7 @@ function Home() {
     feedType: "all",
     theme: null,
   });
+
   const [response, setResponse] = useState({
     success: false,
     error: false,
@@ -38,10 +39,18 @@ function Home() {
 
   const queryClient = useQueryClient();
 
-  const { data: prompt, isLoading: isFetchingPrompt } = useGetWeeklyTheme();
+  const {
+    data: theme,
+    isLoading: isFetchingPrompt,
+    isFetched: isThemeFetched,
+  } = useGetWeeklyTheme();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useGetInfinitePosts({ userId: user?.id, filter: filter.feedType });
+    useGetInfinitePosts({
+      userId: user?.id,
+      filter: filter.feedType,
+      theme: theme?.id,
+    });
 
   const { mutate: addPost, isPending: isPosting } = useAddPost({
     userId: user?.id,
@@ -78,8 +87,22 @@ function Home() {
     }
   };
 
-  const themes = ["Love", "Loss", "Hope", "Friendship"];
-  if (prompt) {
+  const themes = [
+    "Love",
+    "Loss",
+    "Hope",
+    "Friendship",
+    "Redemption",
+    "Haiku",
+    "Melancholy",
+    "Identity",
+    "Comedy",
+    "Nostalgia",
+    "Family",
+  ];
+  let prompt = "";
+  if (isThemeFetched) {
+    prompt = theme.prompt;
     themes.unshift(prompt);
   }
 
@@ -109,6 +132,7 @@ function Home() {
         {/** Posts Section */}
         <Box className="flex-1 md:w-[800px]">
           <PromptSection>
+            {/* Today's prompt text */}
             <WritingThemeTitle />
             {isFetchingPrompt ? (
               <LoadingTheme />
