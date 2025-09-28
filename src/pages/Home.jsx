@@ -18,6 +18,7 @@ import useAddPost from "../hooks/post/useAddPost";
 import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import PopularThemes from "../components/Home/PopularThemes";
+import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
 
 function Home() {
   const { user } = useAuth();
@@ -38,6 +39,9 @@ function Home() {
   const isToday = date.isSame(today, "day");
 
   const queryClient = useQueryClient();
+
+  const { data: popularThemes, isFetched: isPopularThemesFetched } =
+    useGetPopularThemes();
 
   const {
     data: theme,
@@ -87,23 +91,15 @@ function Home() {
     }
   };
 
-  const themes = [
-    "Love",
-    "Loss",
-    "Hope",
-    "Friendship",
-    "Redemption",
-    "Haiku",
-    "Melancholy",
-    "Identity",
-    "Comedy",
-    "Nostalgia",
-    "Family",
-  ];
+  let themes = [];
   let prompt = "";
   if (isThemeFetched) {
     prompt = theme.prompt;
-    themes.unshift(prompt);
+    themes.unshift(theme);
+  }
+
+  if (isPopularThemesFetched && popularThemes?.data.length > 0) {
+    themes.push(...popularThemes.data);
   }
 
   return (

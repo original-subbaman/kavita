@@ -52,12 +52,12 @@ export async function fetchPostsPagination({
   feedType,
   theme,
 }) {
-  const limit = 50;
+  const limit = 10;
   try {
     let query = supabase
       .from("post")
       .select("*, user (id, name, user_name, profile_url)")
-      // .eq("writing_theme", theme)
+      .eq("writing_theme", theme)
       .eq("is_hidden", false);
 
     // fetch one user's post
@@ -696,6 +696,37 @@ export async function deletePost({ userId, postId }) {
     return { success: true, message: "Post deleted successfully" };
   } catch (error) {
     console.log("🚀 ~ deletePost ~ error:", error);
+    throw error;
+  }
+}
+
+export async function getPopularThemes() {
+  try {
+    const popularThemes = [
+      "Love",
+      "Loss",
+      "Hope",
+      "Friendship",
+      "Redemption",
+      "Haiku",
+      "Melancholy",
+      "Identity",
+      "Comedy",
+      "Nostalgia",
+      "Family",
+    ];
+    const { data, error } = await supabase
+      .from("writing_themes")
+      .select("*")
+      .in("prompt", popularThemes);
+
+    if (error) {
+      return { success: false, data: [] };
+    }
+
+    return { success: true, data: data };
+  } catch (error) {
+    console.error("🚀 ~ getPopularThemes ~ error:", error);
     throw error;
   }
 }
