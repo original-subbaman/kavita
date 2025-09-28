@@ -23,7 +23,9 @@ import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
 function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
   const [addPostDialog, setAddPostDialog] = useState(false);
+
   const [filter, setFilter] = useState({
     feedType: "all",
     theme: null,
@@ -34,9 +36,6 @@ function Home() {
     error: false,
     message: "",
   });
-  const today = dayjs(new Date());
-  const [date, setDate] = useState(dayjs(new Date()));
-  const isToday = date.isSame(today, "day");
 
   const queryClient = useQueryClient();
 
@@ -44,7 +43,7 @@ function Home() {
     useGetPopularThemes();
 
   const {
-    data: theme,
+    data: currWeeklyTheme,
     isLoading: isFetchingPrompt,
     isFetched: isThemeFetched,
   } = useGetWeeklyTheme();
@@ -53,7 +52,7 @@ function Home() {
     useGetInfinitePosts({
       userId: user?.id,
       filter: filter.feedType,
-      theme: theme?.id,
+      theme: filter.theme?.id || currWeeklyTheme?.id,
     });
 
   const { mutate: addPost, isPending: isPosting } = useAddPost({
@@ -94,8 +93,8 @@ function Home() {
   let themes = [];
   let prompt = "";
   if (isThemeFetched) {
-    prompt = theme.prompt;
-    themes.unshift(theme);
+    prompt = currWeeklyTheme.prompt;
+    themes.unshift(currWeeklyTheme);
   }
 
   if (isPopularThemesFetched && popularThemes?.data.length > 0) {
@@ -140,11 +139,9 @@ function Home() {
               open={addPostDialog}
               onOpenChange={setAddPostDialog}
             >
-              {isToday && (
-                <Box className="w-[93%] md:w-full mx-4">
-                  <PostInputBox onClick={handlePostInputClick} />
-                </Box>
-              )}
+              <Box className="w-[93%] md:w-full mx-4">
+                <PostInputBox onClick={handlePostInputClick} />
+              </Box>
               <InputAlertDialog
                 mutation={addPost}
                 prompt={prompt}
@@ -155,7 +152,7 @@ function Home() {
           {/* Filters */}
           <Box className="flex flex-col gap-4 mb-4">
             <PopularThemes
-              seletedTheme={filter.theme || prompt}
+              seletedTheme={filter.theme || currWeeklyTheme}
               setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
               themes={themes}
             />

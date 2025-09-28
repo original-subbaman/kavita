@@ -17,14 +17,13 @@ const ThemeChip = ({ label, variant = "outlined", onClick }) => {
 };
 
 const PopularThemes = ({ seletedTheme, setTheme, themes }) => {
-  console.log("🚀 ~ PopularThemes ~ themes:", themes);
   return (
     <Box display="flex" gap={1} flexWrap="wrap" mx={2}>
       {themes.map((t) => {
         return (
           <ThemeChip
             label={t?.prompt}
-            variant={seletedTheme === t ? "filled" : "outlined"}
+            variant={seletedTheme.id === t.id ? "filled" : "outlined"}
             onClick={() => setTheme(t)}
           />
         );
