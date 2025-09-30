@@ -12,7 +12,7 @@ function RootWrapper({ showHeader = true, children }) {
       {showHeader && (
         <Header toggleSideNav={() => setOpenSideNav((prev) => !prev)} />
       )}
-      {isAuthenticated && openSideNav && (
+      {isAuthenticated && (
         <MobileNav
           openSideNav={openSideNav}
           onClose={() => setOpenSideNav(false)}

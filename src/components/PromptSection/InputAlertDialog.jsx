@@ -16,7 +16,7 @@ function InputAlertDialog({
   theme,
   isEdit = false,
 }) {
-  const [post, setPost] = useState(content || theme?.prompt);
+  const [post, setPost] = useState(content || "");
   const [bgColor, setBgColor] = useState(savedColor || DefaultBGColor); // Default background color
   const [error, setError] = useState({
     lowWordCount: false,
@@ -86,7 +86,7 @@ function InputAlertDialog({
 
   return (
     <AlertDialog.Content
-      className="w-[600px] "
+      className="w-[600px]"
       aria-describedby="Add your writing piece"
     >
       {snackbar.open && (
@@ -98,7 +98,7 @@ function InputAlertDialog({
           message={snackbar.message}
         />
       )}
-      <AlertDialog.Title className="text-white text-lg font-normal">
+      <AlertDialog.Title className="text-white text-base md:text-lg font-normal">
         {title}
       </AlertDialog.Title>
       {/* Error Messages */}

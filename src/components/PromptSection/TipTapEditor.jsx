@@ -85,24 +85,6 @@ function MenuBar({ editor, bgColor, setBgColor }) {
       toolTip: "Strike through",
     },
     {
-      label: "H1",
-      action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-      active: editorState.isHeading1,
-      toolTip: "Heading 1",
-    },
-    {
-      label: "H2",
-      action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-      active: editorState.isHeading2,
-      toolTip: "Heading 2",
-    },
-    {
-      label: "H5",
-      action: () => editor.chain().focus().toggleHeading({ level: 5 }).run(),
-      active: editorState.isHeading5,
-      toolTip: "Heading 5",
-    },
-    {
       label: "↺",
       action: () => editor.chain().focus().undo().run(),
       disabled: !editorState.canUndo,
