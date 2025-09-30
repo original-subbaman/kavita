@@ -268,10 +268,10 @@ async function getPostLikeStatus(userId, postId) {
  * @returns {Promise<Object>} - Inserted post comment object.
  * @throws {Error} - Throws if params are missing or insert fails.
  */
-export async function addPost(post, userId, bgColor) {
+export async function addPost(post, userId, themeId, bgColor) {
   try {
-    if (!post || !userId) {
-      throw new Error("Post and userId are required.");
+    if (!post || !userId || !themeId) {
+      throw new Error("Post, userId, and themeId are required.");
     }
 
     const { error } = await supabase.from("post").insert([
@@ -279,6 +279,7 @@ export async function addPost(post, userId, bgColor) {
         post: post,
         user_id: userId,
         bg_color: bgColor,
+        writing_theme: themeId,
       },
     ]);
 
@@ -286,10 +287,6 @@ export async function addPost(post, userId, bgColor) {
       console.error("Error inserting post:", error.message);
       throw new Error(`Failed to add post: ${error.message}`);
     }
-
-    // if (!data || data.length === 0) {
-    //   throw new Error("Insert succeeded but returned no data.");
-    // }
 
     return true;
   } catch (err) {

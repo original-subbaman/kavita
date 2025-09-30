@@ -25,6 +25,7 @@ import WeeklyTheme from "../components/Home/WeeklyTheme";
 function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [addPostDialog, setAddPostDialog] = useState(false);
 
@@ -38,8 +39,6 @@ function Home() {
     error: false,
     message: "",
   });
-
-  const queryClient = useQueryClient();
 
   const { data: popularThemes, isFetched: isPopularThemesFetched } =
     useGetPopularThemes();
@@ -103,6 +102,8 @@ function Home() {
     themes.push(...popularThemes.data);
   }
 
+  const activeTheme = filter.theme || currWeeklyTheme;
+
   return (
     <>
       {/* Success Snackbar */}
@@ -124,16 +125,16 @@ function Home() {
         />
       )}
       <Flex display={"flex"} gap={"2"} className="min-h-screen">
-        {/** suggest prompt section */}
+        {/* suggest prompt section */}
         <Box className="flex-1 hidden sm:block"></Box>
-        {/** Posts Section */}
+        {/* Posts Section */}
         <Box className="flex-1 md:w-[800px]">
           <PromptSection>
             {/* Today's prompt text */}
             {isFetchingPrompt ? (
               <LoadingTheme />
             ) : (
-              <WeeklyTheme theme={prompt} />
+              <WeeklyTheme theme={activeTheme?.prompt} />
             )}
             {/* Input box */}
             <AlertDialogRoot
@@ -145,7 +146,7 @@ function Home() {
               </Box>
               <InputAlertDialog
                 mutation={addPost}
-                prompt={prompt}
+                theme={activeTheme}
                 mutationState={isPosting}
               />
             </AlertDialogRoot>
@@ -177,7 +178,6 @@ function Home() {
             />
           </PostActionsProvider>
         </Box>
-        {/** filter */}
         <Box className="flex-1 my-8 color-white hidden sm:flex flex-col items-center  "></Box>
       </Flex>
       <ScrollToTop />

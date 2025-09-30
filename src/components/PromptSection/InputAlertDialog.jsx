@@ -13,10 +13,10 @@ function InputAlertDialog({
   savedColor,
   mutation,
   mutationState,
-  prompt,
+  theme,
   isEdit = false,
 }) {
-  const [post, setPost] = useState(content || prompt);
+  const [post, setPost] = useState(content || theme?.prompt);
   const [bgColor, setBgColor] = useState(savedColor || DefaultBGColor); // Default background color
   const [error, setError] = useState({
     lowWordCount: false,
@@ -28,7 +28,11 @@ function InputAlertDialog({
     message: "",
   });
 
-  const title = prompt ? `Writing theme: ${prompt}` : isEdit ? "Edit post" : "";
+  const title = theme
+    ? `Writing theme: ${theme?.prompt}`
+    : isEdit
+    ? "Edit post"
+    : "";
 
   const isPostEmpty = () => {
     if (post.length === 0 || /^\s*$/.test(post)) {
@@ -60,7 +64,7 @@ function InputAlertDialog({
       return;
     }
     if (!isEdit) {
-      mutation({ post, bgColor });
+      mutation({ post, themeId: theme?.id, bgColor });
     } else {
       mutation({
         post,
