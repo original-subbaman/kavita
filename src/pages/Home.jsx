@@ -20,6 +20,7 @@ import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import PopularThemes from "../components/Home/PopularThemes";
 import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
 import AuthGuard from "../components/AuthGuard";
+import WeeklyTheme from "../components/Home/WeeklyTheme";
 
 function Home() {
   const { user } = useAuth();
@@ -31,7 +32,6 @@ function Home() {
     feedType: "all",
     theme: null,
   });
-  console.log("🚀 ~ Home ~ filter:", filter);
 
   const [response, setResponse] = useState({
     success: false,
@@ -130,11 +130,10 @@ function Home() {
         <Box className="flex-1 md:w-[800px]">
           <PromptSection>
             {/* Today's prompt text */}
-            <WritingThemeTitle />
             {isFetchingPrompt ? (
               <LoadingTheme />
             ) : (
-              <PromptText prompt={prompt} />
+              <WeeklyTheme theme={prompt} />
             )}
             {/* Input box */}
             <AlertDialogRoot
@@ -161,7 +160,7 @@ function Home() {
             />
             {/* Fitler by feed type */}
             <AuthGuard>
-              <div className="self-end">
+              <div className="self-end mr-4 md:mr-0">
                 <PostFilter setOption={setFilter} />
               </div>
             </AuthGuard>
@@ -185,12 +184,6 @@ function Home() {
     </>
   );
 }
-
-const WritingThemeTitle = () => (
-  <Text className="text-left text-white text-md font-primary w-full ">
-    ✨ This week’s writing theme:
-  </Text>
-);
 
 const LoadingTheme = () => (
   <Text size={"6"} className="animate-fade-pulse text-radix-green">
