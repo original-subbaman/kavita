@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchPostsPagination } from "../../api/post.api";
 
 const useGetInfinitePosts = ({ userId, feedType, theme }) => {
-  console.log("🚀 ~ useGetInfinitePosts ~ theme:", theme);
+  console.log("🚀 ~ useGetInfinitePosts ~ feedType:", feedType);
   return useInfiniteQuery({
     queryKey: ["infinite_posts", userId, feedType, theme],
     queryFn: async ({ pageParam }) => {

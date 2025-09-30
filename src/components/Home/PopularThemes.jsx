@@ -23,7 +23,7 @@ const PopularThemes = ({ seletedTheme, setTheme, themes }) => {
         return (
           <ThemeChip
             label={t?.prompt}
-            variant={seletedTheme.id === t.id ? "filled" : "outlined"}
+            variant={seletedTheme?.id === t.id ? "filled" : "outlined"}
             onClick={() => setTheme(t)}
           />
         );

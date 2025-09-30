@@ -19,6 +19,7 @@ import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import PopularThemes from "../components/Home/PopularThemes";
 import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
+import AuthGuard from "../components/AuthGuard";
 
 function Home() {
   const { user } = useAuth();
@@ -30,6 +31,7 @@ function Home() {
     feedType: "all",
     theme: null,
   });
+  console.log("🚀 ~ Home ~ filter:", filter);
 
   const [response, setResponse] = useState({
     success: false,
@@ -51,7 +53,7 @@ function Home() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useGetInfinitePosts({
       userId: user?.id,
-      filter: filter.feedType,
+      feedType: filter.feedType,
       theme: filter.theme?.id || currWeeklyTheme?.id,
     });
 
@@ -151,14 +153,18 @@ function Home() {
           </PromptSection>
           {/* Filters */}
           <Box className="flex flex-col gap-4 mb-4">
+            {/* Filter by Popular Themes */}
             <PopularThemes
               seletedTheme={filter.theme || currWeeklyTheme}
               setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
               themes={themes}
             />
-            <div className="self-end">
-              <PostFilter setOption={setFilter} />
-            </div>
+            {/* Fitler by feed type */}
+            <AuthGuard>
+              <div className="self-end">
+                <PostFilter setOption={setFilter} />
+              </div>
+            </AuthGuard>
           </Box>
           {/* Post Section */}
           <PostActionsProvider onPostAction={() => {}}>
