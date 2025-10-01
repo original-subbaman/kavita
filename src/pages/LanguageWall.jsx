@@ -25,15 +25,16 @@ import { convertISOTimeToIST } from "../utils/Date";
 function LanguageWall(props) {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const [postId, setPostId] = useState();
   const debounceSearch = useDebounceSearch(searchTerm);
+
+  const [postId, setPostId] = useState();
+  const [selecteQuote, setSelectedQuote] = useState();
+
   let paneRef = useRef(null);
   let paneInstanceRef = useRef(null);
 
   useEffect(() => {
-    // Initialize the Cupertino Pane
     paneInstanceRef.current = new CupertinoPane(paneRef.current, {
-      // You can customize options here
       darkMode: true,
       backdrop: true,
       draggableOver: true,
@@ -45,8 +46,9 @@ function LanguageWall(props) {
   }, []);
 
   const handleSearchChange = (event) => setSearchTerm(event.target.value);
-  const handleQuoteClick = (postId) => {
+  const handleQuoteClick = (postId, quote) => {
     setPostId(postId);
+    setSelectedQuote(quote);
     paneInstanceRef.current.present({ animate: true });
   };
 
@@ -86,7 +88,7 @@ function LanguageWall(props) {
             <Text
               mr={"3"}
               key={quote.id}
-              onClick={() => handleQuoteClick(quote.post_id)}
+              onClick={() => handleQuoteClick(quote.post_id, quote)}
               className={` ${
                 index % 3 === 0 ? "text-3xl" : "text-lg"
               }  hover:bg-radix-green/20 hover:px-[2px] duration-500 transition-all cursor-pointer tracking-wider`}
@@ -109,7 +111,8 @@ function LanguageWall(props) {
           <Box className="flex justify-between border-b pb-2">
             <PostMeta
               author={post?.user?.user_name}
-              createdAt={convertISOTimeToIST(post?.created_at || undefined)}
+              createdAt={convertISOTimeToIST(post?.created_at)}
+              quotedOn={convertISOTimeToIST(selecteQuote?.created_at)}
             />
             <div className="flex flex-col space-y-2 mt-3">
               {/* Expand Icon Button */}
@@ -137,7 +140,11 @@ function LanguageWall(props) {
   );
 }
 
-const PostMeta = ({ author, createdAt }) => {
+const PostMeta = ({
+  author,
+  createdAt = "--/--/--",
+  quotedOn = "--/--/--",
+}) => {
   return (
     <Box className="flex flex-col">
       <Text size="4" weight="bold" className="font-lora">
@@ -145,6 +152,9 @@ const PostMeta = ({ author, createdAt }) => {
       </Text>
       <Text size="2" weight="medium" color="gray">
         <span style={{ fontWeight: "bold" }}>Posted On:</span> {createdAt}
+      </Text>
+      <Text size="2" weight="medium" color="gray">
+        <span style={{ fontWeight: "bold" }}>Quote Saved On:</span> {quotedOn}
       </Text>
     </Box>
   );

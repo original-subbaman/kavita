@@ -23,7 +23,7 @@ export function convertISOTimeToIST(isoTimeStamp) {
 
   const date = new Date(isoTimeStamp);
 
-  const formattedDate = format(date, "dd MMM yyyy, HH:mm:ss", {
+  const formattedDate = format(date, "dd MMM yyyy, h:mm a", {
     timeZone: "Asia/Kolkata",
   });
 
