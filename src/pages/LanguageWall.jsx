@@ -1,4 +1,4 @@
-import { SizeIcon } from "@radix-ui/react-icons";
+import { SizeIcon, TrashIcon } from "@radix-ui/react-icons";
 import {
   Box,
   Container,
@@ -42,10 +42,6 @@ function LanguageWall(props) {
         top: { enabled: true, height: 600, bounce: true },
       },
     });
-
-    // Show the pane when the component mounts
-
-    // Cleanup on unmount
   }, []);
 
   const handleSearchChange = (event) => setSearchTerm(event.target.value);
@@ -110,34 +106,24 @@ function LanguageWall(props) {
         }}
       >
         <Box>
-          <Box className="flex justify-between border-b">
-            <Box className="flex flex-col">
-              <Text size={"4"} weight={"bold"} className="font-lora">
-                Author: {post?.user?.user_name}
-              </Text>
-              <Text size={"2"} weight={"medium"} color="gray">
-                <span style={{ fontWeight: "bold" }}>Posted On:</span> {"  "}
-                {convertISOTimeToIST(post?.created_at || undefined)}
-              </Text>
-            </Box>
-            <Tooltip content="Expand">
-              <IconButton
-                style={{
-                  position: "absolute",
-                  marginTop: "10px",
-                  right: "20px",
-                  color: "darkgray",
-                  borderRadius: "50%",
-                  background: "#ebebeb",
-                  padding: "1px",
-                  width: "26px",
-                  height: "26px",
-                }}
+          <Box className="flex justify-between border-b pb-2">
+            <PostMeta
+              author={post?.user?.user_name}
+              createdAt={convertISOTimeToIST(post?.created_at || undefined)}
+            />
+            <div className="flex flex-col space-y-2 mt-3">
+              {/* Expand Icon Button */}
+              <FloatingIconButton
+                content="Expand"
+                icon={<SizeIcon style={{ color: "#7a7a7e" }} />}
                 onClick={() => paneInstanceRef.current.moveToBreak("top")}
-              >
-                <SizeIcon style={{ color: "#7a7a7e" }} />
-              </IconButton>
-            </Tooltip>
+              />
+              <FloatingIconButton
+                content="Trash"
+                icon={<TrashIcon style={{ color: "#7a7a7e" }} />}
+                onClick={() => paneInstanceRef.current.moveToBreak("top")}
+              />
+            </div>
           </Box>
           <ScrollArea mt={"6"}>
             <div
@@ -150,5 +136,39 @@ function LanguageWall(props) {
     </Container>
   );
 }
+
+const PostMeta = ({ author, createdAt }) => {
+  return (
+    <Box className="flex flex-col">
+      <Text size="4" weight="bold" className="font-lora">
+        Author: {author}
+      </Text>
+      <Text size="2" weight="medium" color="gray">
+        <span style={{ fontWeight: "bold" }}>Posted On:</span> {createdAt}
+      </Text>
+    </Box>
+  );
+};
+
+const FloatingIconButton = ({ content, icon, onClick, style = {} }) => {
+  return (
+    <Tooltip title={content}>
+      <IconButton
+        style={{
+          color: "darkgray",
+          borderRadius: "50%",
+          background: "#ebebeb",
+          padding: "1px",
+          width: "26px",
+          height: "26px",
+          ...style, // allow overriding styles
+        }}
+        onClick={onClick}
+      >
+        {icon}
+      </IconButton>
+    </Tooltip>
+  );
+};
 
 export default LanguageWall;
