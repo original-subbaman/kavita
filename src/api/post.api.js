@@ -57,15 +57,16 @@ export async function fetchPostsPagination({
     let query = supabase
       .from("post")
       .select("*, user (id, name, user_name, profile_url)")
-      .eq("writing_theme", theme)
       .eq("is_hidden", false);
 
-    // fetch one user's post
     if (userId && !feedType) {
       query = query.eq("user_id", userId);
     }
 
-    // fetch from followed users
+    if (theme) {
+      query = query.eq("writing_theme", theme);
+    }
+
     if (feedType === "following" && userId) {
       const { data: following, error: followingError } = await supabase
         .from("followers")
@@ -89,7 +90,7 @@ export async function fetchPostsPagination({
       query = query.lt("created_at", pageParam);
     }
 
-    console.log(query);
+    console.log("query", query);
 
     const { data, error } = await query;
 

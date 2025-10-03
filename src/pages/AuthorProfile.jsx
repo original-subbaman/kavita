@@ -44,7 +44,8 @@ const AuthorProfile = () => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useGetInfinitePosts({ userId: authorUserId });
+  } = useGetInfinitePosts({ userId: authorUserId, feedType: "all" });
+  console.log("🚀 ~ AuthorProfile ~ posts:", posts);
 
   const onSuccess = (message, action) => {
     setResponse({
