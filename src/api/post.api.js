@@ -90,8 +90,6 @@ export async function fetchPostsPagination({
       query = query.lt("created_at", pageParam);
     }
 
-    console.log("query", query);
-
     const { data, error } = await query;
 
     if (error) {

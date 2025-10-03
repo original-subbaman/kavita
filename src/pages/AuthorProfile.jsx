@@ -16,6 +16,8 @@ import useHasFollowed from "../hooks/user/useHasFollowed";
 import useUnfollowUser from "../hooks/user/useUnfollowUser";
 import { useQueryClient } from "@tanstack/react-query";
 import useFollowerCount from "../hooks/user/useFollowerCount";
+import useCreateNotification from "../hooks/notification/useCreateNotification";
+import useNotifyNewFolower from "../hooks/notification/useNotifyNewFollower";
 
 const AuthorProfile = () => {
   const params = useParams();
@@ -37,7 +39,6 @@ const AuthorProfile = () => {
     followerId: currentUserId,
     followedId: authorUserId,
   });
-
   const {
     data: posts,
     fetchNextPage,
@@ -45,7 +46,6 @@ const AuthorProfile = () => {
     isFetchingNextPage,
     status,
   } = useGetInfinitePosts({ userId: authorUserId, feedType: "all" });
-  console.log("🚀 ~ AuthorProfile ~ posts:", posts);
 
   const onSuccess = (message, action) => {
     setResponse({
@@ -69,11 +69,16 @@ const AuthorProfile = () => {
 
   const { mutate: followUser, isPending: isFollowing } = useFollowUser({
     onSuccess: () =>
-      onSuccess(`You have started following: ${author?.user_name}`, () =>
+      onSuccess(`You have started following: ${author?.user_name}`, () => {
         queryClient.invalidateQueries({
           queryKey: ["follower_count", authorUserId],
-        })
-      ),
+        });
+        notify({
+          followedId: authorUserId,
+          followerId: currentUserId,
+          message: `${author?.user_name} started following you!`,
+        });
+      }),
     onError: () => onError("Unable to follow user. Please try again later."),
   });
 
@@ -87,6 +92,8 @@ const AuthorProfile = () => {
       ),
     onError: () => onError("Unable to unfollowe user. Please try again later."),
   });
+
+  const { mutate: notify } = useNotifyNewFolower();
 
   if (status === "error") {
     return (

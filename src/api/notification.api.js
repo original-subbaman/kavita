@@ -323,3 +323,41 @@ export async function updateNotificationSeenState({ userId }) {
     };
   }
 }
+
+export async function notifyNewFollower({ followerId, followedId, message }) {
+  try {
+    if (!followedId || !followerId) {
+      throw new Error("Missing parameter: userId or followerId");
+    }
+
+    const { error } = await supabase.from("user_notification").insert({
+      recipient_id: followedId,
+      sender_id: followerId,
+      type: "new_follower",
+      message: message,
+      target_type: "user",
+      target_id: followedId,
+    });
+
+    if (error) {
+      throw new Error(
+        error.message || "Failed to create notification for new follower."
+      );
+    }
+
+    if (!data || data.length === 0) {
+      throw new Error("Notification insert returned no data.");
+    }
+
+    return {
+      success: true,
+      message: "Notification created successfully",
+    };
+  } catch (error) {
+    console.log("🚀 ~ notifyNewFollower ~ error:", error);
+    return {
+      success: false,
+      error,
+    };
+  }
+}
