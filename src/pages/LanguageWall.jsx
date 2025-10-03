@@ -9,22 +9,22 @@ import {
   Text,
   Tooltip,
 } from "@radix-ui/themes";
+import { useQueryClient } from "@tanstack/react-query";
 import { CupertinoPane } from "cupertino-pane";
 import DOMPurify from "dompurify";
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import "../components/BottomPane/bottom-pane.css";
+import DeleteQuoteDialog from "../components/LanguageWall/DeleteQuoteDialog";
 import Loading from "../components/Loading";
 import QuoteSearchBox from "../components/QuoteSearchBox";
+import ResponseSnackbar from "../components/ResponseSnackbar";
 import useAuth from "../hooks/auth/useAuth";
+import useDeleteLanguage from "../hooks/language/useDeleteLanguage";
 import useFilterLanguage from "../hooks/language/useFilterLanguage";
 import useGetLanguage from "../hooks/language/useGetLanguage";
 import useGetPostById from "../hooks/post/useGetPostById";
 import useDebounceSearch from "../hooks/useDebounceSearch";
 import { convertISOTimeToIST } from "../utils/Date";
-import DeleteQuoteDialog from "../components/LanguageWall/DeleteQuoteDialog";
-import useDeleteLanguage from "../hooks/language/useDeleteLanguage";
-import { useQueryClient } from "@tanstack/react-query";
-import ResponseSnackbar from "../components/ResponseSnackbar";
 
 function LanguageWall(props) {
   const { user } = useAuth();
@@ -135,35 +135,53 @@ function LanguageWall(props) {
 
       {isFetching && <Loading message={"Loading..."} />}
 
-      {isLanguageFetched && quotes.length === 0 && (
-        <Flex
-          align={"center"}
-          justify={"center"}
-          className="min-h-[50vh] text-gray-500"
-        >
-          <Heading as="h1">No quotes to show</Heading>
-        </Flex>
-      )}
+      {isLanguageFetched && quotes.length === 0 && <NoQuotes />}
 
       {isLanguageFetched && quotes.length > 0 && (
-        <Container className="text-white font-madimiOne mx-4" py={{ sm: "8" }}>
-          {filteredList.map((quote, index) => (
-            <Text
-              mr={"3"}
-              key={quote.id}
-              onClick={() => handleQuoteClick(quote.post_id, quote)}
-              className={` ${
-                index % 3 === 0 ? "text-3xl" : "text-lg"
-              }  hover:bg-radix-green/20 hover:px-[2px] duration-500 transition-all cursor-pointer tracking-wider`}
-            >
-              {quote.language}
-            </Text>
-          ))}
-        </Container>
+        <QuoteList quotes={filteredList} handleQuoteClick={handleQuoteClick} />
       )}
 
-      <div
+      {/* Cupertino Pane */}
+      <PostPane
+        post={post}
         ref={paneRef}
+        selectedQuote={selectedQuote}
+        postHTML={postHTML}
+        onExpand={() => paneInstanceRef.current.moveToBreak("top")}
+        onDelete={handleOpenDeleteDialog}
+        convertISOTimeToIST={convertISOTimeToIST}
+      />
+    </Container>
+  );
+}
+
+const QuoteList = ({ quotes, handleQuoteClick }) => {
+  return (
+    <Container className="text-white font-madimiOne mx-4" py={{ sm: "8" }}>
+      {quotes.map((quote, index) => (
+        <Text
+          mr={"3"}
+          key={quote.id}
+          onClick={() => handleQuoteClick(quote.post_id, quote)}
+          className={` ${
+            index % 3 === 0 ? "text-3xl" : "text-lg"
+          }  hover:bg-radix-green/20 hover:px-[2px] duration-500 transition-all cursor-pointer tracking-wider`}
+        >
+          {quote.language}
+        </Text>
+      ))}
+    </Container>
+  );
+};
+
+const PostPane = forwardRef(
+  (
+    { post, selectedQuote, postHTML, onExpand, onDelete, convertISOTimeToIST },
+    ref
+  ) => {
+    return (
+      <div
+        ref={ref}
         style={{
           backgroundColor: "white",
           padding: "20px",
@@ -177,31 +195,44 @@ function LanguageWall(props) {
               createdAt={convertISOTimeToIST(post?.created_at)}
               quotedOn={convertISOTimeToIST(selectedQuote?.created_at)}
             />
+
             <div className="flex flex-col space-y-2 mt-3">
-              {/* Expand Icon Button */}
               <FloatingIconButton
                 content="Expand"
                 icon={<SizeIcon style={{ color: "#7a7a7e" }} />}
-                onClick={() => paneInstanceRef.current.moveToBreak("top")}
+                onClick={onExpand}
               />
               <FloatingIconButton
                 content="Trash"
                 icon={<TrashIcon style={{ color: "#7a7a7e" }} />}
-                onClick={handleOpenDeleteDialog}
+                onClick={onDelete}
               />
             </div>
           </Box>
-          <ScrollArea mt={"6"}>
+
+          <ScrollArea className="mt-6">
             <div
               dangerouslySetInnerHTML={{ __html: postHTML }}
               style={{ fontFamily: "lora" }}
-            ></div>
+            />
           </ScrollArea>
         </Box>
       </div>
-    </Container>
+    );
+  }
+);
+
+const NoQuotes = () => {
+  return (
+    <Flex
+      align={"center"}
+      justify={"center"}
+      className="min-h-[50vh] text-gray-500"
+    >
+      <Heading as="h1">No quotes to show</Heading>
+    </Flex>
   );
-}
+};
 
 const PostMeta = ({
   author,
