@@ -94,3 +94,26 @@ export async function getLanguageCount(userId) {
     throw error;
   }
 }
+
+export async function deleteLanguage({ userId, quoteId }) {
+  try {
+    if (!userId || !quoteId) {
+      throw new Error("Missing parameter userId or quoteId");
+    }
+
+    const { error } = await supabase
+      .from("language")
+      .delete()
+      .eq("user_id", userId)
+      .eq("id", quoteId);
+
+    if (error) {
+      throw error;
+    }
+
+    return { success: true, message: "Quote deleted successfully" };
+  } catch (error) {
+    console.error("🚀 ~ deleteLanguage ~ error:", error);
+    throw error;
+  }
+}

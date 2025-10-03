@@ -21,14 +21,22 @@ import useGetLanguage from "../hooks/language/useGetLanguage";
 import useGetPostById from "../hooks/post/useGetPostById";
 import useDebounceSearch from "../hooks/useDebounceSearch";
 import { convertISOTimeToIST } from "../utils/Date";
+import DeleteQuoteDialog from "../components/LanguageWall/DeleteQuoteDialog";
+import useDeleteLanguage from "../hooks/language/useDeleteLanguage";
+import { useQueryClient } from "@tanstack/react-query";
+import ResponseSnackbar from "../components/ResponseSnackbar";
 
 function LanguageWall(props) {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounceSearch(searchTerm);
 
+  const [deleteDialog, setDeleteDialog] = useState(false);
   const [postId, setPostId] = useState();
-  const [selecteQuote, setSelectedQuote] = useState();
+  const [selectedQuote, setSelectedQuote] = useState();
+  const [response, setResponse] = useState();
 
   let paneRef = useRef(null);
   let paneInstanceRef = useRef(null);
@@ -45,12 +53,23 @@ function LanguageWall(props) {
     });
   }, []);
 
-  const handleSearchChange = (event) => setSearchTerm(event.target.value);
-  const handleQuoteClick = (postId, quote) => {
-    setPostId(postId);
-    setSelectedQuote(quote);
-    paneInstanceRef.current.present({ animate: true });
-  };
+  const { mutate: deleteQuote } = useDeleteLanguage({
+    onSuccess: () => {
+      setResponse({
+        open: true,
+        severity: "success",
+        message: "Quote deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ["user_language", user.id] });
+    },
+    onError: () => {
+      setResponse({
+        open: true,
+        severity: "error",
+        message: "Could not delete quote. Please try again later.",
+      });
+    },
+  });
 
   const { data: post } = useGetPostById({ postId: postId });
   const postHTML = DOMPurify.sanitize(post?.post);
@@ -65,11 +84,55 @@ function LanguageWall(props) {
 
   const filteredList = useFilterLanguage(quotes, debounceSearch);
 
+  const handleDeleteQuote = () => {
+    deleteQuote({ userId: user.id, quoteId: selectedQuote?.id });
+    setDeleteDialog(false);
+    closePane();
+  };
+
+  const handleOpenDeleteDialog = () => setDeleteDialog(true);
+  const handleCloseDeleteDialog = () => setDeleteDialog(false);
+
+  const handleSearchChange = (event) => setSearchTerm(event.target.value);
+  const handleQuoteClick = (postId, quote) => {
+    setPostId(postId);
+    setSelectedQuote(quote);
+    paneInstanceRef.current.present({ animate: true });
+  };
+
+  const closePane = () => {
+    if (paneInstanceRef.current) {
+      paneInstanceRef.current.destroy({ animate: true });
+      paneInstanceRef.current = null;
+    }
+  };
+
   return (
     <Container className="mt-8" size={"2"}>
+      {/* Response Snackbar */}
+      {response && (
+        <ResponseSnackbar
+          open={response?.open}
+          severity={response.severity}
+          message={response.message}
+          onClose={() => setResponse(null)}
+        />
+      )}
+
+      {/* Delete Quote Dialog */}
+      <DeleteQuoteDialog
+        open={deleteDialog}
+        setOpen={setDeleteDialog}
+        quote={selectedQuote?.language}
+        handleCancel={handleCloseDeleteDialog}
+        handleDelete={handleDeleteQuote}
+      />
+
+      {/* Quote Search Box */}
       <Box className="mx-3 mb-4">
         <QuoteSearchBox size="2" handleSearchChange={handleSearchChange} />
       </Box>
+
       {isFetching && <Loading message={"Loading..."} />}
 
       {isLanguageFetched && quotes.length === 0 && (
@@ -112,7 +175,7 @@ function LanguageWall(props) {
             <PostMeta
               author={post?.user?.user_name}
               createdAt={convertISOTimeToIST(post?.created_at)}
-              quotedOn={convertISOTimeToIST(selecteQuote?.created_at)}
+              quotedOn={convertISOTimeToIST(selectedQuote?.created_at)}
             />
             <div className="flex flex-col space-y-2 mt-3">
               {/* Expand Icon Button */}
@@ -124,7 +187,7 @@ function LanguageWall(props) {
               <FloatingIconButton
                 content="Trash"
                 icon={<TrashIcon style={{ color: "#7a7a7e" }} />}
-                onClick={() => paneInstanceRef.current.moveToBreak("top")}
+                onClick={handleOpenDeleteDialog}
               />
             </div>
           </Box>
