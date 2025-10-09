@@ -1,4 +1,5 @@
 import { Container, Text } from "@radix-ui/themes";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
@@ -7,17 +8,15 @@ import InfinitePostSection from "../components/PostSection/InfinitePostSection";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import { PostActionsProvider } from "../context/PostActionContext";
 import useAuth from "../hooks/auth/useAuth";
+import useNotifyNewFolower from "../hooks/notification/useNotifyNewFollower";
 import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetPostCount from "../hooks/post/useGetPostCount";
+import useFollowerCount from "../hooks/user/useFollowerCount";
 import useFollowUser from "../hooks/user/useFollowUser";
 import useGetProfile from "../hooks/user/useGetProfile";
 import useGetUser from "../hooks/user/useGetUser";
 import useHasFollowed from "../hooks/user/useHasFollowed";
 import useUnfollowUser from "../hooks/user/useUnfollowUser";
-import { useQueryClient } from "@tanstack/react-query";
-import useFollowerCount from "../hooks/user/useFollowerCount";
-import useCreateNotification from "../hooks/notification/useCreateNotification";
-import useNotifyNewFolower from "../hooks/notification/useNotifyNewFollower";
 
 const AuthorProfile = () => {
   const params = useParams();
