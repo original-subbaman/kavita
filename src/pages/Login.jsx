@@ -1,15 +1,15 @@
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
-import { Button, Flex, Text } from "@radix-ui/themes";
+import { Flex, Text } from "@radix-ui/themes";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CustomTextField from "../components/CustomTextField";
+import LoadingButton from "../components/LoadingButton";
 import LoginWrapper from "../components/Login_Signup/LoginWrapper";
 import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
-import { useForm } from "react-hook-form";
-import useAuth from "../hooks/auth/useAuth";
 import ResponseSnackbar from "../components/ResponseSnackbar";
-import LoadingButton from "../components/LoadingButton";
+import useAuth from "../hooks/auth/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -112,7 +112,7 @@ const Login = () => {
           Sign In
         </LoadingButton>
         <Text as="p" align={"center"} mt={"4"}>
-          New to CWS?{" "}
+          New to Kavita?{" "}
           <Text
             as="span"
             className="text-blue-500 cursor-pointer"

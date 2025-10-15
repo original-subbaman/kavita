@@ -60,11 +60,13 @@ function UserDetailSection(props) {
   let joinedOn = "";
   let username = "";
   let address = "";
+  let status = "";
 
   if (isUserFetched) {
     joinedOn = new Date(data.created_at).toLocaleDateString("en-IN");
     username = data.user_name;
     address = data.address;
+    status = data.status || "You should update your status!";
   }
 
   const handleResponseClose = () => {
@@ -122,7 +124,12 @@ function UserDetailSection(props) {
           {getInitialsOfName(name)}
         </Avatar>
         <div className="w-full">
-          <Text size={"5"}>{name}</Text>
+          <div className="flex flex-col">
+            <Text size={"5"}>{name}</Text>
+            <Text size={"2"} className="text-gray-400">
+              {status}
+            </Text>
+          </div>
           <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap justify-start sm:gap-20 w-full">
             <LittleInfo title={"username"} info={username} />
             <LittleInfo title={"email"} info={email || ""} />

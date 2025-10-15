@@ -104,6 +104,18 @@ function EditProfileDialog({
                 error={errors?.bio?.message}
               />
             </label>
+            <label>
+              <Text as="div" size="2" mb="1" weight="bold">
+                Status
+              </Text>
+              <CustomTextField
+                name={"status"}
+                placeholder={"Status"}
+                control={control}
+                defaultValue={user?.status}
+                error={errors?.status?.message}
+              />
+            </label>
           </Flex>
           <Flex gap="3" mt="4" justify="end">
             <Dialog.Close>
