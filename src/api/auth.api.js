@@ -49,8 +49,6 @@ async function updateProfileData(userData) {
         id: userData.id,
         user_name: userData.userName,
         name: userData.name,
-        address: userData.address,
-        gender: userData.gender,
         created_at: new Date(),
       },
     ]);

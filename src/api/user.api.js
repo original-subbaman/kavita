@@ -10,7 +10,7 @@ import { v4 as uuid } from "uuid";
  */
 export async function isUserNameAvailable({ username }) {
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("user")
       .select("user_name")
       .eq("user_name", username)
@@ -20,6 +20,10 @@ export async function isUserNameAvailable({ username }) {
     return !data;
   } catch (error) {
     console.error("Error checking username:", error);
+    const code = error.code;
+    if (code === "PGRST116") {
+      return true;
+    }
     return false;
   }
 }

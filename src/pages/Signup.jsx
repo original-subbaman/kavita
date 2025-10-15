@@ -1,9 +1,5 @@
-import {
-  EnvelopeClosedIcon,
-  HomeIcon,
-  PersonIcon,
-} from "@radix-ui/react-icons";
-import { Flex, Checkbox, Text, Button, Dialog } from "@radix-ui/themes";
+import { EnvelopeClosedIcon, PersonIcon } from "@radix-ui/react-icons";
+import { Checkbox, Dialog, Flex, Text } from "@radix-ui/themes";
 import { PenLine } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,11 +10,9 @@ import CustomTextField from "../components/CustomTextField";
 import LoadingButton from "../components/LoadingButton";
 import LoginWrapper from "../components/Login_Signup/LoginWrapper";
 import PasswordTextField from "../components/Login_Signup/PasswordTextField";
+import TermsAndConditions from "../components/Login_Signup/TermsAndConditions";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import ResponseSnackbar from "../components/ResponseSnackbar";
-import CustomSelect from "../components/Select";
-import { GenderOptions } from "../utils/Constants";
-import TermsAndConditions from "../components/Login_Signup/TermsAndConditions";
 const REQUIRED_NAME_ERROR = "Name is required";
 const REQUIRED_EMAIL_ERROR = "Email is required";
 const REQUIRED_ADDRESS_ERROR = "Address is required";
@@ -57,6 +51,16 @@ const Signup = () => {
         data.name
       );
 
+      if (authData === undefined) {
+        setResponse({
+          error: true,
+          success: false,
+          info: false,
+          message: "Account with this email already exists",
+        });
+        return;
+      }
+
       if (error) {
         setResponse({
           error: true,
@@ -74,8 +78,6 @@ const Signup = () => {
         id: authData.user.id,
         name: data.name,
         userName: data.user_name,
-        address: data.address,
-        gender,
       };
 
       const { error: profileError } = await updateProfileData(newUser);
@@ -188,7 +190,7 @@ const Signup = () => {
               error={errors?.email?.message}
             />
           </Flex>
-          <Flex gap={"4"} align={"stretch"}>
+          {/* <Flex gap={"4"} align={"stretch"}>
             <CustomTextField
               control={control}
               name={"address"}
@@ -208,7 +210,7 @@ const Signup = () => {
               values={GenderOptions}
               defaultValue={"Male"}
             />
-          </Flex>
+          </Flex> */}
           <PasswordTextField
             name={"password"}
             control={control}
