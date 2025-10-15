@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import { APP_NAME } from "../../utils/Constants";
 import { Dialog, Flex, Button } from "@radix-ui/themes";
 
 const TermsAndConditions = ({ open, onOpenChange }) => {
@@ -20,7 +20,7 @@ const Terms = (
       <strong>1. Acceptance of Terms </strong>
     </h2>
     <p>
-      By creating an account and using <strong>[Platform Name]</strong>, you
+      By creating an account and using <strong>{APP_NAME}</strong>, you
       acknowledge that you have read, understood, and agree to be bound by these
       Terms and Conditions. If you do not agree, you must discontinue use of the
       platform immediately.
@@ -30,7 +30,7 @@ const Terms = (
       <strong>2. Community Conduct</strong>
     </h2>
     <p>
-      As a user of <strong>[Platform Name]</strong>, you agree to:
+      As a user of <strong>{APP_NAME}</strong>, you agree to:
     </p>
     <ul>
       <li>Maintain respectful and civil interactions with all users.</li>
@@ -57,17 +57,17 @@ const Terms = (
     <ul>
       <li>
         You retain ownership of any original content you post but grant{" "}
-        <strong>[Platform Name]</strong> a non-exclusive, worldwide,
-        royalty-free license to display, distribute, and promote your content
-        within the platform.
+        <strong>{APP_NAME}</strong> a non-exclusive, worldwide, royalty-free
+        license to display, distribute, and promote your content within the
+        platform.
       </li>
       <li>
         You are solely responsible for the content you share and any
         consequences that may arise from it.
       </li>
       <li>
-        <strong>[Platform Name]</strong> reserves the right to remove any
-        content that violates these terms without prior notice.
+        <strong>{APP_NAME}</strong> reserves the right to remove any content
+        that violates these terms without prior notice.
       </li>
     </ul>
 
@@ -77,8 +77,8 @@ const Terms = (
     </h2>
     <ul>
       <li>
-        <strong>[Platform Name]</strong> reserves the right to suspend or delete
-        any account at its sole discretion if it determines that the user has
+        <strong>{APP_NAME}</strong> reserves the right to suspend or delete any
+        account at its sole discretion if it determines that the user has
         violated these Terms and Conditions.
       </li>
       <li>
@@ -113,9 +113,9 @@ const Terms = (
       <strong>6. Privacy and Data Protection</strong>
     </h2>
     <p>
-      <strong>[Platform Name]</strong> values user privacy and follows best
-      practices to protect personal data. By using this platform, you consent to
-      our collection and use of personal data as outlined in our Privacy Policy.
+      <strong>{APP_NAME}</strong> values user privacy and follows best practices
+      to protect personal data. By using this platform, you consent to our
+      collection and use of personal data as outlined in our Privacy Policy.
     </p>
 
     <br></br>
@@ -123,8 +123,8 @@ const Terms = (
       <strong>7. Changes to Terms</strong>
     </h2>
     <p>
-      <strong>[Platform Name]</strong> reserves the right to update or modify
-      these Terms and Conditions at any time. Continued use of the platform
+      <strong>{APP_NAME}</strong> reserves the right to update or modify these
+      Terms and Conditions at any time. Continued use of the platform
       constitutes acceptance of any revisions.
     </p>
 
@@ -134,7 +134,7 @@ const Terms = (
     </h2>
     <ul>
       <li>
-        <strong>[Platform Name]</strong> is not responsible for user-generated
+        <strong>{APP_NAME}</strong> is not responsible for user-generated
         content and does not endorse opinions expressed by users.
       </li>
       <li>
@@ -154,8 +154,8 @@ const Terms = (
 
     <br></br>
     <p>
-      By signing up and using <strong>[Platform Name]</strong>, you confirm that
-      you have read, understood, and agree to these Terms and Conditions.
+      By signing up and using <strong>{APP_NAME}</strong>, you confirm that you
+      have read, understood, and agree to these Terms and Conditions.
     </p>
   </div>
 );
