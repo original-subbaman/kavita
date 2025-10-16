@@ -108,7 +108,7 @@ function LanguageWall(props) {
   };
 
   return (
-    <Container className="mt-8" size={"2"}>
+    <Container className="pt-8" size={"2"}>
       {/* Response Snackbar */}
       {response && (
         <ResponseSnackbar

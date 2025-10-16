@@ -19,7 +19,12 @@ function Header({ toggleSideNav }) {
   const { data: count } = useGetNotificationCount(user?.id, 0);
 
   return (
-    <header className="flex justify-between text-white bg-dark-light items-center h-16 px-4 md:px-10 drop-shadow-md sticky top-0 z-[100]">
+    <header
+      className="flex justify-between font-primary 
+    text-white bg-dark-light items-center 
+    h-16 px-4 md:px-10 drop-shadow-md sticky 
+    top-0 z-[100]"
+    >
       <Button
         variant="ghost"
         size="4"
