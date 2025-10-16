@@ -710,6 +710,12 @@ export async function getPopularThemes() {
       "Comedy",
       "Nostalgia",
       "Family",
+      "Gangtok",
+      "Kangchenjunga",
+      "Death",
+      "Traffic Jam",
+      "Unrequited Love",
+      "Solitude",
     ];
     const { data, error } = await supabase
       .from("writing_themes")
