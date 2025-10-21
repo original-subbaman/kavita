@@ -14,7 +14,7 @@ function Header({ toggleSideNav }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
-  const userName = user?.user_metadata?.name;
+  const userName = user?.name;
 
   const { data: count } = useGetNotificationCount(user?.id, 0);
 

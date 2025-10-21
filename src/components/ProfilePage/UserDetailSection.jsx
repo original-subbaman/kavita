@@ -12,12 +12,13 @@ import ResponseSnackbar from "../ResponseSnackbar";
 import EditProfileDialog from "./EditProfileDialog";
 import LittleInfo from "./LittleInfo";
 import ProfileSectionWrapper from "./ProfileSectionWrapper";
+import { useNavigate } from "react-router-dom";
 
 const defaultErrMsg = "Unexpected error! Please try again later";
 
 function UserDetailSection(props) {
   const { user } = useAuth();
-  const { name, email } = user.user_metadata;
+  const navigate = useNavigate();
   const [openEdit, setOpenEdit] = useState(false);
   const [response, setResponse] = useState({
     success: false,
@@ -28,7 +29,7 @@ function UserDetailSection(props) {
 
   const onUpdateSuccess = (data) => {
     setResponse((prev) => ({ ...prev, success: true }));
-    queryClient.invalidateQueries({ queryKey: ["user_get_user", user.id] });
+    navigate(0);
   };
 
   const onUpdateError = (error) => {
@@ -53,7 +54,9 @@ function UserDetailSection(props) {
       onError: onUpdateError,
     });
 
-  const { data, isFetched: isUserFetched } = useGetUser({ userId: user.id });
+  const { data, isFetched: isUserFetched } = useGetUser({
+    userId: user.id,
+  });
 
   const { data: profile } = useGetProfile({ userId: user.id });
 
@@ -61,12 +64,16 @@ function UserDetailSection(props) {
   let username = "";
   let address = "";
   let status = "";
+  let name = "";
+  let email = "";
 
   if (isUserFetched) {
     joinedOn = new Date(data.created_at).toLocaleDateString("en-IN");
     username = data.user_name;
     address = data.address;
     status = data.status || "You should update your status!";
+    name = data.name;
+    email = data.email;
   }
 
   const handleResponseClose = () => {

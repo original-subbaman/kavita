@@ -26,7 +26,6 @@ const LineChart = ({ data }) => {
       custom: ({ seriesIndex, dataPointIndex, w }) => {
         const value = w.config.series[seriesIndex].data[dataPointIndex].y; // Get value of the data point
         const date = w.config.series[seriesIndex].data[dataPointIndex].x; // Get corresponding date
-        console.log("date", date);
         return `
           <div style="padding: 10px; background: #333; color: #fff; border-radius: 5px;">
             <strong>Posted On: ${date}</strong><br />
