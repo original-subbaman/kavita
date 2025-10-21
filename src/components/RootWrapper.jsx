@@ -19,7 +19,7 @@ function RootWrapper({ showHeader = true, children }) {
           onClose={() => setOpenSideNav(false)}
         />
       )}
-      <main className="w-full font-primary min-h-[100dvh] bg-gradient-to-b relative overflow-hidden">
+      <main className="w-full font-primary min-h-[100dvh] bg-dark-light overflow-hidden">
         <Outlet />
         {children}
       </main>
