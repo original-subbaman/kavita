@@ -12,21 +12,37 @@ import CreateRouter from "./router/Router";
 import MuiTheme from "./utils/MuiTheme";
 import { store } from "./store.js";
 import Loading from "./components/Loading.jsx";
+import { useAppTheme } from "./hooks/useAppTheme.js";
+import { AppThemeProvider } from "./context/AppThemeProvider.jsx";
 const queryClient = new QueryClient();
+
+function AppWithDynamicTheme() {
+  const { mode, accentColor } = useAppTheme();
+
+  return (
+    <ThemeProvider theme={MuiTheme}>
+      <Theme appearance={mode} accentColor={accentColor}>
+        <AuthProvider>
+          <Suspense fallback={<Loading />}>
+            <RouterProvider router={CreateRouter()} />
+          </Suspense>
+        </AuthProvider>
+      </Theme>
+    </ThemeProvider>
+  );
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <React.StrictMode>
       <Provider store={store}>
-        <ThemeProvider theme={MuiTheme}>
-          <Theme appearance="dark" accentColor="green">
-            <AuthProvider>
-              <Suspense fallback={<Loading />}>
-                <RouterProvider router={CreateRouter()} />
-              </Suspense>
-            </AuthProvider>
-          </Theme>
-        </ThemeProvider>
+        <AuthProvider>
+          <AppThemeProvider>
+            <Suspense fallback={<Loading />}>
+              <AppWithDynamicTheme />
+            </Suspense>
+          </AppThemeProvider>
+        </AuthProvider>
       </Provider>
     </React.StrictMode>
   </QueryClientProvider>
