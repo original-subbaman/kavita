@@ -1,7 +1,16 @@
 import { Box, Chip } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAppTheme } from "../../hooks/useAppTheme";
 
 const ThemeChip = ({ label, variant = "outlined", onClick }) => {
+  const { mode } = useAppTheme();
+
+  const notSelectedColor =
+    mode === "dark" ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.87)";
+
+  const filledBg = "#F76B15";
+  const filledHover = "#F98944";
+
   return (
     <Chip
       label={label}
@@ -9,9 +18,12 @@ const ThemeChip = ({ label, variant = "outlined", onClick }) => {
       variant={variant}
       onClick={onClick}
       sx={{
-        backgroundColor: variant === "filled" ? "#F76B15" : null,
-        color: "white",
-        fontWeight: 500,
+        backgroundColor: variant === "filled" ? filledBg : "transparent",
+        color: variant === "filled" ? "#FFFFFF" : notSelectedColor,
+        transition: "background-color 150ms ease",
+        "&:hover": {
+          backgroundColor: variant === "filled" ? filledHover : undefined,
+        },
       }}
     />
   );

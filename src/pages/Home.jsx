@@ -1,29 +1,29 @@
 import { Root as AlertDialogRoot } from "@radix-ui/react-alert-dialog";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
-import dayjs from "dayjs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthGuard from "../components/AuthGuard";
+import PopularThemes from "../components/Home/PopularThemes";
 import PostFilter from "../components/Home/PostFilter";
+import WeeklyTheme from "../components/Home/WeeklyTheme";
 import InfinitePostSection from "../components/PostSection/InfinitePostSection";
 import InputAlertDialog from "../components/PromptSection/InputAlertDialog";
 import PostInputBox from "../components/PromptSection/PostInputBox";
 import PromptSection from "../components/PromptSection/PromptSection";
-import PromptText from "../components/PromptSection/PromptText";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import ScrollToTop from "../components/ScrollToTop";
 import { PostActionsProvider } from "../context/PostActionContext";
 import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
 import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
-import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
-import PopularThemes from "../components/Home/PopularThemes";
 import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
-import AuthGuard from "../components/AuthGuard";
-import WeeklyTheme from "../components/Home/WeeklyTheme";
+import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
+import { useAppTheme } from "../hooks/useAppTheme";
 
 function Home() {
   const { user } = useAuth();
+  const { mode } = useAppTheme();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -134,7 +134,7 @@ function Home() {
             {isFetchingPrompt ? (
               <LoadingTheme />
             ) : (
-              <WeeklyTheme theme={activeTheme?.prompt} />
+              <WeeklyTheme theme={mode} writingTheme={activeTheme?.prompt} />
             )}
             {/* Input box */}
             <AlertDialogRoot
@@ -142,7 +142,7 @@ function Home() {
               onOpenChange={setAddPostDialog}
             >
               <Box className="w-[93%] md:w-full mx-4">
-                <PostInputBox onClick={handlePostInputClick} />
+                <PostInputBox onClick={handlePostInputClick} theme={mode} />
               </Box>
               <InputAlertDialog
                 mutation={addPost}

@@ -9,8 +9,9 @@ import LinkText from "./LinkText";
 import LoginButton from "./LoginButton";
 import PopupMenu from "./PopupMenu";
 import quill from "../../assets/quill.png";
+import { useAppTheme } from "../../hooks/useAppTheme";
 
-function Header({ toggleSideNav }) {
+function Header({ toggleSideNav, theme }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
@@ -20,10 +21,10 @@ function Header({ toggleSideNav }) {
 
   return (
     <header
-      className="flex justify-between font-primary 
-    text-white bg-dark-light items-center 
+      className={`flex justify-between font-primary 
+    text-white ${theme === "dark" ? "bg-dark-light" : "bg-white"} items-center 
     h-16 px-4 md:px-10 drop-shadow-md sticky 
-    top-0 z-[100]"
+    top-0 z-[100]`}
     >
       <Button
         variant="ghost"

@@ -1,9 +1,15 @@
+import { useAppTheme } from "../../hooks/useAppTheme";
+
 const Footer = () => {
+  const { mode } = useAppTheme();
+
   return (
-    <footer className="w-full bg-dark-light font-primary text-white text-center py-4">
-      <p>
-        From Sikkim with ❤️ <br /> &copy; {new Date().getFullYear()} SK Kavita
-      </p>
+    <footer
+      className={`w-full ${
+        mode === "dark" ? "bg-dark-light text-white" : "bg-white text-black"
+      } font-primary text-center py-4`}
+    >
+      <p>From Sikkim with ❤️</p>
     </footer>
   );
 };

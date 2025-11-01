@@ -1,9 +1,15 @@
-const WeeklyTheme = ({ theme }) => {
+const WeeklyTheme = ({ writingTheme, theme }) => {
   return (
-    <div className="w-[95%] md:w-full md:mx-auto p-4 rounded-2xl bg-[#F5EEDF] border border-gray-300">
+    <div
+      className={`w-[95%] md:w-full md:mx-auto p-4 rounded-2xl ${
+        theme === "" ? "bg-[#F5EEDF]" : "bg-white"
+      } border border-gray-300`}
+    >
       <div className="text-center">
         <p className="text-gray-600 text-sm mb-2">✨ Writing theme:</p>
-        <h2 className="text-2xl font-semibold text-emerald-700">{theme}</h2>
+        <h2 className="text-2xl font-semibold text-emerald-700">
+          {writingTheme}
+        </h2>
       </div>
     </div>
   );

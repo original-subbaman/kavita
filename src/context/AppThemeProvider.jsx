@@ -4,7 +4,7 @@ export const ThemeContext = createContext();
 
 export function AppThemeProvider({ children }) {
   const [mode, setMode] = useState(
-    () => localStorage.getItem("themeMode") || "light"
+    () => localStorage.getItem("themeMode") || "dark"
   );
   const [accentColor, setAccentColor] = useState(
     () => localStorage.getItem("accentColor") || "green"

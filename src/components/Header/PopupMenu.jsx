@@ -4,7 +4,7 @@ import useAuth from "../../hooks/auth/useAuth";
 import useGetProfile from "../../hooks/user/useGetProfile";
 import { getInitialsOfName } from "../../utils/Helper";
 
-function PopupMenu({ name }) {
+function PopupMenu({ name, theme }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
@@ -23,8 +23,14 @@ function PopupMenu({ name }) {
 
   return (
     <Popover.Root>
-      <div className="flex items-center gap-2 rounded cursor-pointer p-2">
-        <p className="text-xl">{name}</p>
+      <div className={`flex items-center gap-2 rounded cursor-pointer p-2`}>
+        <p
+          className={`text-xl ${
+            theme === "dark" ? "text-white" : "text-radix-green"
+          }`}
+        >
+          {name}
+        </p>
         <Popover.Trigger>
           {profile ? (
             <img

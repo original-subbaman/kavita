@@ -73,7 +73,7 @@ function InfinitePostSection({
       {isFetchingNextPage && <Loading message={"Fetching more posts..."} />}
 
       {!hasNextPage && (
-        <div className="text-white text-center mt-4 mb-8 text-lg">
+        <div className="text-center mt-4 mb-8 text-lg">
           No more posts to show
         </div>
       )}
