@@ -1,5 +1,10 @@
 import { Badge, IconButton } from "@mui/material";
-import { HamburgerMenuIcon, SunIcon, MoonIcon } from "@radix-ui/react-icons";
+import {
+  HamburgerMenuIcon,
+  SunIcon,
+  MoonIcon,
+  BellIcon,
+} from "@radix-ui/react-icons";
 import { Button } from "@radix-ui/themes";
 import { IoIosNotifications } from "react-icons/io";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -34,18 +39,18 @@ function NavLinks({ location }) {
 
 function UserMenu({ count, userName }) {
   return (
-    <div className="flex items-center gap-2">
-      <NavLink to="/notifications">
-        <IconButton sx={{ color: "white" }}>
+    <>
+      <NavLink to="/notifications" className="h-8">
+        <Button variant="soft" className="h-8">
           <Badge badgeContent={count > 99 ? "99+" : count} color="success">
-            <IoIosNotifications />
+            <BellIcon />
           </Badge>
-        </IconButton>
+        </Button>
       </NavLink>
       <div className="hidden md:block">
         <PopupMenu name={userName} />
       </div>
-    </div>
+    </>
   );
 }
 
@@ -86,14 +91,17 @@ function Header({ toggleSideNav, theme }) {
         Kavita
         <img src={quill} className="w-6 h-6" />
       </Button>
+
       {isAuthenticated ? (
         <>
           <NavLinks location={location} />
-          <UserMenu count={count} userName={userName} />
+          <div className="flex items-center justify-center gap-2">
+            <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
+            <UserMenu count={count} userName={userName} />
+          </div>
         </>
       ) : (
         <div className="flex items-center gap-4 justify-center ">
-          {/* Toggle Theme Button */}
           <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
           <LoginButton />
         </div>
