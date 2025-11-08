@@ -34,7 +34,7 @@ const CustomTextField = ({
                 type={type}
                 placeholder={placeholder}
                 onChange={onChange}
-                value={value}
+                value={value ?? ""}
                 onBlur={onBlur}
                 className={inputClass}
               />
