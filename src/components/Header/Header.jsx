@@ -12,18 +12,51 @@ import LoginButton from "./LoginButton";
 import PopupMenu from "./PopupMenu";
 import ToggleThemeButton from "../Common/ToggleThemeButton";
 
+function NavLinks({ location }) {
+  return (
+    <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-8">
+      <NavLink to={"/"}>
+        <LinkText isActive={location.pathname === "/"}>Home</LinkText>
+      </NavLink>
+      <NavLink to={"/inspiration"}>
+        <LinkText isActive={location.pathname === "/inspiration"}>
+          Inspiration
+        </LinkText>
+      </NavLink>
+      <NavLink to={"/my-posts"}>
+        <LinkText isActive={location.pathname === "/my-posts"}>
+          My Posts
+        </LinkText>
+      </NavLink>
+    </nav>
+  );
+}
+
+function UserMenu({ count, userName }) {
+  return (
+    <div className="flex items-center gap-2">
+      <NavLink to="/notifications">
+        <IconButton sx={{ color: "white" }}>
+          <Badge badgeContent={count > 99 ? "99+" : count} color="success">
+            <IoIosNotifications />
+          </Badge>
+        </IconButton>
+      </NavLink>
+      <div className="hidden md:block">
+        <PopupMenu name={userName} />
+      </div>
+    </div>
+  );
+}
+
 function Header({ toggleSideNav, theme }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { mode, toggleMode } = useAppTheme();
-  console.log("🚀 ~ Header ~ toggleMode:", toggleMode);
-  console.log("🚀 ~ Header ~ mode:", mode);
   const { user, isAuthenticated } = useAuth();
   const userName = user?.name;
 
   const { data: count } = useGetNotificationCount(user?.id, 0);
-
-  const toggleTheme = () => {};
 
   return (
     <header
@@ -53,48 +86,18 @@ function Header({ toggleSideNav, theme }) {
         Kavita
         <img src={quill} className="w-6 h-6" />
       </Button>
-      {isAuthenticated && (
+      {isAuthenticated ? (
         <>
-          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-8">
-            <NavLink to={"/"}>
-              <LinkText isActive={location.pathname === "/"}>Home</LinkText>
-            </NavLink>
-            <NavLink to={"/inspiration"}>
-              <LinkText isActive={location.pathname === "/inspiration"}>
-                Inspiration
-              </LinkText>
-            </NavLink>
-            <NavLink to={"/my-posts"}>
-              <LinkText isActive={location.pathname === "/my-posts"}>
-                My Posts
-              </LinkText>
-            </NavLink>
-          </nav>
+          <NavLinks location={location} />
+          <UserMenu count={count} userName={userName} />
         </>
-      )}
-      <div className="flex items-center gap-4 justify-center ">
-        {/* Toggle Theme Button */}
-        <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
-        {isAuthenticated ? (
-          <div className="flex items-center gap-2">
-            <NavLink to="/notifications">
-              <IconButton sx={{ color: "white" }}>
-                <Badge
-                  badgeContent={count > 99 ? "99+" : count}
-                  color="success"
-                >
-                  <IoIosNotifications />
-                </Badge>
-              </IconButton>
-            </NavLink>
-            <div className="hidden md:block">
-              <PopupMenu name={userName} />
-            </div>
-          </div>
-        ) : (
+      ) : (
+        <div className="flex items-center gap-4 justify-center ">
+          {/* Toggle Theme Button */}
+          <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
           <LoginButton />
-        )}
-      </div>
+        </div>
+      )}
     </header>
   );
 }
