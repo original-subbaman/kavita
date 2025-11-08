@@ -1,4 +1,8 @@
-import { EnvelopeClosedIcon, PersonIcon } from "@radix-ui/react-icons";
+import {
+  EnvelopeClosedIcon,
+  Pencil1Icon,
+  PersonIcon,
+} from "@radix-ui/react-icons";
 import { Checkbox, Dialog, Flex, Text } from "@radix-ui/themes";
 import { PenLine } from "lucide-react";
 import { useRef, useState } from "react";
@@ -166,7 +170,7 @@ const Signup = () => {
               placeholder="Enter User Name"
               inputVariant={TextFieldProps.inputVariant}
               size={TextFieldProps.size}
-              startIcon={<PenLine />}
+              startIcon={<Pencil1Icon />}
               rules={{
                 required: REQUIRED_USER_NAME_ERROR,
                 validate: async (value) => {

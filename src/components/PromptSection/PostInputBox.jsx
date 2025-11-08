@@ -8,12 +8,12 @@ function PostInputBox({ onClick, theme = "dark" }) {
       className={`w-full rounded-lg p-2 ${
         theme === "dark"
           ? "bg-[#303030] text-white"
-          : "bg-radix-green text-black"
+          : "bg-white border border-gray-300 text-black"
       }`}
       onClick={onClick}
     >
       <TextField.Slot className="mr-2 md:mr-0">
-        <Pencil1Icon className="w-5 h-5" />
+        <Pencil1Icon className="w-5 h-5 text-gray-500" />
       </TextField.Slot>
       <TextField.Input
         placeholder="Write your own..."
