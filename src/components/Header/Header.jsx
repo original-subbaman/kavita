@@ -1,23 +1,29 @@
 import { Badge, IconButton } from "@mui/material";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Button, Text } from "@radix-ui/themes";
+import { HamburgerMenuIcon, SunIcon, MoonIcon } from "@radix-ui/react-icons";
+import { Button } from "@radix-ui/themes";
 import { IoIosNotifications } from "react-icons/io";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import quill from "../../assets/quill.png";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetNotificationCount from "../../hooks/notification/useGetNotificationCount";
+import { useAppTheme } from "../../hooks/useAppTheme";
 import LinkText from "./LinkText";
 import LoginButton from "./LoginButton";
 import PopupMenu from "./PopupMenu";
-import quill from "../../assets/quill.png";
-import { useAppTheme } from "../../hooks/useAppTheme";
+import ToggleThemeButton from "../Common/ToggleThemeButton";
 
 function Header({ toggleSideNav, theme }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { mode, toggleMode } = useAppTheme();
+  console.log("🚀 ~ Header ~ toggleMode:", toggleMode);
+  console.log("🚀 ~ Header ~ mode:", mode);
   const { user, isAuthenticated } = useAuth();
   const userName = user?.name;
 
   const { data: count } = useGetNotificationCount(user?.id, 0);
+
+  const toggleTheme = () => {};
 
   return (
     <header
@@ -66,22 +72,29 @@ function Header({ toggleSideNav, theme }) {
           </nav>
         </>
       )}
-      {isAuthenticated ? (
-        <div className="flex items-center gap-2">
-          <NavLink to="/notifications">
-            <IconButton sx={{ color: "white" }}>
-              <Badge badgeContent={count > 99 ? "99+" : count} color="success">
-                <IoIosNotifications />
-              </Badge>
-            </IconButton>
-          </NavLink>
-          <div className="hidden md:block">
-            <PopupMenu name={userName} />
+      <div className="flex items-center gap-4 justify-center ">
+        {/* Toggle Theme Button */}
+        <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
+        {isAuthenticated ? (
+          <div className="flex items-center gap-2">
+            <NavLink to="/notifications">
+              <IconButton sx={{ color: "white" }}>
+                <Badge
+                  badgeContent={count > 99 ? "99+" : count}
+                  color="success"
+                >
+                  <IoIosNotifications />
+                </Badge>
+              </IconButton>
+            </NavLink>
+            <div className="hidden md:block">
+              <PopupMenu name={userName} />
+            </div>
           </div>
-        </div>
-      ) : (
-        <LoginButton />
-      )}
+        ) : (
+          <LoginButton />
+        )}
+      </div>
     </header>
   );
 }

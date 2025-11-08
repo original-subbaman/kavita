@@ -7,7 +7,7 @@ function LoginButton(props) {
     navigate("/login");
   };
   return (
-    <Button size="3" onClick={handleLogin} className="min-w-[100px]">
+    <Button onClick={handleLogin} className="h-8 font-light" {...props}>
       Login
     </Button>
   );
