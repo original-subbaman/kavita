@@ -23,11 +23,13 @@ import useDeleteLanguage from "../hooks/language/useDeleteLanguage";
 import useFilterLanguage from "../hooks/language/useFilterLanguage";
 import useGetLanguage from "../hooks/language/useGetLanguage";
 import useGetPostById from "../hooks/post/useGetPostById";
+import { useAppTheme } from "../hooks/useAppTheme";
 import useDebounceSearch from "../hooks/useDebounceSearch";
 import { convertISOTimeToIST } from "../utils/Date";
 
 function LanguageWall(props) {
   const { user } = useAuth();
+  const { mode } = useAppTheme();
   const queryClient = useQueryClient();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -129,8 +131,20 @@ function LanguageWall(props) {
       />
 
       {/* Quote Search Box */}
-      <Box className="mx-3 mb-4">
-        <QuoteSearchBox size="2" handleSearchChange={handleSearchChange} />
+      <Box className="mx-3 mb-2">
+        <QuoteSearchBox
+          size="2"
+          handleSearchChange={handleSearchChange}
+          theme={mode}
+        />
+        <Text
+          size="1"
+          className={`font-light ${
+            mode === "dark" ? "text-gray-300" : "text-gray-500"
+          }`}
+        >
+          * Click on a quote to view post
+        </Text>
       </Box>
 
       {isFetching && <Loading message={"Loading..."} />}
@@ -138,7 +152,11 @@ function LanguageWall(props) {
       {isLanguageFetched && quotes.length === 0 && <NoQuotes />}
 
       {isLanguageFetched && quotes.length > 0 && (
-        <QuoteList quotes={filteredList} handleQuoteClick={handleQuoteClick} />
+        <QuoteList
+          quotes={filteredList}
+          handleQuoteClick={handleQuoteClick}
+          theme={mode}
+        />
       )}
 
       {/* Cupertino Pane */}
@@ -155,17 +173,22 @@ function LanguageWall(props) {
   );
 }
 
-const QuoteList = ({ quotes, handleQuoteClick }) => {
+const QuoteList = ({ quotes, handleQuoteClick, theme }) => {
   return (
-    <Container className="text-white font-madimiOne mx-4" py={{ sm: "8" }}>
+    <Container
+      className={`${
+        theme === "dark" ? "text-white" : "text-black"
+      } font-madimiOne mx-4`}
+      py={{ sm: "8", md: "2" }}
+    >
       {quotes.map((quote, index) => (
         <Text
           mr={"3"}
           key={quote.id}
           onClick={() => handleQuoteClick(quote.post_id, quote)}
-          className={` ${
-            index % 3 === 0 ? "text-3xl" : "text-lg"
-          }  hover:bg-radix-green/20 hover:px-[2px] duration-500 transition-all cursor-pointer tracking-wider`}
+          className={` ${index % 3 === 0 ? "text-2xl" : "text-md"}  
+          hover:bg-radix-green/20 hover:px-[2px] 
+          duration-500 transition-all cursor-pointer tracking-wider`}
         >
           {quote.language}
         </Text>
