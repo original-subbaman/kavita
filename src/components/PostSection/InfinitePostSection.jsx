@@ -21,6 +21,7 @@ function InfinitePostSection({
   },
   containerStyles,
 }) {
+  console.log("🚀 ~ InfinitePostSection ~ data:", data);
   if (status === "error") {
     return (
       <ErrorMessage message={"Error loading posts. Try refreshing the page."} />
@@ -72,11 +73,12 @@ function InfinitePostSection({
       </InfiniteScroll>
       {isFetchingNextPage && <Loading message={"Fetching more posts..."} />}
 
-      {!hasNextPage && (
-        <div className="text-center text-gray-400 dark:text-gray-600 mt-4 mb-8 text-lg">
-          No more posts to show
-        </div>
-      )}
+      {!posts ||
+        (posts?.length === 0 && (
+          <div className="text-center text-gray-400 dark:text-gray-600 mt-4 mb-8 text-lg">
+            No more posts to show
+          </div>
+        ))}
     </Container>
   );
 }

@@ -4,6 +4,7 @@ import usePostActions from "../../hooks/post/usePostActions";
 import { timeAgoUTC } from "../../utils/Helper";
 import { PostActionMenu } from "../MyPosts/PostActionMenu";
 import { PostActions } from "../../context/PostActionContext";
+import { useAppTheme } from "../../hooks/useAppTheme";
 
 function Post({
   id,
@@ -18,6 +19,8 @@ function Post({
   isHidden,
   showMenu = false,
 }) {
+  console.log("🚀 ~ Post ~ bgColor:", bgColor);
+  const { mode } = useAppTheme();
   const { onPostAction } = usePostActions();
   const sanitizedPost = DOMPurify.sanitize(content);
 
@@ -35,25 +38,26 @@ function Post({
     onPostAction({ action: PostActions.hide, postId: id, data: !isHidden });
 
   return (
-    <div
-      className={`relative group cursor-pointer rounded-md drop-shadow-md `}
-      style={{
-        backgroundColor: bgColor || "var(--radix-ice-berg-dark)",
-      }}
-    >
+    <div className={`relative group cursor-pointer rounded drop-shadow-md `}>
       {/* Main card */}
       <Box
         size="none"
-        className={`w-[${width}] h-[${height}] text-white cursor-pointer rounded-md p-0 drop-shadow-2xl hover:shadow-xl`}
-        style={{
-          backgroundColor: bgColor || "var(--radix-ice-berg-dark)",
-        }}
+        className={`w-[${width}] h-[${height}] 
+        cursor-pointer ${
+          mode === "dark"
+            ? "bg-dark-light text-white"
+            : "bg-white border border-gray-300"
+        }  
+        rounded-md p-0 hover:shadow-xl`}
       >
         <Box
-          className="flex flex-row items-center justify-between 
-          mb-4 p-2 px-4 bg-dark-light 
-          border-t-[1px]  border-dark-light 
-          rounded-t-sm"
+          className={`flex flex-row items-center justify-between 
+          mb-4 p-2 px-4 border-b  drop-shadow-sm rounded-t-md
+          ${
+            mode === "dark"
+              ? "bg-[#2e2b29] text-white border-gray-900"
+              : "bg-gray-100 border-gray-300"
+          }`}
         >
           <Box className="flex flex-row items-center gap-2">
             <Avatar src={authorImg} alt="User Avatar" fallback="JD" />

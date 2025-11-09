@@ -6,12 +6,12 @@ const LoginWrapper = ({ title, children }) => {
   return (
     <main
       className={`w-full font-primary min-h-screen ${
-        mode === "dark" ? "bg-dark-light" : "bg-white"
+        mode === "dark" ? "bg-dark-light" : "bg-white border"
       }`}
     >
       <Flex align={"center"} justify={"center"} className="min-h-screen">
         <Box
-          className={`bg-white p-6 md:min-w-[500px] md:min-h-[400px] shadow-lg rounded-md`}
+          className={`bg-white p-6 md:min-w-[500px] md:min-h-[400px] shadow-lg rounded-md border border-gray-300`}
         >
           <Text size={"6"} className="text-[#30a46c]">
             {title}
