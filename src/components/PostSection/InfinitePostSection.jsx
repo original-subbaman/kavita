@@ -21,7 +21,6 @@ function InfinitePostSection({
   },
   containerStyles,
 }) {
-  console.log("🚀 ~ InfinitePostSection ~ data:", data);
   if (status === "error") {
     return (
       <ErrorMessage message={"Error loading posts. Try refreshing the page."} />

@@ -22,11 +22,7 @@ function AppWithDynamicTheme() {
   return (
     <ThemeProvider theme={MuiTheme}>
       <Theme appearance={mode} accentColor={accentColor}>
-        <AuthProvider>
-          <Suspense fallback={<Loading />}>
-            <RouterProvider router={CreateRouter()} />
-          </Suspense>
-        </AuthProvider>
+        <RouterProvider router={CreateRouter()} />
       </Theme>
     </ThemeProvider>
   );
@@ -36,13 +32,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <React.StrictMode>
       <Provider store={store}>
-        <AuthProvider>
-          <AppThemeProvider>
+        <AppThemeProvider>
+          <AuthProvider>
             <Suspense fallback={<Loading />}>
               <AppWithDynamicTheme />
             </Suspense>
-          </AppThemeProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </AppThemeProvider>
       </Provider>
     </React.StrictMode>
   </QueryClientProvider>
