@@ -8,6 +8,7 @@ import useDeleteComment from "../../hooks/post/useDeleteComment";
 import useLoadComments from "../../hooks/post/useLoadComments";
 import { usePostComment } from "../../hooks/post/usePostComment";
 import useReportComment from "../../hooks/post/useReportComment";
+import { useAppTheme } from "../../hooks/useAppTheme";
 import {
   setOpenDeleteComment,
   setOpenReportComment,
@@ -19,7 +20,6 @@ import ReportCommentDialog from "../PostDetail/ReportCommentDialog";
 import ResponseSnackbar from "../ResponseSnackbar";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
-import { NotificationTarget, NotificationType } from "../../utils/Constants";
 
 const CommentSection = ({
   postId,
@@ -27,6 +27,7 @@ const CommentSection = ({
   onPostCommentError,
   setReportError,
 }) => {
+  const { mode } = useAppTheme();
   const [activeComment, setActiveComment] = useState(null);
   const queryClient = useQueryClient();
   const { user, isAuthenticated } = useAuth();
@@ -139,6 +140,7 @@ const CommentSection = ({
               setActiveComment={setActiveComment}
               addComment={addComment}
               isAuthenticated={isAuthenticated}
+              theme={mode}
             />
           ))}
       </Box>

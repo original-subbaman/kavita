@@ -18,6 +18,7 @@ import DOMPurify from "dompurify";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAppTheme } from "../hooks/useAppTheme";
 import CommentSection from "../components/Comments/CommentSection";
 import ReportPostDialog from "../components/PostDetail/ReportPostDialog";
 import ResponseSnackbar from "../components/ResponseSnackbar";
@@ -58,6 +59,7 @@ const letterVariants = {
 
 export default function PostDetail() {
   const navigate = useNavigate();
+  const { mode } = useAppTheme();
   const { user, isAuthenticated } = useAuth();
   let { id } = useParams();
 
@@ -250,13 +252,13 @@ export default function PostDetail() {
       />
       <Container size={"2"} className="mx-3 md:mx-0">
         {/* Author Section */}
-        <Section size={"1"} className="text-start">
+        <Section size={"1"} className={` text-start`}>
           <Flex gap={"2"} align={"start"}>
             <BackButton size="3" />
             <Box>
               {author ? (
                 <Box className="flex items-center gap-4">
-                  <AnimatedText text={author || ""} />
+                  <AnimatedText text={author || ""} theme={mode} />
                   <Button
                     variant="ghost"
                     size={"2"}
@@ -279,17 +281,19 @@ export default function PostDetail() {
         <SelectedText
           selectedText={selectedText}
           captureLanguage={handleCaptureLanguage}
+          theme={mode}
         />
         {/* Post Section */}
         <Section
-          className="
-        min-h-[50vh]
-        rounded-lg drop-shadow-lg 
-        py-10 px-4 
-        mb-2 md:px-8"
-          style={{
-            backgroundColor: contentBGColor || "var(--radix-ice-berg-dark)",
-          }}
+          className={`
+          min-h-[50vh] py-10 px-4
+          ${
+            mode === "dark"
+              ? "bg-brownish-dark text-white"
+              : "bg-white border border-gray-300 text-black"
+          }
+          rounded-lg 
+          mb-2 md:px-8`}
         >
           {content && (
             <motion.div
@@ -300,7 +304,7 @@ export default function PostDetail() {
                 dangerouslySetInnerHTML={{ __html: content || "" }}
                 onMouseMove={(event) => getSelectionText()}
                 onMouseUp={(event) => window.getSelection().removeAllRanges()}
-                className="text-white text-start font-primary text-2xl  whitespace-pre-line"
+                className="text-start font-primary text-2xl  whitespace-pre-line"
               />
             </motion.div>
           )}
@@ -342,10 +346,12 @@ export default function PostDetail() {
   );
 }
 
-function AnimatedText({ text }) {
+function AnimatedText({ text, theme }) {
   return (
     <motion.div
-      className="flex overflow-hidden font-primary font-bold text-lg text-white"
+      className={`flex overflow-hidden font-primary font-bold text-lg ${
+        theme === "dark" ? "text-white" : "text-black"
+      }`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"

@@ -1,13 +1,13 @@
 import { Box, Button, Text } from "@radix-ui/themes";
-import { convertISOTimeToIST } from "../../utils/Date";
 import { useDispatch } from "react-redux";
-import CommentForm from "./CommentForm";
 import {
   setCommentId,
   setOpenDeleteComment,
   setOpenReportComment,
-  setPostId,
 } from "../../slice/postDetailSlice";
+import { convertISOTimeToIST } from "../../utils/Date";
+import CommentForm from "./CommentForm";
+
 const Comment = ({
   comment,
   currentUserId,
@@ -18,6 +18,7 @@ const Comment = ({
   addComment,
   parentId = null,
   isAuthenticated,
+  theme,
 }) => {
   const dispatch = useDispatch();
   const fiveMin = 300000;
@@ -38,12 +39,21 @@ const Comment = ({
     activeComment.id === comment.id;
 
   return (
-    <Box className="text-white my-2 rounded-md p-4 bg-slate-600/30">
+    <Box
+      className={` my-2 rounded-md p-4  ${
+        theme === "dark"
+          ? "bg-slate-600/30 text-white"
+          : "border border-gray-300 text-black"
+      }`}
+    >
       <Box className="mb-4">
         <Text weight={"medium"} className="block" size={"4"}>
           {comment.userName}
         </Text>
-        <Text className="text-white" size={"2"}>
+        <Text
+          size={"2"}
+          className={`${theme === "dark" ? "text-gray-500" : "text-gray-600"}`}
+        >
           {convertISOTimeToIST(comment.created_at)}
         </Text>
       </Box>

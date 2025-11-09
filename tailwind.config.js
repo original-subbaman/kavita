@@ -22,6 +22,7 @@ export default {
       "dark-light": "#191919",
       "radix-green": "#30a46c",
       "radix-grass": "#46a758",
+      "brownish-dark": "#2e2b29",
       "aurora": "#00141a",
       "ice-berg-dark": "#161821"
       },
