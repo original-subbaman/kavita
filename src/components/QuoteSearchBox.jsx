@@ -20,7 +20,9 @@ function QuoteSearchBox({
           placeholder="Search for a quote"
           variant="soft"
           onChange={handleSearchChange}
-          className="focus:text-white   placeholder:text-lg text-lg"
+          className={`${
+            theme === "dark" ? "focus:text-white" : "focus:text-black"
+          } placeholder:text-lg text-lg`}
         />
       </TextField.Root>
     </div>

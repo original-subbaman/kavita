@@ -19,7 +19,6 @@ function Post({
   isHidden,
   showMenu = false,
 }) {
-  console.log("🚀 ~ Post ~ bgColor:", bgColor);
   const { mode } = useAppTheme();
   const { onPostAction } = usePostActions();
   const sanitizedPost = DOMPurify.sanitize(content);
@@ -70,6 +69,7 @@ function Post({
           </Box>
           {showMenu && (
             <PostActionMenu
+              mode={mode}
               isHidden={isHidden}
               handleHidePost={handleHidePost}
               handleEditPost={handleEditPost}

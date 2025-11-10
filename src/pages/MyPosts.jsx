@@ -1,26 +1,28 @@
 import { AlertDialog, Box, Container } from "@radix-ui/themes";
+import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useState } from "react";
-import DateFilter from "../components/MyPosts/DateFilter";
-import PostSection from "../components/PostSection/PostSection";
-import QuoteSearchBox from "../components/QuoteSearchBox";
-import useAuth from "../hooks/auth/useAuth";
-import useGetUserPosts from "../hooks/post/useGetUserPosts";
-import useDebounceSearch from "../hooks/useDebounceSearch";
 import Loading from "../components/Loading";
-import useHidePost from "../hooks/post/useHidePost";
-import ResponseSnackbar from "../components/ResponseSnackbar";
-import useDeletePost from "../hooks/post/useDeletePost";
-import { useQueryClient } from "@tanstack/react-query";
-import InputAlertDialog from "../components/PromptSection/InputAlertDialog";
-import { PostActions, PostActionsProvider } from "../context/PostActionContext";
+import DateFilter from "../components/MyPosts/DateFilter";
 import DeleteDialog from "../components/MyPosts/DeleteDialog";
+import PostSection from "../components/PostSection/PostSection";
+import InputAlertDialog from "../components/PromptSection/InputAlertDialog";
+import QuoteSearchBox from "../components/QuoteSearchBox";
+import ResponseSnackbar from "../components/ResponseSnackbar";
+import { PostActions, PostActionsProvider } from "../context/PostActionContext";
+import useAuth from "../hooks/auth/useAuth";
+import useDeletePost from "../hooks/post/useDeletePost";
+import useGetUserPosts from "../hooks/post/useGetUserPosts";
+import useHidePost from "../hooks/post/useHidePost";
 import useUpdatePost from "../hooks/post/useUpdatePost";
+import { useAppTheme } from "../hooks/useAppTheme";
+import useDebounceSearch from "../hooks/useDebounceSearch";
 
 const MyPosts = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
+  const { mode } = useAppTheme();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditPost, setOpenEditPost] = useState(false);
   const [notification, setNotification] = useState(null);
@@ -31,14 +33,15 @@ const MyPosts = () => {
     from: dayjs().startOf("year"),
     to: dayjs(),
   });
+  console.log("🚀 ~ MyPosts ~ filterDate:", filterDate);
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounceSearch(searchTerm);
 
   // Fetch post queries
   const { data: posts, isFetching: isFetchingPosts } = useGetUserPosts({
     id: user.id,
-    from: filterDate.from,
-    to: filterDate.to,
+    from: filterDate.from.toISOString(),
+    to: filterDate.to.toISOString(),
     search: debounceSearch,
   });
 
@@ -100,7 +103,6 @@ const MyPosts = () => {
   };
 
   const handlePostAction = ({ action, postId, data }) => {
-    console.log("🚀 ~ handlePostAction ~ data:", data);
     switch (action) {
       case PostActions.hide:
         hidePost({ postId, isHidden: data });
@@ -122,7 +124,7 @@ const MyPosts = () => {
 
   return (
     <PostActionsProvider onPostAction={handlePostAction}>
-      <Container size={"2"} className="mx-2">
+      <Container size={"2"} className="mx-2 my-4">
         {/*  Response Snackbar */}
         {notification && (
           <ResponseSnackbar
@@ -162,7 +164,11 @@ const MyPosts = () => {
         </AlertDialog.Root>
         {/* Filters */}
         <Box className="flex-1 mx-3 sm:mx-0">
-          <QuoteSearchBox handleSearchChange={handleSearchChange} size="2" />
+          <QuoteSearchBox
+            handleSearchChange={handleSearchChange}
+            size="2"
+            theme={mode}
+          />
         </Box>
         <Box className="mb-4">
           <DateFilter

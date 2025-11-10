@@ -1,28 +1,34 @@
 import { DatePicker, pickersLayoutClasses } from "@mui/x-date-pickers";
-const StyledDatePicker = ({ value, onChanged, ...rest }) => {
+
+const StyledDatePicker = ({ value, onChanged, mode = "dark", ...rest }) => {
+  const isDark = mode === "dark";
   return (
     <DatePicker
       value={value}
       format="DD/MM/YYYY"
       PopperProps={{
-        sx: { "&.MuiPickersPopper-root": { border: "4px solid red" } },
+        sx: {
+          "&.MuiPickersPopper-root": {
+            border: isDark ? "4px solid red" : "4px solid #e5e7eb", // light gray border
+          },
+        },
       }}
       sx={{
-        background: "#132d23",
-        border: "2px solid #2f7c57",
+        background: isDark ? "#132d23" : "#fff", // white background
+        border: `2px solid ${isDark ? "#2f7c57" : "#e5e7eb"}`, // light gray border
         borderRadius: "5px",
         "& .MuiInputBase-input": {
-          color: "white",
+          color: isDark ? "white" : "#222", // black text
         },
         "& .MuiInputBase-input::placeholder": {
-          color: "#2f7c57", // Change to your desired color
+          color: isDark ? "#2f7c57" : "#888", // light gray placeholder
         },
         "& .MuiInputAdornment-root .MuiSvgIcon-root": {
-          color: "#2f7c57", // Change calendar icon color here
+          color: isDark ? "#2f7c57" : "#888", // light gray icon
         },
         "& .MuiOutlinedInput-root": {
           "&.Mui-focused fieldset": {
-            borderColor: "transparent", // Remove focus border
+            borderColor: "transparent",
           },
         },
       }}
@@ -33,13 +39,14 @@ const StyledDatePicker = ({ value, onChanged, ...rest }) => {
         layout: {
           sx: {
             [`.${pickersLayoutClasses.contentWrapper}`]: {
-              backgroundColor: "#1e1e1e", // Dark mode calendar background
-              color: "white",
+              backgroundColor: isDark ? "#1e1e1e" : "#fff", // white background
+              color: isDark ? "white" : "#222", // black text
               "& .MuiButtonBase-root": {
-                color: "white",
+                color: isDark ? "white" : "#222", // black button text
               },
-
-              "& .MuiDayCalendar-weekDayLabel": { color: "#15803d" },
+              "& .MuiDayCalendar-weekDayLabel": {
+                color: isDark ? "#15803d" : "#888", // light gray label
+              },
             },
           },
         },
