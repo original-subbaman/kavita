@@ -2,7 +2,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import StyledDatePicker from "./StyledDatePicker";
+import { useAppTheme } from "../../hooks/useAppTheme";
 const DateFilter = ({ from, to, setFilterDate }) => {
+  const { mode } = useAppTheme();
   return (
     <Box my={"3"} className="mx-3 sm:mx-0">
       <Text className="self-center flex-1" color="green">
@@ -12,6 +14,8 @@ const DateFilter = ({ from, to, setFilterDate }) => {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <StyledDatePicker
             value={from}
+            mode={mode}
+            maxDate={to}
             onChange={(newDate) =>
               setFilterDate((prev) => ({ ...prev, from: newDate }))
             }
@@ -22,9 +26,11 @@ const DateFilter = ({ from, to, setFilterDate }) => {
           <StyledDatePicker
             disableFuture
             value={to}
-            onChanged={(newDate) =>
-              setFilterDate((prev) => ({ ...prev, to: newDate }))
-            }
+            minDate={from}
+            mode={mode}
+            onChange={(newDate) => {
+              return setFilterDate((prev) => ({ ...prev, to: newDate }));
+            }}
           />
         </LocalizationProvider>
       </Flex>
