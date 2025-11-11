@@ -1,9 +1,12 @@
-import React from "react";
+import { useAppTheme } from "../../hooks/useAppTheme";
 
 function ProfileSectionWrapper({ height, children }) {
+  const { mode } = useAppTheme();
   return (
     <div
-      className={`w-[100%] bg-[#212327] text-white rounded-lg  p-6 drop-shadow-md`}
+      className={`w-[100%] ${
+        mode === "dark" ? "bg-[#212327] text-white" : "bg-white text-black"
+      }  rounded-lg  p-6 drop-shadow-md`}
     >
       {children}
     </div>
