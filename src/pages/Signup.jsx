@@ -4,7 +4,6 @@ import {
   PersonIcon,
 } from "@radix-ui/react-icons";
 import { Checkbox, Dialog, Flex, Text } from "@radix-ui/themes";
-import { PenLine } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +16,8 @@ import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import TermsAndConditions from "../components/Login_Signup/TermsAndConditions";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import ResponseSnackbar from "../components/ResponseSnackbar";
+import supabase from "../supabase_client/create_client";
+
 const REQUIRED_NAME_ERROR = "Name is required";
 const REQUIRED_EMAIL_ERROR = "Email is required";
 const REQUIRED_ADDRESS_ERROR = "Address is required";
@@ -27,6 +28,7 @@ const Signup = () => {
   const formRef = useRef(null);
   const [gender, setGender] = useState("Male");
   const [loading, setLoading] = useState(false);
+  const [disabledSubmit, setDisabledSubmit] = useState(false);
   const [checked, setChecked] = useState(false);
   const [response, setResponse] = useState({
     success: false,
@@ -35,8 +37,9 @@ const Signup = () => {
     message: "",
   });
 
-  const handleResponseClose = () =>
+  const handleResponseClose = () => {
     setResponse({ success: false, error: false, message: "" });
+  };
 
   const {
     handleSubmit,
@@ -44,66 +47,23 @@ const Signup = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async ({ email, password, name, user_name }) => {
     try {
       setLoading(true);
+      setDisabledSubmit(true);
+
+      const { data, error } = await supabase
+        .from("user")
+        .select("*")
+        .eq("email", email)
+        .single();
+
+      if (data) {
+        throw new Error("Email is already registered. Please login instead.");
+      }
 
       // Sign up user
-      const { data: authData, error } = await signUpWithEmail(
-        data.email,
-        data.password,
-        data.name
-      );
-
-      if (authData === undefined) {
-        setResponse({
-          error: true,
-          success: false,
-          info: false,
-          message: "Account with this email already exists",
-        });
-        return;
-      }
-
-      if (error) {
-        setResponse({
-          error: true,
-          success: false,
-          info: false,
-          message: error.message,
-        });
-        return;
-      }
-
-      delete data["email"];
-      delete data["password"];
-      // Update profile data
-      const newUser = {
-        id: authData.user.id,
-        name: data.name,
-        userName: data.user_name,
-      };
-
-      const { error: profileError } = await updateProfileData(newUser);
-
-      if (profileError) {
-        if (profileError.code === "23505") {
-          setResponse({
-            error: true,
-            success: false,
-            info: false,
-            message: "User with this email already exists",
-          });
-        } else {
-          setResponse({
-            error: true,
-            success: false,
-            info: false,
-            message: "Creating profile failed. Please try again",
-          });
-        }
-        return;
-      }
+      const { session, user } = await signUpWithEmail(email, password, name);
 
       // Success case
       setResponse({
@@ -112,16 +72,21 @@ const Signup = () => {
         info: true,
         message: "Please check your email for verification link",
       });
-      navigate("/login-redirect", { replace: true });
+
+      setTimeout(() => {
+        navigate("/login", { replace: true });
+      }, 3000);
     } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error);
       setResponse({
         error: true,
         success: false,
         info: false,
-        message: "Cannot sign up user at the moment",
+        message: error?.message || "Cannot sign up user at the moment",
       });
     } finally {
       setLoading(false);
+      setDisabledSubmit(false);
     }
   };
 
@@ -133,6 +98,7 @@ const Signup = () => {
         onClose={handleResponseClose}
         message={response.message}
         severity={"success"}
+        autoHideDuration={3000}
       />
       {/* Info snackbar */}
       <ResponseSnackbar
@@ -239,7 +205,7 @@ const Signup = () => {
             loading={loading}
             type={"submit"}
             className="w-full"
-            disabled={!checked}
+            disabled={!checked || disabledSubmit}
             size={"3"}
             my={"3"}
           >
