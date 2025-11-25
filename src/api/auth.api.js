@@ -8,7 +8,7 @@ import supabase from "../supabase_client/create_client";
  * @returns {Promise<Object>} - Supabase sign up response.
  * @throws {Error} - Throws if sign up fails.
  */
-async function signUpWithEmail(email, password, name) {
+async function signUpWithEmail(email, password, name, userName) {
   try {
     const { data, error } = await supabase.auth.signUp({
       email: email,
@@ -16,6 +16,7 @@ async function signUpWithEmail(email, password, name) {
       options: {
         data: {
           name: name,
+          user_name: userName,
         },
       },
     });

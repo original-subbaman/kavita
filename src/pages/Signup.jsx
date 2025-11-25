@@ -7,7 +7,7 @@ import { Checkbox, Dialog, Flex, Text } from "@radix-ui/themes";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { signUpWithEmail, updateProfileData } from "../api/auth.api";
+import { signUpWithEmail } from "../api/auth.api";
 import { isUserNameAvailable } from "../api/user.api";
 import CustomTextField from "../components/CustomTextField";
 import LoadingButton from "../components/LoadingButton";
@@ -16,7 +16,6 @@ import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import TermsAndConditions from "../components/Login_Signup/TermsAndConditions";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import ResponseSnackbar from "../components/ResponseSnackbar";
-import supabase from "../supabase_client/create_client";
 
 const REQUIRED_NAME_ERROR = "Name is required";
 const REQUIRED_EMAIL_ERROR = "Email is required";
@@ -52,25 +51,20 @@ const Signup = () => {
       setLoading(true);
       setDisabledSubmit(true);
 
-      const { data, error } = await supabase
-        .from("user")
-        .select("*")
-        .eq("email", email)
-        .single();
-
-      if (data) {
-        throw new Error("Email is already registered. Please login instead.");
-      }
-
       // Sign up user
-      const { session, user } = await signUpWithEmail(email, password, name);
+      const { session, user } = await signUpWithEmail(
+        email,
+        password,
+        name,
+        user_name
+      );
 
       // Success case
       setResponse({
         error: false,
         success: true,
-        info: true,
-        message: "Please check your email for verification link",
+        info: false,
+        message: "Sign up successful! Redirecting to login...",
       });
 
       setTimeout(() => {
