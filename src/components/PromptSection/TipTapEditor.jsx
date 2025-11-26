@@ -119,9 +119,9 @@ function MenuBar({ editor, bgColor, setBgColor }) {
           );
         })}
 
-        <ToolbarButton onClick={toggleCirclePicker} toolTip="Background Color">
+        {/* <ToolbarButton onClick={toggleCirclePicker} toolTip="Background Color">
           <PaintBucket />
-        </ToolbarButton>
+        </ToolbarButton> */}
       </div>
       {showPicker && (
         <div className="flex items-center bg-gray-800 w-full p-4 z-[100]">
