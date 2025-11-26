@@ -6,7 +6,9 @@ const useGetProfile = ({ userId }) => {
     queryKey: ["get_profile", userId],
     queryFn: () => getProfile(userId),
     enabled: !!userId,
+    refetchOnWindowFocus: false,
     staleTime: Infinity,
+    retry: false,
   });
 };
 

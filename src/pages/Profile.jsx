@@ -40,12 +40,12 @@ function Profile() {
           value={isFetchingLikeCount ? 0 : likeCount}
         />
         <StatCard
-          title="language recorded"
+          title="quotes saved"
           value={isFetchingLangCount ? 0 : languageCount}
         />
         <StatCard
           title="longest streak"
-          value={isFetchingLongestStreak ? 0 : longestStreak[0].streak_length}
+          value={isFetchingLongestStreak ? 0 : longestStreak[0]?.streak_length}
         />
       </Grid>
     </Container>

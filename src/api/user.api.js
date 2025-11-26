@@ -215,7 +215,7 @@ export async function getProfile(userId) {
       .single();
 
     if (error) throw error;
-    if (!data?.profile_url) throw new Error("No profile URL found");
+    if (!data?.profile_url) return null;
 
     const {
       data: { publicUrl },
@@ -223,7 +223,6 @@ export async function getProfile(userId) {
 
     return publicUrl;
   } catch (error) {
-    console.error("🚀 ~ getProfile ~ error:", error);
     throw error;
   }
 }
