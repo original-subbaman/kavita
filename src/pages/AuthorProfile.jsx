@@ -119,11 +119,8 @@ const AuthorProfile = () => {
         message={response?.message}
         onClose={() => setResponse(null)}
       />
-      <div className="flex items-center mb-4 gap-3">
-        <BackButton />
-        <Text className="text-gray-300">Back</Text>
-      </div>
-      <div className="mb-4">
+      <BackButton />
+      <div className="mt-4">
         <AuthorDetailCard
           profile={profile}
           username={author?.user_name || ""}
@@ -137,9 +134,7 @@ const AuthorProfile = () => {
           onUnfollowUser={handleUnfollowUser}
         />
       </div>
-      <Text size={"5"} className="text-white">
-        Recent Posts
-      </Text>
+      <p className="text-white my-4">Recent Posts</p>
       <PostActionsProvider>
         <InfinitePostSection
           data={posts}

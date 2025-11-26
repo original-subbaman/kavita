@@ -4,7 +4,7 @@ import { getInitialsOfName } from "../../utils/Helper";
 
 const FollowButton = ({ onClick, isLoading = true }) => {
   return (
-    <Button variant="ghost" color="orange" onClick={onClick} loading={true}>
+    <Button variant="ghost" color="orange" onClick={onClick}>
       <PlusIcon className="h-4 w-4" />
       Follow
     </Button>
@@ -44,7 +44,9 @@ const AuthorDetailCard = ({
         <div className="flex-1">
           <div>
             <div className="flex items-center gap-4 ">
-              <h1 className="text-2xl text-white">{name}</h1>
+              <h1 className="text-2xl text-white">
+                {name.toLocaleLowerCase()}
+              </h1>
               {!isUserAuthor && (
                 <div>
                   {showFollowButton ? (
@@ -59,19 +61,21 @@ const AuthorDetailCard = ({
           </div>
 
           {/* Bio */}
-          <p className="text-gray-300 mb-6 max-w-2xl leading-relaxed">{bio}</p>
+          <p className="text-gray-300 mb-6 text-sm italic max-w-2xl leading-relaxed">
+            {bio}
+          </p>
 
           {/* Stats */}
           <div className="flex gap-6">
             <div className="text-center">
-              <div className="text-xl text-white">{poems}</div>
-              <div className="text-sm text-gray-400">Poems</div>
+              <div className="text-lg text-white">{poems}</div>
+              <div className="text-sm font-light text-gray-400">poems</div>
             </div>
             <div className="text-center">
-              <div className="text-xl text-white">
+              <div className="text-lg text-white">
                 {followers.toLocaleString()}
               </div>
-              <div className="text-sm text-gray-400">Followers</div>
+              <div className="text-sm font-light text-gray-400">followers</div>
             </div>
           </div>
         </div>
