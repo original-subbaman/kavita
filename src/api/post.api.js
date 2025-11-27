@@ -18,7 +18,7 @@ export async function fetchPosts({ date }) {
 
     const { data, error } = await supabase
       .from("post")
-      .select("*, user (id, name, user_name)")
+      .select("*, profiles (id, full_name, user_name)")
       // .gte("created_at", formatISO(startOfDay(date))) // Uncomment if needed
       .lte("created_at", formattedDate)
       .order("created_at", { ascending: false });
@@ -56,7 +56,7 @@ export async function fetchPostsPagination({
   try {
     let query = supabase
       .from("post")
-      .select("*, user (id, name, user_name, profile_url)")
+      .select("*, profiles (id, full_name, user_name, profile_link, status)")
       .eq("is_hidden", false);
 
     if (userId && !feedType) {
@@ -104,7 +104,7 @@ export async function fetchPostsPagination({
       data.length === limit ? data[data.length - 1].created_at : undefined;
 
     const postsWithUserProfile = data.map((post) => {
-      if (!post?.user.profile_url) {
+      if (!post?.user?.profile_url) {
         return { ...post, profile_url: null };
       }
 
@@ -147,7 +147,7 @@ export async function fetchPostsById({ id, from, to, search = "" }) {
 
     const { data, error } = await supabase
       .from("post")
-      .select("*, user (id, name, user_name)")
+      .select("*, profiles (id, full_name, user_name)")
       .eq("user_id", id)
       .ilike("post", `%${search}%`)
       .gte("created_at", from)
@@ -179,7 +179,7 @@ export async function getPostById(id) {
 
     const { data, error } = await supabase
       .from("post")
-      .select("*, user (id, name, user_name)")
+      .select("*, profiles (id, full_name, user_name)")
       .eq("id", id)
       .single();
 
@@ -211,7 +211,7 @@ export async function fetchPostAndLikeStatus(postId, userId) {
     // Fetch the post
     const { data: post, error: postError } = await supabase
       .from("post")
-      .select("*, user (id, name, user_name)")
+      .select("*, profiles (id, full_name, user_name)")
       .eq("id", postId)
       .single();
 
@@ -376,7 +376,7 @@ export async function loadComments(postId) {
 
     const { data, error } = await supabase
       .from("post_comment")
-      .select("*, user(id, name, user_name)")
+      .select("*, profiles (id, full_name, user_name)")
       .eq("post_id", postId)
       .eq("is_hidden", false)
       .order("created_at", { ascending: false });
@@ -672,8 +672,6 @@ export async function getWritingTheme() {
  * @throws {Error} If the Supabase query fails or an unexpected error occurs.
  */
 export async function deletePost({ userId, postId }) {
-  console.log("🚀 ~ deletePost ~ postId:", postId);
-  console.log("🚀 ~ deletePost ~ userId:", userId);
   try {
     if (!userId || !postId) {
       throw new Error("Missing userId or postId");
