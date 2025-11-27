@@ -56,10 +56,11 @@ function InfinitePostSection({
                   <NavLink to={`/post/${post.id}`} style={{ width: "100%" }}>
                     <Post
                       content={post.post}
-                      author={post.user.user_name}
-                      authorImg={post.author_img}
+                      author={post?.profiles?.user_name}
+                      authorImg={post?.profiles?.profile_link}
                       createdAt={post.created_at}
                       bgColor={post.bg_color}
+                      height={"300px"}
                     />
                   </NavLink>
                 </motion.div>

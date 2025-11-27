@@ -41,7 +41,7 @@ function Post({
       {/* Main card */}
       <Box
         size="none"
-        className={`w-[${width}] h-[${height}] 
+        className={`w-[${width}] h-[${height}] max-h-[400px] overflow-hidden 
         cursor-pointer ${
           mode === "dark"
             ? "bg-dark-light text-white"

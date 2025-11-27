@@ -80,8 +80,8 @@ export default function PostDetail() {
     select: (response) => response.post,
   });
 
-  const author = post?.user.user_name;
-  const authorId = post?.user.id;
+  const author = post?.profiles.user_name;
+  const authorId = post?.profiles.id;
   const createdAt = post?.created_at;
   const content = DOMPurify.sanitize(post?.post);
   const hasLiked = post?.hasLiked;
