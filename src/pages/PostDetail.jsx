@@ -77,7 +77,9 @@ export default function PostDetail() {
     userId: user?.id,
     isUpdating: false,
     staleTime: 0,
-    select: (response) => response.post,
+    select: (response) => {
+      return { ...response.post, hasLiked: response.hasLiked };
+    },
   });
 
   const author = post?.profiles.user_name;
