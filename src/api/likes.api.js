@@ -43,7 +43,7 @@ export async function toggleLike(postId, userId) {
       .select("*")
       .eq("post_id", postId)
       .eq("user_id", userId)
-      .single();
+      .maybeSingle();
 
     if (fetchError && fetchError.code !== "PGRST116") {
       console.error(fetchError.code);

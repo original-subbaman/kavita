@@ -10,9 +10,9 @@ const useLoadComments = ({ postId }) => {
       return comments.map((comment) => ({
         id: comment.id,
         created_at: comment.created_at,
-        userName: comment.user.user_name,
+        userName: comment.profiles.user_name,
         comment: comment.comment,
-        userId: comment.user.id,
+        userId: comment.profiles.id,
       }));
     },
   });

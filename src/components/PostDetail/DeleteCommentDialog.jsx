@@ -1,9 +1,12 @@
 import React from "react";
 import { AlertDialog, Flex, Button } from "@radix-ui/themes";
 
-function DeleteCommentDialog({ onDelete, onClose }) {
+const DeleteCommentDialog = React.forwardRef(function DeleteCommentDialog(
+  { onDelete, onClose },
+  ref
+) {
   return (
-    <AlertDialog.Content maxWidth="450px">
+    <AlertDialog.Content ref={ref}>
       <AlertDialog.Title>Delete Comment</AlertDialog.Title>
       <AlertDialog.Description>
         Are you sure you want to delete this comment? This action cannot be
@@ -19,6 +22,6 @@ function DeleteCommentDialog({ onDelete, onClose }) {
       </Flex>
     </AlertDialog.Content>
   );
-}
+});
 
 export default DeleteCommentDialog;
