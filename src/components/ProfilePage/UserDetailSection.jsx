@@ -29,7 +29,6 @@ function UserDetailSection(props) {
 
   const onUpdateSuccess = (data) => {
     setResponse((prev) => ({ ...prev, success: true }));
-    navigate(0);
   };
 
   const onUpdateError = (error) => {
