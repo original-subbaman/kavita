@@ -59,7 +59,7 @@ function Header({ toggleSideNav, theme }) {
   const navigate = useNavigate();
   const { mode, toggleMode } = useAppTheme();
   const { user, isAuthenticated } = useAuth();
-  const userName = user?.name;
+  const userName = user?.full_name;
 
   const { data: count } = useGetNotificationCount(user?.id, 0);
 

@@ -56,6 +56,7 @@ function UserDetailSection(props) {
 
   const { data, isFetched: isUserFetched } = useGetUser({
     userId: user.id,
+    table: "user",
   });
 
   const { data: profile } = useGetProfile({ userId: user.id });

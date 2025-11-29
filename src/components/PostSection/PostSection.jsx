@@ -28,8 +28,8 @@ function PostSection({ posts, showMenu = false }) {
               <Post
                 id={post.id}
                 content={post.post}
-                author={post.user.user_name}
-                authorId={post.user.id}
+                author={post.profiles.user_name}
+                authorId={post.profiles.id}
                 isHidden={post.is_hidden}
                 width={dimensions[index].width}
                 height={dimensions[index].height}
