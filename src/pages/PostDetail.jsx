@@ -170,6 +170,7 @@ export default function PostDetail() {
         postId: id,
         userId: user?.id, // replace by actual user id
       });
+      setSelectedText("");
       return;
     }
     navigate("/login");
