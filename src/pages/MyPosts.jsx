@@ -33,7 +33,6 @@ const MyPosts = () => {
     from: dayjs().startOf("year"),
     to: dayjs(),
   });
-  console.log("🚀 ~ MyPosts ~ filterDate:", filterDate);
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounceSearch(searchTerm);
 
@@ -52,8 +51,8 @@ const MyPosts = () => {
       queryKey: [
         "get_user_posts",
         user.id,
-        filterDate.from,
-        filterDate.to,
+        filterDate.from.toISOString(),
+        filterDate.to.toISOString(),
         debounceSearch,
       ],
     });

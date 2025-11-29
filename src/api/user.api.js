@@ -67,10 +67,10 @@ export async function updateUser({ userId, user }) {
  * @returns {Promise<Object>} - Returns the user data.
  * @throws {Error} - Throws error if retrieval fails.
  */
-export async function getUser(userId) {
+export async function getUser(userId, table = "profiles") {
   try {
     const { data, error } = await supabase
-      .from("profiles")
+      .from(table)
       .select("*")
       .eq("id", userId)
       .single();
