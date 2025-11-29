@@ -204,19 +204,16 @@ export async function createNotification(
     }
 
     // Insert new notification
-    const { data, error } = await supabase
-      .from("user_notification")
-      .insert([
-        {
-          target_id: postId,
-          recipient_id: recipientId,
-          sender_id: senderId,
-          message,
-          target_type: target,
-          type: type,
-        },
-      ])
-      .select();
+    const { data, error } = await supabase.from("user_notification").insert([
+      {
+        target_id: postId,
+        recipient_id: recipientId,
+        sender_id: senderId,
+        message,
+        target_type: target,
+        type: type,
+      },
+    ]);
 
     if (error) {
       throw new Error(
@@ -343,10 +340,6 @@ export async function notifyNewFollower({ followerId, followedId, message }) {
       throw new Error(
         error.message || "Failed to create notification for new follower."
       );
-    }
-
-    if (!data || data.length === 0) {
-      throw new Error("Notification insert returned no data.");
     }
 
     return {

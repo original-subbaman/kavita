@@ -70,7 +70,7 @@ export async function updateUser({ userId, user }) {
 export async function getUser(userId) {
   try {
     const { data, error } = await supabase
-      .from("user")
+      .from("profiles")
       .select("*")
       .eq("id", userId)
       .single();
