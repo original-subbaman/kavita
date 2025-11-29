@@ -13,7 +13,7 @@ const FollowButton = ({ onClick, isLoading = true }) => {
 
 const UnfollowButton = ({ onClick, isLoading = true }) => {
   return (
-    <Button variant="ghost" color="orange" onClick={onClick} loading={true}>
+    <Button variant="ghost" color="orange" onClick={onClick}>
       Unfollow
     </Button>
   );
@@ -28,6 +28,7 @@ const AuthorDetailCard = ({
   followers = "0",
   showFollowButton = true,
   isUserAuthor = false,
+  isAuthenticated = false,
   onFollowUser = () => {},
   onUnfollowUser = () => {},
 }) => {
@@ -47,7 +48,7 @@ const AuthorDetailCard = ({
               <h1 className="text-2xl text-white">
                 {name.toLocaleLowerCase()}
               </h1>
-              {!isUserAuthor && (
+              {!isUserAuthor && isAuthenticated && (
                 <div>
                   {showFollowButton ? (
                     <FollowButton onClick={onFollowUser} />

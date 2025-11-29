@@ -20,7 +20,7 @@ import useUnfollowUser from "../hooks/user/useUnfollowUser";
 
 const AuthorProfile = () => {
   const params = useParams();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
   const [response, setResponse] = useState(null);
@@ -37,6 +37,7 @@ const AuthorProfile = () => {
   const { data: hasFollowed } = useHasFollowed({
     followerId: currentUserId,
     followedId: authorUserId,
+    staleTime: 0,
   });
   const {
     data: posts,
@@ -124,11 +125,12 @@ const AuthorProfile = () => {
         <AuthorDetailCard
           profile={profile}
           username={author?.user_name || ""}
-          name={author?.name || ""}
+          name={author?.full_name || ""}
           poems={postCount || 0}
           bio={author?.bio}
           followers={followerCount}
           isUserAuthor={isUserAuthor}
+          isAuthenticated={isAuthenticated}
           showFollowButton={showFollowButton}
           onFollowUser={handleFollowUser}
           onUnfollowUser={handleUnfollowUser}
