@@ -97,6 +97,14 @@ function LanguageWall(props) {
 
   const handleSearchChange = (event) => setSearchTerm(event.target.value);
   const handleQuoteClick = (postId, quote) => {
+    if (!postId) {
+      setResponse({
+        open: true,
+        severity: "info",
+        message: "The post for this quote is no longer available.",
+      });
+      return;
+    }
     setPostId(postId);
     setSelectedQuote(quote);
     paneInstanceRef.current.present({ animate: true });
