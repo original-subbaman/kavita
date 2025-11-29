@@ -193,6 +193,7 @@ export default function PostDetail() {
   function handleReportClick() {
     if (isAuthenticated) {
       dispatch(setOpenReportPost(true));
+      return;
     }
     navigate("/login");
   }
