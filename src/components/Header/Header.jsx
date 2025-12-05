@@ -76,7 +76,7 @@ function Header({ toggleSideNav, theme }) {
         className="block md:hidden"
         onClick={toggleSideNav}
       >
-        <HamburgerMenuIcon className="w-8 h-8" />
+        {isAuthenticated && <HamburgerMenuIcon className="w-8 h-8" />}
       </Button>
 
       <Button

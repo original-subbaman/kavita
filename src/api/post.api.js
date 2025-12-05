@@ -711,7 +711,7 @@ export async function getPopularThemes() {
       "Gangtok",
       "Kangchenjunga",
       "Death",
-      "Traffic Jam",
+      "Capturing A Moment",
       "Unrequited Love",
       "Solitude",
     ];

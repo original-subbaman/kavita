@@ -185,7 +185,6 @@ export async function uploadProfile(userId, profile) {
       .update({ profile_link: filePath })
       .eq("id", userId);
 
-    console.log("🚀 ~ uploadProfile ~ filePath:", filePath);
     if (updateError || updateProfilesError) {
       await supabase.storage.from("profile_images").remove([filePath]);
       throw error;
