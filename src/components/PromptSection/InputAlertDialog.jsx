@@ -2,6 +2,7 @@ import { AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import ResponseSnackbar from "../ResponseSnackbar";
 import TipTapEditor from "./TipTapEditor";
+import { useAppTheme } from "../../hooks/useAppTheme";
 
 export const DefaultBGColor = "#2e2b29";
 const minWords = 10;
@@ -16,8 +17,11 @@ function InputAlertDialog({
   theme,
   isEdit = false,
 }) {
+  const { mode } = useAppTheme();
   const [post, setPost] = useState(content || "");
-  const [bgColor, setBgColor] = useState(savedColor || DefaultBGColor); // Default background color
+  const [bgColor, setBgColor] = useState(
+    mode === "dark" ? DefaultBGColor : "#ffffff"
+  ); // Default background color
   const [error, setError] = useState({
     lowWordCount: false,
     invalidPrompt: false,
@@ -98,7 +102,11 @@ function InputAlertDialog({
           message={snackbar.message}
         />
       )}
-      <AlertDialog.Title className="text-white text-base md:text-lg font-normal">
+      <AlertDialog.Title
+        className={`${
+          mode === "dark" ? "text-white" : "text-black"
+        } text-base md:text-lg font-normal`}
+      >
         {title}
       </AlertDialog.Title>
       {/* Error Messages */}

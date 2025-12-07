@@ -304,11 +304,11 @@ export default function PostDetail() {
               initial={{ opacity: 0, filter: "blur(10px)" }}
               animate={{ opacity: 1, filter: "blur(0px)" }}
             >
-              <Box
+              <div
                 dangerouslySetInnerHTML={{ __html: content || "" }}
                 onMouseMove={(event) => getSelectionText()}
                 onMouseUp={(event) => window.getSelection().removeAllRanges()}
-                className="text-start font-primary text-2xl  whitespace-pre-line"
+                className="[&>p]:my-4 text-start font-primary text-2xl"
               />
             </motion.div>
           )}

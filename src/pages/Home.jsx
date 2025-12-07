@@ -84,11 +84,7 @@ function Home() {
   };
 
   const handlePostInputClick = () => {
-    if (user) {
-      setAddPostDialog(true);
-    } else {
-      navigate("/login");
-    }
+    setAddPostDialog(true);
   };
 
   let themes = [];
