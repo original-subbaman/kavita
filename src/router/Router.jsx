@@ -13,6 +13,7 @@ import PostDetail from "../pages/PostDetail.jsx";
 import Profile from "../pages/Profile.jsx";
 import Signup from "../pages/Signup.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import AddPost from "../pages/AddPost.jsx";
 
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword.jsx"));
 const ResetPassword = lazy(() => import("../pages/ResetPassword.jsx"));
@@ -67,6 +68,8 @@ function CreateRouter() {
             </ProtectedRoute>
           ),
         },
+
+        { path: "posts/new", element: <AddPost /> },
       ],
     },
     { path: "/login-redirect", element: <LoginRedirect /> },

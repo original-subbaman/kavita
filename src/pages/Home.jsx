@@ -84,7 +84,10 @@ function Home() {
   };
 
   const handlePostInputClick = () => {
-    setAddPostDialog(true);
+    // setAddPostDialog(true);
+    navigate("/posts/new", {
+      state: { writingTheme: filter.theme || currWeeklyTheme },
+    });
   };
 
   let themes = [];
@@ -140,11 +143,6 @@ function Home() {
               <Box className="w-[93%] md:w-full mx-4">
                 <PostInputBox onClick={handlePostInputClick} theme={mode} />
               </Box>
-              <InputAlertDialog
-                mutation={addPost}
-                theme={activeTheme}
-                mutationState={isPosting}
-              />
             </AlertDialogRoot>
           </PromptSection>
           {/* Filters */}

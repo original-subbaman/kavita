@@ -158,7 +158,7 @@ function TipTapEditor({ initial, onChange, bgColor, setBgColor }) {
     content: initial,
     editorProps: {
       attributes: {
-        style: `background-color: ${bgColor}`,
+        style: `height: 100%; background-color: ${bgColor}`,
       },
     },
     onUpdate({ editor }) {
@@ -179,9 +179,9 @@ function TipTapEditor({ initial, onChange, bgColor, setBgColor }) {
   }, [bgColor, editor]);
 
   return (
-    <div>
+    <div className="shadow-lg rounded min-h-[70vh]">
       <MenuBar editor={editor} bgColor={bgColor} setBgColor={setBgColor} />
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} className="w-full h-full" />
     </div>
   );
 }
