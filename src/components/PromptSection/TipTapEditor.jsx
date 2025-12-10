@@ -2,9 +2,20 @@ import { Tooltip } from "@mui/material";
 import { Button } from "@radix-ui/themes";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { PaintBucket, XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { XIcon } from "lucide-react";
+import { useState } from "react";
 import { CirclePicker } from "react-color";
+import { useAppTheme } from "../../hooks/useAppTheme";
+import {
+  Bold,
+  Italic,
+  Strikethrough,
+  Undo2,
+  Redo2,
+  Heading1,
+  Heading2,
+  Heading3,
+} from "lucide-react";
 import "./editor_styles.css";
 import { DefaultBGColor } from "./InputAlertDialog";
 
@@ -17,25 +28,23 @@ const ToolbarButton = ({
   toolTip,
 }) => (
   <Tooltip title={toolTip ? toolTip : ""}>
-    <span>
-      <button
-        onClick={onClick}
-        disabled={disabled}
-        className={`
-      font-primary text-lg font-bold px-1 
-      ${isActive ? "bg-gray-500 text-white rounded" : ""}
-      ${disabled ? "opacity-50 cursor-not-allowed" : ""}
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`
+      font-primary font-bold 
+      ${isActive ? "text-black" : "text-gray-500"}
+      ${disabled ? " cursor-not-allowed" : ""}
       ${className}
     `}
-      >
-        {children}
-      </button>
-    </span>
+    >
+      {children}
+    </button>
   </Tooltip>
 );
 
 function MenuBar({ editor, bgColor, setBgColor }) {
-  const [showPicker, setShowPicker] = useState(false);
+  const ICON_SIZE = 18;
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
@@ -62,92 +71,79 @@ function MenuBar({ editor, bgColor, setBgColor }) {
 
   const buttons = [
     {
-      label: "B",
+      icon: <Heading1 size={ICON_SIZE} />,
+      action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+      active: editorState.isHeading1,
+      toolTip: "Heading 1",
+    },
+    {
+      icon: <Heading2 size={ICON_SIZE} />,
+      action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+      active: editorState.isHeading2,
+      toolTip: "Heading 2",
+    },
+    {
+      icon: <Heading3 size={ICON_SIZE} />,
+      action: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+      active: editorState.isHeading3,
+      toolTip: "Heading 3",
+    },
+    {
+      icon: <Bold size={ICON_SIZE} />,
       action: () => editor.chain().focus().toggleBold().run(),
       active: editorState.isBold,
       disabled: !editorState.canBold,
       toolTip: "Bold",
     },
     {
-      label: "I",
+      icon: <Italic size={ICON_SIZE} />,
       action: () => editor.chain().focus().toggleItalic().run(),
       active: editorState.isItalic,
       disabled: !editorState.canItalic,
-      className: "italic font-serif",
       toolTip: "Italic",
     },
     {
-      label: "S",
+      icon: <Strikethrough size={ICON_SIZE} />,
       action: () => editor.chain().focus().toggleStrike().run(),
       active: editorState.isStrike,
       disabled: !editorState.canStrike,
-      className: "line-through",
       toolTip: "Strike through",
     },
+
     {
-      label: "↺",
+      icon: <Undo2 size={ICON_SIZE} />,
       action: () => editor.chain().focus().undo().run(),
       disabled: !editorState.canUndo,
       toolTip: "Undo",
     },
     {
-      label: "↻",
+      icon: <Redo2 size={ICON_SIZE} />,
       action: () => editor.chain().focus().redo().run(),
       disabled: !editorState.canRedo,
       toolTip: "Redo",
     },
   ];
 
-  function toggleCirclePicker() {
-    setShowPicker((prev) => !prev);
-  }
   return (
-    <div>
-      <div className="flex flex-wrap items-center gap-3 p-2 bg-gray-200 text-black rounded-t-sm h-10">
-        {buttons.map((btn, idx) => {
-          return (
-            <ToolbarButton
-              key={idx}
-              onClick={btn.action}
-              isActive={btn.active}
-              disabled={btn.disabled}
-              className={btn.className}
-              toolTip={btn?.toolTip}
-            >
-              {btn.label}
-            </ToolbarButton>
-          );
-        })}
-
-        {/* <ToolbarButton onClick={toggleCirclePicker} toolTip="Background Color">
-          <PaintBucket />
-        </ToolbarButton> */}
-      </div>
-      {showPicker && (
-        <div className="flex items-center bg-gray-800 w-full p-4 z-[100]">
-          <CirclePicker
-            color={bgColor}
-            colors={[
-              DefaultBGColor,
-              "#77172e",
-              "#256377",
-              "#065f46",
-              "#472e5b",
-              "#264d3b",
-              "#6c394f",
-            ]}
-            width="100%"
-            onChangeComplete={(color) => setBgColor(color.hex)}
-          />
-          <Button
-            variant="ghost"
-            onClick={toggleCirclePicker}
-            className="rounded-full w-7 h-7 p-0"
+    <div
+      className={`flex flex-wrap items-center 
+    gap-3 px-2 py-2 bg-slate-50
+    text-black rounded-sm border`}
+    >
+      {buttons.map((btn, idx) => {
+        return (
+          <ToolbarButton
+            key={idx}
+            onClick={btn.action}
+            isActive={btn.active}
+            disabled={btn.disabled}
+            className={btn.className}
+            toolTip={btn?.toolTip}
           >
-            <XIcon size={20} />
-          </Button>
-        </div>
-      )}
+            {btn.icon}
+          </ToolbarButton>
+        );
+      })}
     </div>
   );
 }
@@ -158,7 +154,8 @@ function TipTapEditor({ initial, onChange, bgColor, setBgColor }) {
     content: initial,
     editorProps: {
       attributes: {
-        style: `height: 100%; background-color: ${bgColor}`,
+        style: `background-color: ${bgColor};`,
+        class: "p-4 mt-2 border rounded-md w-full",
       },
     },
     onUpdate({ editor }) {
@@ -166,22 +163,10 @@ function TipTapEditor({ initial, onChange, bgColor, setBgColor }) {
     },
   });
 
-  useEffect(() => {
-    if (editor) {
-      editor.setOptions({
-        editorProps: {
-          attributes: {
-            style: `background-color: ${bgColor};`,
-          },
-        },
-      });
-    }
-  }, [bgColor, editor]);
-
   return (
-    <div className="shadow-lg rounded min-h-[70vh]">
-      <MenuBar editor={editor} bgColor={bgColor} setBgColor={setBgColor} />
-      <EditorContent editor={editor} className="w-full h-full" />
+    <div className="mx-2 md:mx-0">
+      <MenuBar editor={editor} bgColor={bgColor} />
+      <EditorContent editor={editor} />
     </div>
   );
 }

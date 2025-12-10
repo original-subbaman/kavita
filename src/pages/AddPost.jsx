@@ -5,23 +5,20 @@ import useAuth from "../hooks/auth/useAuth";
 import TipTapEditor from "../components/PromptSection/TipTapEditor";
 import { Container, AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
 import { useLocation } from "react-router-dom";
+import { DefaultBGColor } from "../components/PromptSection/InputAlertDialog";
 
 const AddPost = ({
   postId,
   userId,
   content,
-  savedColor,
   mutation,
-  mutationState,
   theme,
   isEdit = false,
 }) => {
   const { user } = useAuth();
   const { mode } = useAppTheme();
   const [post, setPost] = useState(content || "");
-  const [bgColor, setBgColor] = useState(
-    mode === "dark" ? DefaultBGColor : "#ffffff"
-  ); // Default background color
+  // Default background color
   const [error, setError] = useState({
     lowWordCount: false,
     invalidPrompt: false,
@@ -35,11 +32,12 @@ const AddPost = ({
   const location = useLocation();
   const writingTheme = location.state?.writingTheme;
 
-  const title = theme
-    ? `Writing theme: ${theme?.prompt}`
-    : isEdit
-    ? "Edit post"
-    : "";
+  const title =
+    writingTheme && writingTheme?.prompt
+      ? `Writing theme: ${writingTheme?.prompt}`
+      : isEdit
+      ? "Edit post"
+      : "";
 
   const { mutate: addPost, isPending: isPosting } = useAddPost({
     userId: user?.id,
@@ -106,11 +104,7 @@ const AddPost = ({
     reset();
   };
 
-  // Think about debounce later
   const onPostChange = (value) => {
-    // if (value.split(" ").length > minWords) {
-    //   setError((prev) => ({ ...prev, lowWordCount: false, message: "" }));
-    // }
     setPost(value);
   };
 
@@ -128,10 +122,9 @@ const AddPost = ({
       <Text
         className={`${
           mode === "dark" ? "text-white" : "text-black"
-        } text-base mb-4 md:text-lg font-normal`}
+        } text-base mb-4 mx-2 md:mx-0 md:text-lg font-normal`}
       >
-        Writing Prompt:{" "}
-        {writingTheme ? writingTheme.prompt : "No theme selected"}
+        {title}
       </Text>
       {/* Error Messages */}
       {!error.lowWordCount ||
@@ -148,13 +141,9 @@ const AddPost = ({
       <TipTapEditor
         initial={post}
         onChange={onPostChange}
-        bgColor={bgColor}
-        setBgColor={setBgColor}
+        bgColor={"#F8FAFC"}
       />
-      <Flex gap="3" mt="4" justify="end">
-        <Button variant="soft" color="gray">
-          Cancel
-        </Button>
+      <Flex gap="3" mt="4" justify="end" className="mx-2 md:mx-0">
         <Button
           variant="solid"
           disabled={error.lowWordCount}
