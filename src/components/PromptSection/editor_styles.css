@@ -1,6 +1,5 @@
 /* Basic editor styles */
 .tiptap:first-child {
-  min-height: 25rem;
   border-bottom-left-radius: 0.125rem;
   border-bottom-right-radius: 0.125rem;
   padding: 0.75rem;
@@ -98,4 +97,12 @@
   border: none;
   border-top: 1px solid var(--gray-2);
   margin: 2rem 0;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

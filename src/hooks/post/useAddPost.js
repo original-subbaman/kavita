@@ -3,8 +3,9 @@ import { addPost } from "../../api/post.api";
 
 const useAddPost = ({ onSuccess, onError, userId }) => {
   return useMutation({
-    mutationFn: ({ post, themeId, bgColor }) =>
-      addPost(post, userId, themeId, bgColor),
+    mutationFn: ({ post, title, themeId }) => {
+      return addPost(post, title, userId, themeId);
+    },
     onSuccess: onSuccess,
     onError: onError,
   });

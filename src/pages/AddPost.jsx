@@ -1,23 +1,29 @@
+import { Button, Container, Flex, Text } from "@radix-ui/themes";
 import { useState } from "react";
-import { useAppTheme } from "../hooks/useAppTheme";
-import useAddPost from "../hooks/post/useAddPost";
-import useAuth from "../hooks/auth/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
 import TipTapEditor from "../components/PromptSection/TipTapEditor";
-import { Container, AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
-import { useLocation } from "react-router-dom";
-import { DefaultBGColor } from "../components/PromptSection/InputAlertDialog";
+import ResponseSnackbar from "../components/ResponseSnackbar";
+import useAuth from "../hooks/auth/useAuth";
+import useAddPost from "../hooks/post/useAddPost";
+import { useAppTheme } from "../hooks/useAppTheme";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AddPost = ({
   postId,
   userId,
   content,
+  title,
   mutation,
-  theme,
   isEdit = false,
 }) => {
+  const minWords = 10;
   const { user } = useAuth();
   const { mode } = useAppTheme();
-  const [post, setPost] = useState(content || "");
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const [postContent, setPostContent] = useState(content || "");
+  const [postTitle, setPostTitle] = useState(title || "");
+
   // Default background color
   const [error, setError] = useState({
     lowWordCount: false,
@@ -32,7 +38,7 @@ const AddPost = ({
   const location = useLocation();
   const writingTheme = location.state?.writingTheme;
 
-  const title =
+  const prompt =
     writingTheme && writingTheme?.prompt
       ? `Writing theme: ${writingTheme?.prompt}`
       : isEdit
@@ -42,41 +48,44 @@ const AddPost = ({
   const { mutate: addPost, isPending: isPosting } = useAddPost({
     userId: user?.id,
     onSuccess: (data) => {
-      setAddPostDialog(false);
       queryClient.invalidateQueries({
         queryKey: ["infinite_posts"],
       });
-      setResponse((prev) => ({
-        ...prev,
-        success: true,
+      setSnackbar({
+        open: true,
         message: "Your post has been published",
-      }));
+        severity: "success",
+      });
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+      reset();
     },
     onError: (error) => {
-      setResponse((prev) => ({
-        ...prev,
-        error: true,
+      setSnackbar({
+        open: true,
         message: "Cannot publish at this moment",
-      }));
-      setAddPostDialog(false);
+        severity: "error",
+      });
+      setAddPostDialog && setAddPostDialog(false);
     },
   });
 
   const isPostEmpty = () => {
-    if (post.length === 0 || /^\s*$/.test(post)) {
+    if (postContent.length === 0 || /^\s*$/.test(postContent)) {
       return true;
     }
     return false;
   };
 
   const reset = () => {
-    setPost();
-    setBgColor();
+    setPostContent();
+    setPostTitle();
     setError({ lowWordCount: false, invalidPrompt: false, message: "" });
   };
 
   const handleOnPostClick = async () => {
-    const wordsInPost = post.split(" ").length;
+    const wordsInPost = postContent.split(" ").length;
 
     if (isPostEmpty()) {
       setSnackbar({ open: true, message: "Empty text field" });
@@ -91,21 +100,21 @@ const AddPost = ({
       }));
       return;
     }
+
     if (!isEdit) {
-      mutation({ post, themeId: theme?.id, bgColor });
+      addPost({
+        post: postContent,
+        title: postTitle,
+        themeId: writingTheme?.id,
+      });
     } else {
       mutation({
-        post,
+        post: postContent,
         postId,
         userId,
         bgColor,
       });
     }
-    reset();
-  };
-
-  const onPostChange = (value) => {
-    setPost(value);
   };
 
   return (
@@ -113,7 +122,7 @@ const AddPost = ({
       {snackbar.open && (
         <ResponseSnackbar
           open={true}
-          severity={"error"}
+          severity={snackbar.severity}
           onClose={() => setSnackbar({ open: false, message: "" })}
           autoHideDuration={3000}
           message={snackbar.message}
@@ -124,7 +133,7 @@ const AddPost = ({
           mode === "dark" ? "text-white" : "text-black"
         } text-base mb-4 mx-2 md:mx-0 md:text-lg font-normal`}
       >
-        {title}
+        {prompt}
       </Text>
       {/* Error Messages */}
       {!error.lowWordCount ||
@@ -139,8 +148,10 @@ const AddPost = ({
       )}
       {/* Text Area */}
       <TipTapEditor
-        initial={post}
-        onChange={onPostChange}
+        initialContent={postContent}
+        initialTitle={postTitle}
+        onContentChange={(value) => setPostContent(value)}
+        onTitleChange={(value) => setPostTitle(value)}
         bgColor={"#F8FAFC"}
       />
       <Flex gap="3" mt="4" justify="end" className="mx-2 md:mx-0">

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import "./editor_styles.css";
 import { DefaultBGColor } from "./InputAlertDialog";
+import Placeholder from "@tiptap/extension-placeholder";
 
 const ToolbarButton = ({
   onClick,
@@ -148,25 +149,56 @@ function MenuBar({ editor, bgColor, setBgColor }) {
   );
 }
 
-function TipTapEditor({ initial, onChange, bgColor, setBgColor }) {
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: initial,
+function TipTapEditor({
+  initialContent,
+  initialTitle,
+  onContentChange,
+  onTitleChange,
+  bgColor,
+  setBgColor,
+}) {
+  const contentEditor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: "Enter content here...",
+      }),
+    ],
+    content: initialContent,
     editorProps: {
       attributes: {
-        style: `background-color: ${bgColor};`,
-        class: "p-4 mt-2 border rounded-md w-full",
+        style: `background-color: ${bgColor}; border-radius: 0.25rem;`,
+        class: "p-4 mt-2 border rounded-md w-full min-h-[25rem]",
       },
     },
     onUpdate({ editor }) {
-      onChange(editor.getHTML());
+      onContentChange(editor.getHTML());
+    },
+  });
+  const titleEditor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: "Enter title here...",
+      }),
+    ],
+    content: initialTitle,
+    editorProps: {
+      attributes: {
+        style: `background-color: ${bgColor}; border-radius: 0.25rem;`,
+        class: "p-4 mt-2 h-12 border w-full",
+      },
+    },
+    onUpdate({ editor }) {
+      onTitleChange(editor.getHTML());
     },
   });
 
   return (
     <div className="mx-2 md:mx-0">
-      <MenuBar editor={editor} bgColor={bgColor} />
-      <EditorContent editor={editor} />
+      <MenuBar editor={contentEditor} bgColor={bgColor} />
+      <EditorContent editor={titleEditor} />
+      <EditorContent editor={contentEditor} />
     </div>
   );
 }
