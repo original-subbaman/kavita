@@ -16,20 +16,13 @@ const AddPost = ({
   mutation,
   isEdit = false,
 }) => {
-  const minWords = 10;
+  const minCharLength = 15;
   const { user } = useAuth();
   const { mode } = useAppTheme();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [postContent, setPostContent] = useState(content || "");
   const [postTitle, setPostTitle] = useState(title || "");
-
-  // Default background color
-  const [error, setError] = useState({
-    lowWordCount: false,
-    invalidPrompt: false,
-    message: "",
-  });
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -71,13 +64,6 @@ const AddPost = ({
     },
   });
 
-  const isPostEmpty = () => {
-    if (postContent.length === 0 || /^\s*$/.test(postContent)) {
-      return true;
-    }
-    return false;
-  };
-
   const reset = () => {
     setPostContent();
     setPostTitle();
@@ -87,16 +73,20 @@ const AddPost = ({
   const handleOnPostClick = async () => {
     const wordsInPost = postContent.split(" ").length;
 
-    if (isPostEmpty()) {
-      setSnackbar({ open: true, message: "Empty text field" });
+    if (postTitle.trim().length === 0) {
+      setSnackbar({
+        open: true,
+        message: "Title cannot be empty",
+        severity: "info",
+      });
       return;
     }
 
-    if (wordsInPost < minWords) {
+    if (wordsInPost < minCharLength) {
       setError((prev) => ({
         ...prev,
         lowWordCount: true,
-        message: `Your post must have at least ${minWords} words before submitting`,
+        message: `At least ${minCharLength} words required`,
       }));
       return;
     }
@@ -117,6 +107,11 @@ const AddPost = ({
     }
   };
 
+  const isPostButtonDisabled =
+    postContent.length === 0 ||
+    isPosting ||
+    postContent.trim().length < minCharLength;
+
   return (
     <Container className="pt-8 min-h-screen" size={"2"}>
       {snackbar.open && (
@@ -135,29 +130,20 @@ const AddPost = ({
       >
         {prompt}
       </Text>
-      {/* Error Messages */}
-      {!error.lowWordCount ||
-        (!error.invalidPrompt && (
-          <Text className=" text-gray-500 my-2">
-            Add your writing piece below
-          </Text>
-        ))}
-      {/* Error messages */}
-      {(error.lowWordCount || error.invalidPrompt) && (
-        <Text color="red">{error.message}</Text>
-      )}
       {/* Text Area */}
       <TipTapEditor
         initialContent={postContent}
         initialTitle={postTitle}
-        onContentChange={(value) => setPostContent(value)}
+        onContentChange={(value) => {
+          setPostContent(value);
+        }}
         onTitleChange={(value) => setPostTitle(value)}
         bgColor={"#F8FAFC"}
       />
       <Flex gap="3" mt="4" justify="end" className="mx-2 md:mx-0">
         <Button
           variant="solid"
-          disabled={error.lowWordCount}
+          disabled={isPostButtonDisabled}
           onClick={handleOnPostClick}
           loading={isPosting.toString()}
         >
