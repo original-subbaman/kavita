@@ -7,6 +7,8 @@ import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useQueryClient } from "@tanstack/react-query";
+import WeeklyTheme from "../components/Home/WeeklyTheme";
+import BackButton from "../components/BackButton";
 
 const AddPost = ({
   postId,
@@ -30,13 +32,6 @@ const AddPost = ({
 
   const location = useLocation();
   const writingTheme = location.state?.writingTheme;
-
-  const prompt =
-    writingTheme && writingTheme?.prompt
-      ? `Writing theme: ${writingTheme?.prompt}`
-      : isEdit
-      ? "Edit post"
-      : "";
 
   const { mutate: addPost, isPending: isPosting } = useAddPost({
     userId: user?.id,
@@ -123,13 +118,11 @@ const AddPost = ({
           message={snackbar.message}
         />
       )}
-      <Text
-        className={`${
-          mode === "dark" ? "text-white" : "text-black"
-        } text-base mb-4 mx-2 md:mx-0 md:text-lg font-normal`}
-      >
-        {prompt}
-      </Text>
+      <BackButton />
+      {/* Writing Theme */}
+      <div className="my-2 ">
+        <WeeklyTheme writingTheme={writingTheme?.prompt} theme={mode} />
+      </div>
       {/* Text Area */}
       <TipTapEditor
         initialContent={postContent}

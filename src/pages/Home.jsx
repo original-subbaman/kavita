@@ -1,33 +1,33 @@
-import { Root as AlertDialogRoot } from "@radix-ui/react-alert-dialog";
 import { Box, Flex, Text } from "@radix-ui/themes";
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import AuthGuard from "../components/AuthGuard";
 import PopularThemes from "../components/Home/PopularThemes";
 import PostFilter from "../components/Home/PostFilter";
 import WeeklyTheme from "../components/Home/WeeklyTheme";
 import InfinitePostSection from "../components/PostSection/InfinitePostSection";
-import InputAlertDialog from "../components/PromptSection/InputAlertDialog";
 import PostInputBox from "../components/PromptSection/PostInputBox";
 import PromptSection from "../components/PromptSection/PromptSection";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import ScrollToTop from "../components/ScrollToTop";
 import { PostActionsProvider } from "../context/PostActionContext";
 import useAuth from "../hooks/auth/useAuth";
-import useAddPost from "../hooks/post/useAddPost";
 import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
 import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import { useAppTheme } from "../hooks/useAppTheme";
+import { useMediaQuery } from "@mui/material";
 
 function Home() {
   const { user } = useAuth();
   const { mode } = useAppTheme();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  const [addPostDialog, setAddPostDialog] = useState(false);
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const [showPopularThemes, setShowPopularThemes] = useState(!isMobile);
+  console.log("🚀 ~ Home ~ isMobile:", isMobile);
 
   const [filter, setFilter] = useState({
     feedType: "all",
@@ -56,29 +56,6 @@ function Home() {
       theme: filter.theme?.id || currWeeklyTheme?.id,
     });
 
-  const { mutate: addPost, isPending: isPosting } = useAddPost({
-    userId: user?.id,
-    onSuccess: (data) => {
-      setAddPostDialog(false);
-      queryClient.invalidateQueries({
-        queryKey: ["infinite_posts"],
-      });
-      setResponse((prev) => ({
-        ...prev,
-        success: true,
-        message: "Your post has been published",
-      }));
-    },
-    onError: (error) => {
-      setResponse((prev) => ({
-        ...prev,
-        error: true,
-        message: "Cannot publish at this moment",
-      }));
-      setAddPostDialog(false);
-    },
-  });
-
   const handleClose = () => {
     setResponse({ error: false, success: false, message: "" });
   };
@@ -91,7 +68,6 @@ function Home() {
   };
 
   let themes = [];
-  let prompt = "";
   if (isThemeFetched) {
     prompt = currWeeklyTheme.prompt;
     themes.unshift(currWeeklyTheme);
@@ -129,30 +105,47 @@ function Home() {
         {/* Posts Section */}
         <Box className="flex-1 md:w-[800px]">
           <PromptSection>
-            {/* Today's prompt text */}
-            {isFetchingPrompt ? (
-              <LoadingTheme />
-            ) : (
-              <WeeklyTheme theme={mode} writingTheme={activeTheme?.prompt} />
-            )}
-            {/* Input box */}
-            <AlertDialogRoot
-              open={addPostDialog}
-              onOpenChange={setAddPostDialog}
-            >
-              <Box className="w-[93%] md:w-full mx-4">
+            <Box className="w-[93%] md:w-full sm:mx-4">
+              {/* Today's prompt text */}
+              {isFetchingPrompt ? (
+                <LoadingTheme />
+              ) : (
+                <WeeklyTheme theme={mode} writingTheme={activeTheme?.prompt} />
+              )}
+              <div className="mt-2">
                 <PostInputBox onClick={handlePostInputClick} theme={mode} />
-              </Box>
-            </AlertDialogRoot>
+              </div>
+            </Box>
           </PromptSection>
           {/* Filters */}
           <Box className="flex flex-col gap-4 mb-4">
             {/* Filter by Popular Themes */}
-            <PopularThemes
-              seletedTheme={filter.theme || currWeeklyTheme}
-              setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
-              themes={themes}
-            />
+
+            <div className="mx-4">
+              <div
+                className={`flex items-center justify-between ${
+                  mode === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                <Text size={"2"}>Filter by Popular Themes:</Text>
+                <IconButton
+                  size="small"
+                  onClick={() => setShowPopularThemes((prev) => !prev)}
+                  aria-label={showPopularThemes ? "Collapse" : "Expand"}
+                  sx={{ color: mode === "dark" ? '#fff' : '#222' }}
+                >
+                  {showPopularThemes ? <MdExpandMore /> : <MdExpandLess />}
+                </IconButton>
+              </div>
+              <Collapse in={showPopularThemes} timeout="auto" unmountOnExit>
+                <PopularThemes
+                  seletedTheme={filter.theme || currWeeklyTheme}
+                  setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
+                  themes={themes}
+                />
+              </Collapse>
+            </div>
+
             {/* Fitler by feed type */}
             <AuthGuard>
               <div className="self-end mr-4 md:mr-0">
@@ -162,14 +155,23 @@ function Home() {
           </Box>
           {/* Post Section */}
           <PostActionsProvider onPostAction={() => {}}>
-            <InfinitePostSection
-              data={data}
-              hasNextPage={hasNextPage}
-              fetchNextPage={fetchNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-              status={status}
-              containerStyles={"md:w-[800px]"}
-            />
+            <div
+              className="md:w-[800px] drop-shadow-md 
+              rounded-2xl p-2 my-4 mx-2 md:mx-0 
+              min-h-[80vh] flex flex-col justify-stretch"
+              style={{
+                background: "linear-gradient(135deg, #e0fbe2 0%, #c6f6d5 100%)",
+              }}
+            >
+              <InfinitePostSection
+                data={data}
+                hasNextPage={hasNextPage}
+                fetchNextPage={fetchNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                status={status}
+                containerStyles={"md:w-[800px]"}
+              />
+            </div>
           </PostActionsProvider>
         </Box>
         <Box className="flex-1 my-8 color-white hidden sm:flex flex-col items-center  "></Box>

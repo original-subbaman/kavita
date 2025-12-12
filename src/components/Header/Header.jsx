@@ -1,4 +1,5 @@
 import { Badge, IconButton } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import {
   HamburgerMenuIcon,
   SunIcon,
@@ -54,12 +55,30 @@ function UserMenu({ count, userName }) {
   );
 }
 
+function GoHomeButton(navigate) {
+  return (
+    <Button
+      size="4"
+      variant="ghost"
+      className="cursor-pointer hover:bg-transparent 
+        hover:shadow-none md:flex md:items-center 
+        md:gap-1 font-primary text-radix-green 
+        text-2xl font-bold"
+      onClick={() => navigate("/")}
+    >
+      Kavita
+      <img src={quill} className="w-6 h-6" />
+    </Button>
+  );
+}
+
 function Header({ toggleSideNav, theme }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { mode, toggleMode } = useAppTheme();
   const { user, isAuthenticated } = useAuth();
   const userName = user?.full_name;
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const { data: count } = useGetNotificationCount(user?.id, 0);
 
@@ -67,44 +86,57 @@ function Header({ toggleSideNav, theme }) {
     <header
       className={`flex justify-between font-primary 
     text-white ${theme === "dark" ? "bg-dark-light" : "bg-white"} items-center 
-    h-16 px-4 md:px-10 drop-shadow-md sticky 
+    h-16 px-4 md:px-64  sticky 
     top-0 z-[100]`}
     >
-      <Button
-        variant="ghost"
-        size="4"
-        className="block md:hidden"
-        onClick={toggleSideNav}
-      >
-        {isAuthenticated && <HamburgerMenuIcon className="w-8 h-8" />}
-      </Button>
-
-      <Button
-        size="4"
-        variant="ghost"
-        className="hidden cursor-pointer hover:bg-transparent 
-        hover:shadow-none md:flex md:items-center 
-        md:gap-1 font-primary text-radix-green 
-        text-2xl font-bold"
-        onClick={() => navigate("/")}
-      >
-        Kavita
-        <img src={quill} className="w-6 h-6" />
-      </Button>
-
-      {isAuthenticated ? (
+      {/* Left side: GoHomeButton for unauthenticated, Hamburger for authenticated mobile */}
+      {!isAuthenticated && isMobile && (
         <>
+          <GoHomeButton navigate={navigate} />
+          <div className="flex items-center gap-4 justify-center ">
+            <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
+            <LoginButton />
+          </div>
+        </>
+      )}
+
+      {!isAuthenticated && !isMobile && (
+        <>
+          <GoHomeButton navigate={navigate} />
+          <div className="flex items-center gap-4 justify-center ">
+            <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
+            <LoginButton />
+          </div>
+        </>
+      )}
+
+      {isAuthenticated && isMobile && (
+        <>
+          <Button
+            variant="ghost"
+            size="4"
+            className="block md:hidden"
+            onClick={toggleSideNav}
+          >
+            <HamburgerMenuIcon className="w-8 h-8" />
+          </Button>
+          <div className="flex items-center justify-center gap-2">
+            <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
+            <UserMenu count={count} userName={userName} />
+          </div>
+        </>
+      )}
+      {isAuthenticated && !isMobile && (
+        <>
+          <div className="hidden md:block">
+            <GoHomeButton navigate={navigate} />
+          </div>
           <NavLinks location={location} />
           <div className="flex items-center justify-center gap-2">
             <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
             <UserMenu count={count} userName={userName} />
           </div>
         </>
-      ) : (
-        <div className="flex items-center gap-4 justify-center ">
-          <ToggleThemeButton mode={mode} toggleTheme={toggleMode} />
-          <LoginButton />
-        </div>
       )}
     </header>
   );

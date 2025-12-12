@@ -1,5 +1,6 @@
 import { Box, Chip } from "@mui/material";
-import { motion, AnimatePresence } from "framer-motion";
+import { Text } from "@radix-ui/themes";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAppTheme } from "../../hooks/useAppTheme";
 
 const ThemeChip = ({ label, variant = "outlined", onClick }) => {
@@ -44,7 +45,13 @@ const chipVariants = {
 
 const PopularThemes = ({ seletedTheme, setTheme, themes }) => {
   return (
-    <Box display="flex" gap={1} flexWrap="wrap" mx={2}>
+    <Box
+      display="flex"
+      gap={1}
+      flexWrap="wrap"
+      justifyContent={"center"}
+      mx={2}
+    >
       {themes.map((t) => (
         <AnimatePresence key={t.id}>
           <motion.div
