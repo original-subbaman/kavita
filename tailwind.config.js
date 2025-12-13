@@ -11,11 +11,16 @@ export default {
         fadePulse: {
           '0%, 100%': { opacity: '0.3' },
           '50%': { opacity: '1' },
-        }
+        },
+        blink: {
+          '0%, 50%, 100%': { opacity: '1' },
+          '25%, 75%': { opacity: '0' },
+        },
       },
       animation: {
         'width-grow': 'widthGrow 0.3s ease-out forwards', 
         'fade-pulse': 'fadePulse 2s ease-in-out infinite',
+        'blink': 'blink 1.5s step-end infinite',
       },
       colors: {
       "dark": "#222222", 

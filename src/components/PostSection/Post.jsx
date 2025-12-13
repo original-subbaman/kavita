@@ -5,9 +5,12 @@ import { timeAgoUTC } from "../../utils/Helper";
 import { PostActionMenu } from "../MyPosts/PostActionMenu";
 import { PostActions } from "../../context/PostActionContext";
 import { useAppTheme } from "../../hooks/useAppTheme";
+import { Quote } from "lucide-react";
+import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
 
 function Post({
   id,
+  title,
   content,
   author,
   authorId,
@@ -37,34 +40,34 @@ function Post({
     onPostAction({ action: PostActions.hide, postId: id, data: !isHidden });
 
   return (
-    <div className={`relative group cursor-pointer rounded drop-shadow-md `}>
+    <div className={`relative group cursor-pointer rounded-2xl`}>
       {/* Main card */}
       <Box
         size="none"
-        className={`w-[${width}] h-[${height}] max-h-[400px] overflow-hidden 
+        className={`w-[${width}] h-[${height}] max-h-[400px] overflow-hidden border
         cursor-pointer ${
-          mode === "dark"
-            ? "bg-dark-light text-white"
-            : "bg-white border border-gray-300"
+          mode === "dark" ? "bg-dark-light text-white " : "bg-white"
         }  
-        rounded-md p-0 hover:shadow-xl`}
+        rounded-2xl p-0`}
       >
         <Box
           className={`flex flex-row items-center justify-between 
-          mb-4 p-2 px-4 border-b  drop-shadow-sm rounded-t-md
-          ${
-            mode === "dark"
-              ? "bg-[#2e2b29] text-white border-gray-900"
-              : "bg-gray-100 border-gray-300"
-          }`}
+          mb-2 p-2 px-4 rounded-t-lg
+          `}
         >
-          <Box className="flex flex-row items-center gap-2">
-            <Avatar src={authorImg} alt="User Avatar" fallback="JD" />
-            <Flex direction={"column"}>
-              <Text className="text-base text-radix-slate-12">{author}</Text>
-              <span className="text-xs text-radix-slate-11">
-                {timeAgoUTC(createdAt)}
+          <Box className="flex flex-row items-center w-full">
+            <Flex direction={"column"} className="w-full flex-1">
+              <Text className="text-base font-bold text-radix-slate-12">
+                {author}
+              </Text>
+              <span className="text-xs font-light text-radix-slate-11">
+                Posted On: {timeAgoUTC(createdAt)}
               </span>
+              <Flex direction={"column"} className="w-full flex-1 gap-2 mt-4">
+                <ImQuotesLeft />
+                <Text className="font-light">{title || "untitled"}</Text>
+                <ImQuotesRight />
+              </Flex>
             </Flex>
           </Box>
           {showMenu && (
@@ -83,7 +86,7 @@ function Post({
           <Box
             dangerouslySetInnerHTML={{ __html: sanitizedPost }}
             onMouseUp={(event) => console.log(event.type)}
-            className="cursor-pointer "
+            className="cursor-pointer text-md md:text-sm "
             wrap={"wrap"}
           />
         </Box>

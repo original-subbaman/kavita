@@ -46,25 +46,28 @@ function InfinitePostSection({
             columnClassName="my-masonry-grid_column"
           >
             {posts ? (
-              posts.map((post) => (
-                <motion.div
-                  initial={{ y: 30, opacity: 0, filter: "blur(10px)" }}
-                  animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                  style={{ width: "100%" }}
-                  key={post.id}
-                >
-                  <NavLink to={`/post/${post.id}`} style={{ width: "100%" }}>
-                    <Post
-                      content={post.post}
-                      author={post?.profiles?.user_name}
-                      authorImg={post?.profiles?.profile_link}
-                      createdAt={post.created_at}
-                      bgColor={post.bg_color}
-                      height={"300px"}
-                    />
-                  </NavLink>
-                </motion.div>
-              ))
+              posts.map((post) => {
+                return (
+                  <motion.div
+                    initial={{ y: 30, opacity: 0, filter: "blur(10px)" }}
+                    animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                    style={{ width: "100%" }}
+                    key={post.id}
+                  >
+                    <NavLink to={`/post/${post.id}`} style={{ width: "100%" }}>
+                      <Post
+                        title={post?.title}
+                        content={post.post}
+                        author={post?.profiles?.user_name}
+                        authorImg={post?.profiles?.profile_link}
+                        createdAt={post.created_at}
+                        bgColor={post.bg_color}
+                        height={"300px"}
+                      />
+                    </NavLink>
+                  </motion.div>
+                );
+              })
             ) : (
               <></>
             )}

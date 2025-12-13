@@ -27,8 +27,6 @@ function Home() {
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:600px)");
   const [showPopularThemes, setShowPopularThemes] = useState(!isMobile);
-  console.log("🚀 ~ Home ~ isMobile:", isMobile);
-
   const [filter, setFilter] = useState({
     feedType: "all",
     theme: null,
@@ -132,7 +130,7 @@ function Home() {
                   size="small"
                   onClick={() => setShowPopularThemes((prev) => !prev)}
                   aria-label={showPopularThemes ? "Collapse" : "Expand"}
-                  sx={{ color: mode === "dark" ? '#fff' : '#222' }}
+                  sx={{ color: mode === "dark" ? "#fff" : "#222" }}
                 >
                   {showPopularThemes ? <MdExpandMore /> : <MdExpandLess />}
                 </IconButton>
@@ -156,12 +154,9 @@ function Home() {
           {/* Post Section */}
           <PostActionsProvider onPostAction={() => {}}>
             <div
-              className="md:w-[800px] drop-shadow-md 
+              className="md:w-[800px] drop-shadow-md border border-gray-300 
               rounded-2xl p-2 my-4 mx-2 md:mx-0 
               min-h-[80vh] flex flex-col justify-stretch"
-              style={{
-                background: "linear-gradient(135deg, #e0fbe2 0%, #c6f6d5 100%)",
-              }}
             >
               <InfinitePostSection
                 data={data}
