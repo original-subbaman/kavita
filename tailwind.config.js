@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      backgroundImage: {
+        'hero-cover': "url('/src/assets/cover.png')",
+      }, 
       keyframes: {
         widthGrow: {
           '0%': { width: "0%"},

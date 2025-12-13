@@ -85,7 +85,9 @@ function Header({ toggleSideNav, theme }) {
   return (
     <header
       className={`flex justify-between font-primary 
-    text-white ${theme === "dark" ? "bg-dark-light" : "bg-white"} items-center 
+    text-white ${
+      theme === "dark" ? "bg-dark-light" : "bg-transparent"
+    } items-center 
     h-16 px-4 md:px-64  sticky 
     top-0 z-[100]`}
     >

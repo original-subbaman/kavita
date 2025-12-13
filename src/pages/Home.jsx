@@ -1,10 +1,13 @@
-import { Box, Flex, Text } from "@radix-ui/themes";
-import { useState } from "react";
+import { useMediaQuery } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
-import { MdExpandMore, MdExpandLess } from "react-icons/md";
+import { Box, Flex, Text } from "@radix-ui/themes";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import AuthGuard from "../components/AuthGuard";
+import HeroSection from "../components/Home/HeroSection";
 import PopularThemes from "../components/Home/PopularThemes";
 import PostFilter from "../components/Home/PostFilter";
 import WeeklyTheme from "../components/Home/WeeklyTheme";
@@ -19,7 +22,6 @@ import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
 import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import { useAppTheme } from "../hooks/useAppTheme";
-import { useMediaQuery } from "@mui/material";
 
 function Home() {
   const { user } = useAuth();
@@ -27,6 +29,7 @@ function Home() {
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:600px)");
   const [showPopularThemes, setShowPopularThemes] = useState(!isMobile);
+  const [showPostSection, setShowPostSection] = useState(false);
   const [filter, setFilter] = useState({
     feedType: "all",
     theme: null,
@@ -97,81 +100,109 @@ function Home() {
           severity={"error"}
         />
       )}
-      <Flex display={"flex"} gap={"2"} className="min-h-screen">
-        {/* suggest prompt section */}
-        <Box className="flex-1 hidden sm:block"></Box>
-        {/* Posts Section */}
-        <Box className="flex-1 md:w-[800px]">
-          <PromptSection>
-            <Box className="w-[93%] md:w-full sm:mx-4">
-              {/* Today's prompt text */}
-              {isFetchingPrompt ? (
-                <LoadingTheme />
-              ) : (
-                <WeeklyTheme theme={mode} writingTheme={activeTheme?.prompt} />
-              )}
-              <div className="mt-2">
-                <PostInputBox onClick={handlePostInputClick} theme={mode} />
-              </div>
-            </Box>
-          </PromptSection>
-          {/* Filters */}
-          <Box className="flex flex-col gap-4 mb-4">
-            {/* Filter by Popular Themes */}
-
-            <div className="mx-4">
-              <div
-                className={`flex items-center justify-between ${
-                  mode === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                <Text size={"2"}>Filter by Popular Themes:</Text>
-                <IconButton
-                  size="small"
-                  onClick={() => setShowPopularThemes((prev) => !prev)}
-                  aria-label={showPopularThemes ? "Collapse" : "Expand"}
-                  sx={{ color: mode === "dark" ? "#fff" : "#222" }}
-                >
-                  {showPopularThemes ? <MdExpandMore /> : <MdExpandLess />}
-                </IconButton>
-              </div>
-              <Collapse in={showPopularThemes} timeout="auto" unmountOnExit>
-                <PopularThemes
-                  seletedTheme={filter.theme || currWeeklyTheme}
-                  setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
-                  themes={themes}
+      <AnimatePresence mode="wait">
+        {/* Hero Section */}
+        {!showPostSection && (
+          <motion.div
+            key="hero"
+            initial={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <HeroSection
+              onReadPoemsClick={() => setShowPostSection(true)}
+              onSubmitYoursClick={handlePostInputClick}
+            />
+          </motion.div>
+        )}
+        {showPostSection && (
+          <motion.div
+            key="posts"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Flex display={"flex"} gap={"2"} className="min-h-screen">
+              {/* suggest prompt section */}
+              <Box className="flex-1 hidden sm:block"></Box>
+              {/* Posts Section */}
+              <Box className="flex-1 md:w-[800px]">
+                {/* Writing Theme Section */}
+                <WritingThemeSection
+                  isFetchingPrompt={isFetchingPrompt}
+                  mode={mode}
+                  activeTheme={activeTheme}
+                  handlePostInputClick={handlePostInputClick}
                 />
-              </Collapse>
-            </div>
+                {/* Filters */}
+                <Box className="flex flex-col gap-4 mb-4">
+                  {/* Filter by Popular Themes */}
+                  <div className="mx-4">
+                    <div
+                      className={`flex items-center justify-between ${
+                        mode === "dark" ? "text-white" : "text-black"
+                      }`}
+                    >
+                      <Text size={"2"}>Filter by Popular Themes:</Text>
+                      <IconButton
+                        size="small"
+                        onClick={() => setShowPopularThemes((prev) => !prev)}
+                        aria-label={showPopularThemes ? "Collapse" : "Expand"}
+                        sx={{ color: mode === "dark" ? "#fff" : "#222" }}
+                      >
+                        {showPopularThemes ? (
+                          <MdExpandMore />
+                        ) : (
+                          <MdExpandLess />
+                        )}
+                      </IconButton>
+                    </div>
+                    <Collapse
+                      in={showPopularThemes}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <PopularThemes
+                        seletedTheme={filter.theme || currWeeklyTheme}
+                        setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
+                        themes={themes}
+                      />
+                    </Collapse>
+                  </div>
 
-            {/* Fitler by feed type */}
-            <AuthGuard>
-              <div className="self-end mr-4 md:mr-0">
-                <PostFilter setOption={setFilter} />
-              </div>
-            </AuthGuard>
-          </Box>
-          {/* Post Section */}
-          <PostActionsProvider onPostAction={() => {}}>
-            <div
-              className="md:w-[800px] drop-shadow-md border border-gray-300 
+                  {/* Fitler by feed type */}
+                  <AuthGuard>
+                    <div className="self-end mr-4 md:mr-0">
+                      <PostFilter setOption={setFilter} />
+                    </div>
+                  </AuthGuard>
+                </Box>
+                {/* Post Section */}
+                <PostActionsProvider onPostAction={() => {}}>
+                  <div
+                    className="md:w-[800px] drop-shadow-md border border-gray-300 
               rounded-2xl p-2 my-4 mx-2 md:mx-0 
               min-h-[80vh] flex flex-col justify-stretch"
-            >
-              <InfinitePostSection
-                data={data}
-                hasNextPage={hasNextPage}
-                fetchNextPage={fetchNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-                status={status}
-                containerStyles={"md:w-[800px]"}
-              />
-            </div>
-          </PostActionsProvider>
-        </Box>
-        <Box className="flex-1 my-8 color-white hidden sm:flex flex-col items-center  "></Box>
-      </Flex>
-      <ScrollToTop />
+                  >
+                    <InfinitePostSection
+                      data={data}
+                      hasNextPage={hasNextPage}
+                      fetchNextPage={fetchNextPage}
+                      isFetchingNextPage={isFetchingNextPage}
+                      status={status}
+                      containerStyles={"md:w-[800px]"}
+                    />
+                  </div>
+                </PostActionsProvider>
+              </Box>
+              <Box className="flex-1 my-8 color-white hidden sm:flex flex-col items-center  "></Box>
+            </Flex>
+            <ScrollToTop />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
@@ -181,5 +212,28 @@ const LoadingTheme = () => (
     Fetching theme...
   </Text>
 );
+
+const WritingThemeSection = ({
+  isFetchingPrompt,
+  mode,
+  activeTheme,
+  handlePostInputClick,
+}) => {
+  return (
+    <PromptSection>
+      <Box className="w-[93%] md:w-full sm:mx-4">
+        {/* Today's prompt text */}
+        {isFetchingPrompt ? (
+          <LoadingTheme />
+        ) : (
+          <WeeklyTheme theme={mode} writingTheme={activeTheme?.prompt} />
+        )}
+        <div className="mt-2">
+          <PostInputBox onClick={handlePostInputClick} theme={mode} />
+        </div>
+      </Box>
+    </PromptSection>
+  );
+};
 
 export default Home;
