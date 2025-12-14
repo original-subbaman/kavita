@@ -22,6 +22,7 @@ function Post({
   isHidden,
   showMenu = false,
 }) {
+  console.log("🚀 ~ Post ~ author:", author);
   const { mode } = useAppTheme();
   const { onPostAction } = usePostActions();
   const sanitizedPost = DOMPurify.sanitize(content);

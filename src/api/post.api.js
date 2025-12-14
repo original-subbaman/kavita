@@ -1,5 +1,6 @@
 import { endOfDay, formatISO } from "date-fns";
 import supabase from "../supabase_client/create_client";
+import { generateAnonName } from "../utils/Helper";
 
 /**
  * Fetches posts up to the end of the given date.
@@ -291,6 +292,38 @@ export async function addPost(post, title, userId, themeId) {
   } catch (err) {
     console.error("addPost failed:", err);
     throw err;
+  }
+}
+
+export async function postAnnomously(post, title, themeId) {
+  try {
+    if (!post || !title || !themeId) {
+      throw new Error("Post, title, and themeId are required.");
+    }
+
+    const anonName = localStorage.getItem("anon_name") || generateAnonName();
+    localStorage.setItem("anon_name", anonName);
+
+    const { error } = await supabase.from("post").insert([
+      {
+        post: post,
+        user_id: null,
+        anon_author: anonName,
+        writing_theme: themeId,
+        post_title: title,
+        is_anon_post: true,
+      },
+    ]);
+
+    if (error) {
+      console.error("Error inserting post:", error.message);
+      throw new Error(`Failed to add post: ${error.message}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.log("🚀 ~ postAnnomously ~ error:", error);
+    throw error;
   }
 }
 

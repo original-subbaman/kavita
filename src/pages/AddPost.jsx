@@ -9,6 +9,7 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { useQueryClient } from "@tanstack/react-query";
 import WeeklyTheme from "../components/Home/WeeklyTheme";
 import BackButton from "../components/BackButton";
+import usePostAnon from "../hooks/post/usePostAnon";
 
 const AddPost = ({
   postId,
@@ -19,11 +20,13 @@ const AddPost = ({
   isEdit = false,
 }) => {
   const minCharLength = 15;
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { mode } = useAppTheme();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [postContent, setPostContent] = useState(content || "");
+  // Track if the user has attempted to post
+  const [hasAttemptedPost, setHasAttemptedPost] = useState(false);
   const [postTitle, setPostTitle] = useState(title || "");
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -33,40 +36,51 @@ const AddPost = ({
   const location = useLocation();
   const writingTheme = location.state?.writingTheme;
 
+  const postButtonTitle = isAuthenticated ? "Post" : "Post Annonymously";
+
+  // Shared mutation handlers
+  const handlePostSuccess = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["infinite_posts"],
+    });
+    setSnackbar({
+      open: true,
+      message: "Your post has been published",
+      severity: "success",
+    });
+    setTimeout(() => {
+      navigate("/");
+    }, 3000);
+    reset();
+  };
+
+  const handlePostError = () => {
+    setSnackbar({
+      open: true,
+      message: "Cannot publish at this moment",
+      severity: "error",
+    });
+    setAddPostDialog && setAddPostDialog(false);
+  };
+
   const { mutate: addPost, isPending: isPosting } = useAddPost({
     userId: user?.id,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ["infinite_posts"],
-      });
-      setSnackbar({
-        open: true,
-        message: "Your post has been published",
-        severity: "success",
-      });
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
-      reset();
-    },
-    onError: (error) => {
-      setSnackbar({
-        open: true,
-        message: "Cannot publish at this moment",
-        severity: "error",
-      });
-      setAddPostDialog && setAddPostDialog(false);
-    },
+    onSuccess: handlePostSuccess,
+    onError: handlePostError,
+  });
+
+  const { mutate: postAnon, isPending: isPostingAnon } = usePostAnon({
+    onSuccess: handlePostSuccess,
+    onError: handlePostError,
   });
 
   const reset = () => {
-    setPostContent();
-    setPostTitle();
-    setError({ lowWordCount: false, invalidPrompt: false, message: "" });
+    setPostContent("");
+    setPostTitle("");
   };
 
   const handleOnPostClick = async () => {
-    const wordsInPost = postContent.split(" ").length;
+    setHasAttemptedPost(true);
 
     if (postTitle.trim().length === 0) {
       setSnackbar({
@@ -77,35 +91,38 @@ const AddPost = ({
       return;
     }
 
-    if (wordsInPost < minCharLength) {
-      setError((prev) => ({
-        ...prev,
-        lowWordCount: true,
-        message: `At least ${minCharLength} words required`,
-      }));
+    if (!isEdit && !isAuthenticated) {
+      postAnon({
+        post: postContent,
+        title: postTitle,
+        themeId: writingTheme?.id,
+      });
       return;
     }
 
-    if (!isEdit) {
+    if (!isEdit && isAuthenticated) {
       addPost({
         post: postContent,
         title: postTitle,
         themeId: writingTheme?.id,
       });
-    } else {
+      return;
+    }
+
+    if (isEdit && isAuthenticated) {
       mutation({
         post: postContent,
         postId,
         userId,
         bgColor,
       });
+      return;
     }
   };
 
+  // Button is enabled initially, disables only after first attempt if invalid
   const isPostButtonDisabled =
-    postContent.length === 0 ||
-    isPosting ||
-    postContent.trim().length < minCharLength;
+    hasAttemptedPost && (postContent.length === 0 || isPosting);
 
   return (
     <Container className="pt-8 min-h-screen" size={"2"}>
@@ -140,7 +157,7 @@ const AddPost = ({
           onClick={handleOnPostClick}
           loading={isPosting.toString()}
         >
-          Post
+          {postButtonTitle}
         </Button>
       </Flex>
     </Container>

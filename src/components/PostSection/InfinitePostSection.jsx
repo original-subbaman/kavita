@@ -58,7 +58,11 @@ function InfinitePostSection({
                       <Post
                         title={post?.title}
                         content={post.post}
-                        author={post?.profiles?.user_name}
+                        author={
+                          post?.is_anon_post
+                            ? post?.anon_author
+                            : post?.profiles?.user_name
+                        }
                         authorImg={post?.profiles?.profile_link}
                         createdAt={post.created_at}
                         bgColor={post.bg_color}

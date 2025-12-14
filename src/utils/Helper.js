@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { faker } from "@faker-js/faker";
 
 export const getRandomDimensions = (count) => {
   const dimensions = [];
@@ -31,6 +32,19 @@ export const getInitialsOfName = (name) => {
       0
     )}`;
   }
+};
+
+/**
+ * Generates a random anonymous username string.
+ * The format is: <username>-<animal>-<4digitNumber>
+ * Example: coolcat-dog-4821
+ *
+ * @returns {string} A unique anonymous username.
+ */
+export const generateAnonName = () => {
+  return `${faker.internet.displayName()}-${faker.animal.type()}-${Math.floor(
+    1000 + Math.random() * 9000
+  )}`;
 };
 
 /**
