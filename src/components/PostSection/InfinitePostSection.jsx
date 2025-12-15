@@ -56,7 +56,7 @@ function InfinitePostSection({
                   >
                     <NavLink to={`/post/${post.id}`} style={{ width: "100%" }}>
                       <Post
-                        title={post?.title}
+                        title={post?.post_title}
                         content={post.post}
                         author={
                           post?.is_anon_post

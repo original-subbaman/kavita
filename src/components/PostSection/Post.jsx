@@ -22,9 +22,9 @@ function Post({
   isHidden,
   showMenu = false,
 }) {
-  console.log("🚀 ~ Post ~ author:", author);
   const { mode } = useAppTheme();
   const { onPostAction } = usePostActions();
+  const sanitizePostTitle = DOMPurify.sanitize(title);
   const sanitizedPost = DOMPurify.sanitize(content);
 
   const handleDeletePost = () =>
@@ -66,7 +66,12 @@ function Post({
               </span>
               <Flex direction={"column"} className="w-full flex-1 gap-2 mt-4">
                 <ImQuotesLeft />
-                <Text className="font-light">{title || "untitled"}</Text>
+                <div
+                  className="font-light"
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizePostTitle || "untitled",
+                  }}
+                />
                 <ImQuotesRight />
               </Flex>
             </Flex>
