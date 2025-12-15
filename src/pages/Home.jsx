@@ -5,7 +5,7 @@ import { Box, Flex, Text } from "@radix-ui/themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AuthGuard from "../components/AuthGuard";
 import HeroSection from "../components/Home/HeroSection";
 import PopularThemes from "../components/Home/PopularThemes";
@@ -27,14 +27,16 @@ function Home() {
   const { user } = useAuth();
   const { mode } = useAppTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const isMobile = useMediaQuery("(max-width:600px)");
   const [showPopularThemes, setShowPopularThemes] = useState(!isMobile);
-  const [showPostSection, setShowPostSection] = useState(false);
+  const [showPostSection, setShowPostSection] = useState(
+    location.state?.showPostSection || false
+  );
   const [filter, setFilter] = useState({
     feedType: "all",
     theme: null,
   });
-
   const [response, setResponse] = useState({
     success: false,
     error: false,

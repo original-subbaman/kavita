@@ -45,11 +45,11 @@ const AddPost = ({
     });
     setSnackbar({
       open: true,
-      message: "Your post has been published",
+      message: "Your poem has been published",
       severity: "success",
     });
     setTimeout(() => {
-      navigate("/");
+      navigate("/", { state: { showPostSection: true } });
     }, 3000);
     reset();
   };
