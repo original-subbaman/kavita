@@ -1,15 +1,17 @@
-import { Button, Container, Flex, Text } from "@radix-ui/themes";
+import { Button, Container, Flex } from "@radix-ui/themes";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { verifyCaptcha } from "../api/utils.api";
+import BackButton from "../components/BackButton";
+import WeeklyTheme from "../components/Home/WeeklyTheme";
 import TipTapEditor from "../components/PromptSection/TipTapEditor";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
-import { useAppTheme } from "../hooks/useAppTheme";
-import { useQueryClient } from "@tanstack/react-query";
-import WeeklyTheme from "../components/Home/WeeklyTheme";
-import BackButton from "../components/BackButton";
 import usePostAnon from "../hooks/post/usePostAnon";
+import { useAppTheme } from "../hooks/useAppTheme";
+import { set } from "date-fns";
 
 const AddPost = ({
   postId,
@@ -25,9 +27,9 @@ const AddPost = ({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [postContent, setPostContent] = useState(content || "");
-  // Track if the user has attempted to post
   const [hasAttemptedPost, setHasAttemptedPost] = useState(false);
   const [postTitle, setPostTitle] = useState(title || "");
+  const [isPosting, setIsPosting] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -63,7 +65,7 @@ const AddPost = ({
     setAddPostDialog && setAddPostDialog(false);
   };
 
-  const { mutate: addPost, isPending: isPosting } = useAddPost({
+  const { mutate: addPost } = useAddPost({
     userId: user?.id,
     onSuccess: handlePostSuccess,
     onError: handlePostError,
@@ -92,11 +94,27 @@ const AddPost = ({
     }
 
     if (!isEdit && !isAuthenticated) {
-      postAnon({
-        post: postContent,
-        title: postTitle,
-        themeId: writingTheme?.id,
-      });
+      try {
+        setIsPosting(true);
+        const token = await getRecaptchaToken("anon_create_post");
+        const res = await verifyCaptcha(token);
+        if (res.success) {
+          postAnon({
+            post: postContent,
+            title: postTitle,
+            themeId: writingTheme?.id,
+          });
+        }
+      } catch (err) {
+        setSnackbar({
+          open: true,
+          message: "Captcha verification failed",
+          severity: "error",
+        });
+      } finally {
+        setIsPosting(false);
+      }
+
       return;
     }
 
@@ -163,5 +181,16 @@ const AddPost = ({
     </Container>
   );
 };
+
+async function getRecaptchaToken(action = "submit") {
+  if (!window.grecaptcha) {
+    throw new Error("reCAPTCHA not loaded");
+  }
+
+  return await window.grecaptcha.execute(
+    import.meta.env.VITE_RECAPTCHA_SITE_KEY,
+    { action }
+  );
+}
 
 export default AddPost;
