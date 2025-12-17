@@ -82,8 +82,9 @@ export default function PostDetail() {
     },
   });
 
-  const author = post?.profiles.user_name;
-  const authorId = post?.profiles.id;
+  const isAnonPost = post?.is_anon_post;
+  const author = isAnonPost ? post?.anon_author : post?.profiles.user_name;
+  const authorId = !isAnonPost ? post?.profiles.id : null;
   const createdAt = post?.created_at;
   const content = DOMPurify.sanitize(post?.post);
   const hasLiked = post?.hasLiked;
@@ -92,6 +93,7 @@ export default function PostDetail() {
 
   const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
     onSuccess: (data, variables, context) => {
+      if (isAnonPost) return; // No notification if post is anonymously created
       const { success, isLiked } = data;
       if (success && !isAuthorCurrUser && isLiked) {
         notifyUser({
@@ -116,6 +118,10 @@ export default function PostDetail() {
 
   const { mutate: recordLanguage } = useRecordLanguage({
     onSuccess: (data) => {
+      dispatch(setSuccess("Language captured successfully"));
+
+      if (isAnonPost) return; // No notification if post is anonymously created
+
       let quote = "";
 
       if (data && Array.isArray(data) && data.length > 0) {
@@ -132,8 +138,6 @@ export default function PostDetail() {
           target: NotificationTarget.post,
         });
       }
-
-      dispatch(setSuccess("Language captured successfully"));
     },
     onError: (error) => dispatch(setError("Error capturing language")),
   });
@@ -205,6 +209,8 @@ export default function PostDetail() {
       payload: "Comment posted!",
     });
 
+    if (isAnonPost) return; // No notification if post is anonymously created
+
     const comment = response?.comment;
     const message = `@${user.user_name} commented on your post${
       comment ? `: ${comment}` : "."
@@ -263,14 +269,16 @@ export default function PostDetail() {
               {author ? (
                 <Box className="flex items-center gap-4">
                   <AnimatedText text={author || ""} theme={mode} />
-                  <Button
-                    variant="ghost"
-                    size={"2"}
-                    color="orange"
-                    onClick={navigateToAuthorProfile}
-                  >
-                    View More <ArrowTopRightIcon />
-                  </Button>
+                  {!isAnonPost && (
+                    <Button
+                      variant="ghost"
+                      size={"2"}
+                      color="orange"
+                      onClick={navigateToAuthorProfile}
+                    >
+                      View More <ArrowTopRightIcon />
+                    </Button>
+                  )}
                 </Box>
               ) : (
                 <div className="h-[28px]"></div>

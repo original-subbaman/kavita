@@ -24,14 +24,14 @@ import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import { useAppTheme } from "../hooks/useAppTheme";
 
 function Home() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { mode } = useAppTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery("(max-width:600px)");
   const [showPopularThemes, setShowPopularThemes] = useState(!isMobile);
   const [showPostSection, setShowPostSection] = useState(
-    location.state?.showPostSection || false
+    location.state?.showPostSection || isAuthenticated || false
   );
   const [filter, setFilter] = useState({
     feedType: "all",
@@ -64,7 +64,6 @@ function Home() {
   };
 
   const handlePostInputClick = () => {
-    // setAddPostDialog(true);
     navigate("/posts/new", {
       state: { writingTheme: filter.theme || currWeeklyTheme },
     });
