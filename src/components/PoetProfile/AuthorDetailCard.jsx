@@ -1,6 +1,7 @@
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Avatar, Box, Button } from "@radix-ui/themes";
 import { getInitialsOfName } from "../../utils/Helper";
+import { useAppTheme } from "../../hooks/useAppTheme";
 
 const FollowButton = ({ onClick, isLoading = true }) => {
   return (
@@ -32,8 +33,14 @@ const AuthorDetailCard = ({
   onFollowUser = () => {},
   onUnfollowUser = () => {},
 }) => {
+  const { mode } = useAppTheme();
+  const isDark = mode === "dark";
   return (
-    <Box className="bg-[#212327] rounded-xl p-8  w-full">
+    <Box
+      className={`${
+        mode === "dark" ? "bg-[#212327]" : "bg-white"
+      } rounded-xl p-8 border w-full`}
+    >
       <div className="flex flex-col md:flex-row gap-6 items-start">
         {/* Avatar */}
         <Avatar
@@ -45,7 +52,11 @@ const AuthorDetailCard = ({
         <div className="flex-1">
           <div>
             <div className="flex items-center gap-4 ">
-              <h1 className="text-2xl text-white">
+              <h1
+                className={`text-2xl ${
+                  isDark ? "text-white" : "text-gray-900"
+                }`}
+              >
                 {name.toLocaleLowerCase()}
               </h1>
               {!isUserAuthor && isAuthenticated && (
@@ -58,25 +69,49 @@ const AuthorDetailCard = ({
                 </div>
               )}
             </div>
-            <p className="text-gray-400">@{username}</p>
+            <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>
+              @{username}
+            </p>
           </div>
 
           {/* Bio */}
-          <p className="text-gray-300 mb-6 text-sm italic max-w-2xl leading-relaxed">
+          <p
+            className={`${
+              isDark ? "text-gray-300" : "text-gray-600"
+            } mb-6 text-sm italic max-w-2xl leading-relaxed`}
+          >
             {bio}
           </p>
 
           {/* Stats */}
           <div className="flex gap-6">
             <div className="text-center">
-              <div className="text-lg text-white">{poems}</div>
-              <div className="text-sm font-light text-gray-400">poems</div>
+              <div
+                className={`${isDark ? "text-white" : "text-gray-900"} text-lg`}
+              >
+                {poems}
+              </div>
+              <div
+                className={`${
+                  isDark ? "text-gray-400" : "text-gray-600"
+                } text-sm font-light`}
+              >
+                poems
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-lg text-white">
+              <div
+                className={`${isDark ? "text-white" : "text-gray-900"} text-lg`}
+              >
                 {followers.toLocaleString()}
               </div>
-              <div className="text-sm font-light text-gray-400">followers</div>
+              <div
+                className={`${
+                  isDark ? "text-gray-400" : "text-gray-600"
+                } text-sm font-light`}
+              >
+                followers
+              </div>
             </div>
           </div>
         </div>

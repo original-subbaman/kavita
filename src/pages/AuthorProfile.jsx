@@ -45,7 +45,11 @@ const AuthorProfile = () => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useGetInfinitePosts({ userId: authorUserId, feedType: "all" });
+  } = useGetInfinitePosts({
+    userId: authorUserId,
+    feedType: "all",
+    excludeAnon: true,
+  });
 
   const onSuccess = (message, action) => {
     setResponse({

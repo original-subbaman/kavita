@@ -52,6 +52,7 @@ export async function fetchPostsPagination({
   userId,
   feedType,
   theme,
+  excludeAnon = false,
 }) {
   const limit = 10;
   try {
@@ -66,6 +67,10 @@ export async function fetchPostsPagination({
 
     if (theme) {
       query = query.eq("writing_theme", theme);
+    }
+
+    if (excludeAnon) {
+      query = query.eq("is_anon_post", false);
     }
 
     if (feedType === "following" && userId) {
