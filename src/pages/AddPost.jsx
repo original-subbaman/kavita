@@ -105,6 +105,7 @@ const AddPost = ({
           });
         }
       } catch (err) {
+        console.log("🚀 ~ handleOnPostClick ~ err:", err);
         setSnackbar({
           open: true,
           message: "Captcha verification failed",
