@@ -27,6 +27,7 @@ function PostSection({ posts, showMenu = false }) {
             >
               <Post
                 id={post.id}
+                title={post.post_title}
                 content={post.post}
                 author={post.profiles.user_name}
                 authorId={post.profiles.id}

@@ -332,12 +332,12 @@ export async function postAnnomously(post, title, themeId) {
   }
 }
 
-export async function updatePost(post, postId, userId, bgColor) {
+export async function updatePost(post, title, postId, userId, bgColor) {
   try {
-    if (!post || !userId) {
+    if (!post || !userId || !title) {
       throw new Error("Post and userId are required.");
     }
-    const updatePayload = { post };
+    const updatePayload = { post, post_title: title };
     if (bgColor !== undefined) updatePayload.bg_color = bgColor;
 
     const { error } = await supabase

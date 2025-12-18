@@ -3,6 +3,7 @@ import { useState } from "react";
 import ResponseSnackbar from "../ResponseSnackbar";
 import TipTapEditor from "./TipTapEditor";
 import { useAppTheme } from "../../hooks/useAppTheme";
+import { set } from "date-fns";
 
 export const DefaultBGColor = "#2e2b29";
 const minWords = 10;
@@ -10,6 +11,8 @@ const minWords = 10;
 function InputAlertDialog({
   postId,
   userId,
+  dialogTitle,
+  contentTitle,
   content,
   savedColor,
   mutation,
@@ -18,7 +21,8 @@ function InputAlertDialog({
   isEdit = false,
 }) {
   const { mode } = useAppTheme();
-  const [post, setPost] = useState(content || "");
+  const [postContent, setPostContent] = useState(content || "");
+  const [postTitle, setPostTitle] = useState(contentTitle || "");
   const [bgColor, setBgColor] = useState(
     mode === "dark" ? DefaultBGColor : "#ffffff"
   ); // Default background color
@@ -39,44 +43,31 @@ function InputAlertDialog({
     : "";
 
   const isPostEmpty = () => {
-    if (post.length === 0 || /^\s*$/.test(post)) {
+    if (postContent.length === 0 || /^\s*$/.test(postContent)) {
       return true;
     }
     return false;
   };
 
   const reset = () => {
-    setPost();
+    setPostContent();
     setBgColor();
     setError({ lowWordCount: false, invalidPrompt: false, message: "" });
   };
 
   const handleOnPostClick = async () => {
-    const wordsInPost = post.split(" ").length;
-
     if (isPostEmpty()) {
       setSnackbar({ open: true, message: "Empty text field" });
       return;
     }
 
-    if (wordsInPost < minWords) {
-      setError((prev) => ({
-        ...prev,
-        lowWordCount: true,
-        message: `Your post must have at least ${minWords} words before submitting`,
-      }));
-      return;
-    }
-    if (!isEdit) {
-      mutation({ post, themeId: theme?.id, bgColor });
-    } else {
-      mutation({
-        post,
-        postId,
-        userId,
-        bgColor,
-      });
-    }
+    mutation({
+      post: postContent,
+      title: postTitle,
+      postId,
+      userId,
+      bgColor,
+    });
     reset();
   };
 
@@ -85,7 +76,7 @@ function InputAlertDialog({
     if (value.split(" ").length > minWords) {
       setError((prev) => ({ ...prev, lowWordCount: false, message: "" }));
     }
-    setPost(value);
+    setPostContent(value);
   };
 
   return (
@@ -107,7 +98,7 @@ function InputAlertDialog({
           mode === "dark" ? "text-white" : "text-black"
         } text-base md:text-lg font-normal`}
       >
-        {title}
+        {dialogTitle}
       </AlertDialog.Title>
       {/* Error Messages */}
       {!error.lowWordCount ||
@@ -123,10 +114,13 @@ function InputAlertDialog({
       {/* Text Area */}
       <div>
         <TipTapEditor
-          initial={post}
-          onChange={onPostChange}
+          initialContent={postContent}
+          initialTitle={postTitle}
+          onContentChange={(value) => {
+            setPostContent(value);
+          }}
+          onTitleChange={(value) => setPostTitle(value)}
           bgColor={bgColor}
-          setBgColor={setBgColor}
         />
       </div>
       <Flex gap="3" mt="4" justify="end">

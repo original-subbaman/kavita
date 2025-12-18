@@ -34,7 +34,7 @@ function Post({
     onPostAction({
       action: PostActions.edit,
       postId: id,
-      data: { content, bgColor },
+      data: { content, title, bgColor },
     });
 
   const handleHidePost = () =>
@@ -58,9 +58,20 @@ function Post({
         >
           <Box className="flex flex-row items-center w-full">
             <Flex direction={"column"} className="w-full flex-1">
-              <Text className="text-base font-bold text-radix-slate-12">
-                {author}
-              </Text>
+              <Flex justify={"between"} align={"center"}>
+                <Text className="text-base font-bold text-radix-slate-12">
+                  {author}
+                </Text>
+                {showMenu && (
+                  <PostActionMenu
+                    mode={mode}
+                    isHidden={isHidden}
+                    handleHidePost={handleHidePost}
+                    handleEditPost={handleEditPost}
+                    handleDeletePost={handleDeletePost}
+                  />
+                )}
+              </Flex>
               <span className="text-xs font-light text-radix-slate-11">
                 Posted On: {timeAgoUTC(createdAt)}
               </span>
@@ -76,15 +87,6 @@ function Post({
               </Flex>
             </Flex>
           </Box>
-          {showMenu && (
-            <PostActionMenu
-              mode={mode}
-              isHidden={isHidden}
-              handleHidePost={handleHidePost}
-              handleEditPost={handleEditPost}
-              handleDeletePost={handleDeletePost}
-            />
-          )}
         </Box>
 
         {/* Post Content */}

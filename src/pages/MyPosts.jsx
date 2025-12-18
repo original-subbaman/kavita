@@ -95,8 +95,8 @@ const MyPosts = () => {
     setSelectedPost(null);
   };
 
-  const handleUpdatePost = ({ post, postId, userId, bgColor }) => {
-    updatePost({ post, postId, userId, bgColor });
+  const handleUpdatePost = ({ post, title, postId, userId, bgColor }) => {
+    updatePost({ post, title, postId, userId, bgColor });
     setOpenEditPost(false);
     setSelectedPost(null);
   };
@@ -110,6 +110,7 @@ const MyPosts = () => {
         setSelectedPost({
           postId,
           content: data.content,
+          title: data.title,
           bgColor: data.bgColor,
         });
         setOpenEditPost(true);
@@ -154,6 +155,8 @@ const MyPosts = () => {
               isEdit
               postId={selectedPost.postId}
               userId={user.id}
+              dialogTitle={"Edit Posts"}
+              contentTitle={selectedPost?.title}
               content={selectedPost?.content}
               savedColor={selectedPost?.bgColor}
               mutation={handleUpdatePost}
