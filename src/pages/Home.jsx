@@ -57,7 +57,10 @@ function Home() {
     useGetInfinitePosts({
       userId: user?.id,
       feedType: filter.feedType,
-      theme: filter.theme?.id || currWeeklyTheme?.id,
+      theme:
+        filter.theme && filter.theme?.id === "all"
+          ? undefined
+          : filter.theme?.id,
     });
 
   const handleClose = () => {
@@ -74,6 +77,7 @@ function Home() {
   if (isThemeFetched) {
     prompt = currWeeklyTheme.prompt;
     themes.unshift(currWeeklyTheme);
+    themes.unshift({ id: "all", prompt: "All" });
   }
 
   if (isPopularThemesFetched && popularThemes?.data.length > 0) {

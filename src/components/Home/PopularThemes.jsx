@@ -1,5 +1,4 @@
 import { Box, Chip } from "@mui/material";
-import { Text } from "@radix-ui/themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppTheme } from "../../hooks/useAppTheme";
 
@@ -44,6 +43,7 @@ const chipVariants = {
 };
 
 const PopularThemes = ({ seletedTheme, setTheme, themes }) => {
+  console.log("🚀 ~ PopularThemes ~ themes:", themes);
   return (
     <Box
       display="flex"
