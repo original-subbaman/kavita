@@ -5,7 +5,8 @@ import { Box, Flex, Text } from "@radix-ui/themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import AuthGuard from "../components/AuthGuard";
 import HeroSection from "../components/Home/HeroSection";
 import PopularThemes from "../components/Home/PopularThemes";
@@ -22,17 +23,17 @@ import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
 import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import { useAppTheme } from "../hooks/useAppTheme";
+import { setShowIntro } from "../slice/homeIntroSlice";
 
 function Home() {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const { mode } = useAppTheme();
   const navigate = useNavigate();
-  const location = useLocation();
   const isMobile = useMediaQuery("(max-width:600px)");
   const [showPopularThemes, setShowPopularThemes] = useState(!isMobile);
-  const [showPostSection, setShowPostSection] = useState(
-    location.state?.showPostSection || isAuthenticated || false
-  );
+  const showIntro = useSelector((state) => state.homeIntroReducer.showIntro);
+  const dispatch = useDispatch();
+
   const [filter, setFilter] = useState({
     feedType: "all",
     theme: null,
@@ -103,7 +104,7 @@ function Home() {
       )}
       <AnimatePresence mode="wait">
         {/* Hero Section */}
-        {!showPostSection && (
+        {showIntro && (
           <motion.div
             key="hero"
             initial={{ opacity: 1, y: 0 }}
@@ -112,12 +113,14 @@ function Home() {
             transition={{ duration: 0.5 }}
           >
             <HeroSection
-              onReadPoemsClick={() => setShowPostSection(true)}
+              onReadPoemsClick={() => {
+                dispatch(setShowIntro(false));
+              }}
               onSubmitYoursClick={handlePostInputClick}
             />
           </motion.div>
         )}
-        {showPostSection && (
+        {!showIntro && (
           <motion.div
             key="posts"
             initial={{ opacity: 0, y: 100 }}
