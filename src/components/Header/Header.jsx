@@ -1,22 +1,15 @@
-import { Badge, IconButton } from "@mui/material";
-import { useMediaQuery } from "@mui/material";
-import {
-  HamburgerMenuIcon,
-  SunIcon,
-  MoonIcon,
-  BellIcon,
-} from "@radix-ui/react-icons";
+import { Badge, useMediaQuery } from "@mui/material";
+import { BellIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "@radix-ui/themes";
-import { IoIosNotifications } from "react-icons/io";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import quill from "../../assets/quill.png";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetNotificationCount from "../../hooks/notification/useGetNotificationCount";
 import { useAppTheme } from "../../hooks/useAppTheme";
+import ToggleThemeButton from "../Common/ToggleThemeButton";
 import LinkText from "./LinkText";
 import LoginButton from "./LoginButton";
 import PopupMenu from "./PopupMenu";
-import ToggleThemeButton from "../Common/ToggleThemeButton";
 
 function NavLinks({ location }) {
   return (
@@ -55,7 +48,7 @@ function UserMenu({ count, userName }) {
   );
 }
 
-function GoHomeButton(navigate) {
+function GoHomeButton({ navigate }) {
   return (
     <Button
       size="4"
