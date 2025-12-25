@@ -86,10 +86,13 @@ export default function PostDetail() {
   const author = isAnonPost ? post?.anon_author : post?.profiles.user_name;
   const authorId = !isAnonPost ? post?.profiles.id : null;
   const createdAt = post?.created_at;
+  const postTitle = DOMPurify.sanitize(post?.post_title);
   const content = DOMPurify.sanitize(post?.post);
   const hasLiked = post?.hasLiked;
   const contentBGColor = post?.bg_color;
   const isAuthorCurrUser = user?.id === authorId;
+
+  // Mutations
 
   const { mutate: toggleLike, isPending: isUpdating } = useToggleLikeOnPost({
     onSuccess: (data, variables, context) => {
@@ -167,12 +170,13 @@ export default function PostDetail() {
     }
   );
 
+  // Handlers
   const handleCaptureLanguage = () => {
     if (isAuthenticated) {
       recordLanguage({
         language: selectedText,
         postId: id,
-        userId: user?.id, // replace by actual user id
+        userId: user?.id,
       });
       setSelectedText("");
       return;
@@ -290,21 +294,45 @@ export default function PostDetail() {
           </Flex>
         </Section>
         {/* Capture Language Section */}
-        <SelectedText
-          selectedText={selectedText}
-          captureLanguage={handleCaptureLanguage}
-          theme={mode}
-        />
+        <div className="mb-8">
+          <SelectedText
+            selectedText={selectedText}
+            captureLanguage={handleCaptureLanguage}
+            theme={mode}
+          />
+        </div>
+        {/* Post Title */}
+        <Section
+          className={`
+          pt-4 pb-0 px-4 font-mono m-0 rounded-t-lg drop-shadow-md 
+          ${
+            mode === "dark"
+              ? "bg-brownish-dark text-white "
+              : "bg-slate-50 text-black"
+          }
+          md:px-8`}
+        >
+          {postTitle && (
+            <motion.div
+              initial={{ opacity: 0, filter: "blur(10px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+            >
+              <div
+                dangerouslySetInnerHTML={{ __html: postTitle || "" }}
+                className="font-bold text-start font-primary text-2xl"
+              />
+            </motion.div>
+          )}
+        </Section>
         {/* Post Section */}
         <Section
           className={`
-          min-h-[50vh] py-10 px-4
+          min-h-[50vh] px-4 py-4 rounded-b-lg drop-shadow-md
           ${
             mode === "dark"
               ? "bg-brownish-dark text-white"
-              : "bg-white border border-gray-300 text-black"
+              : "bg-slate-50 text-black"
           }
-          rounded-lg 
           mb-2 md:px-8`}
         >
           {content && (
@@ -316,7 +344,7 @@ export default function PostDetail() {
                 dangerouslySetInnerHTML={{ __html: content || "" }}
                 onMouseMove={(event) => getSelectionText()}
                 onMouseUp={(event) => window.getSelection().removeAllRanges()}
-                className="[&>p]:my-4 text-start font-primary text-2xl"
+                className="[&_p]:min-h-[1rem] prose text-start font-primary text-xl"
               />
             </motion.div>
           )}
