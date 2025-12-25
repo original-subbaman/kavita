@@ -732,6 +732,29 @@ export async function deletePost({ userId, postId }) {
   }
 }
 
+export async function getThemeById(themeId) {
+  try {
+    if (!themeId) {
+      return "";
+    }
+
+    const { data, error } = await supabase
+      .from("writing_themes")
+      .select("*")
+      .eq("id", themeId)
+      .single();
+
+    if (error) {
+      return { success: false, data: "" };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.log("🚀 ~ getThemeById ~ error:", error);
+    throw error;
+  }
+}
+
 export async function getPopularThemes() {
   try {
     const popularThemes = [

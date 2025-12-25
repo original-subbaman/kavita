@@ -64,7 +64,7 @@ function Home() {
   };
 
   const handlePostInputClick = () => {
-    navigate("/posts/new", {
+    navigate(`/posts/new/${filter.theme?.id || currWeeklyTheme?.id}`, {
       state: { writingTheme: filter.theme || currWeeklyTheme },
     });
   };
@@ -125,7 +125,7 @@ function Home() {
             exit={{ opacity: 0, y: 100 }}
             transition={{ duration: 0.5 }}
           >
-            <Flex display={"flex"} gap={"2"} className="min-h-screen">
+            <Flex display={"flex"} gap={"2"} className="min-h-screen ">
               {/* suggest prompt section */}
               <Box className="flex-1 hidden sm:block"></Box>
               {/* Posts Section */}
@@ -183,9 +183,10 @@ function Home() {
                 {/* Post Section */}
                 <PostActionsProvider onPostAction={() => {}}>
                   <div
-                    className="md:w-[800px] drop-shadow-md border border-gray-300 
-              rounded-2xl p-2 my-4 mx-2 md:mx-0 
-              min-h-[80vh] flex flex-col justify-stretch"
+                    className={`md:w-[800px] drop-shadow-md border border-gray-300 
+                      rounded-2xl p-2 my-4 mx-2 md:mx-0 
+                      min-h-[80vh] flex flex-col justify-stretch
+                      `}
                   >
                     <InfinitePostSection
                       data={data}

@@ -68,8 +68,7 @@ function CreateRouter() {
             </ProtectedRoute>
           ),
         },
-
-        { path: "posts/new", element: <AddPost /> },
+        { path: "posts/new/:themeId", element: <AddPost /> },
       ],
     },
     { path: "/login-redirect", element: <LoginRedirect /> },

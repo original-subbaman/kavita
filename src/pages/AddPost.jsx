@@ -1,7 +1,7 @@
 import { Button, Container, Flex } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { verifyCaptcha } from "../api/utils.api";
 import BackButton from "../components/BackButton";
 import WeeklyTheme from "../components/Home/WeeklyTheme";
@@ -11,6 +11,7 @@ import useAuth from "../hooks/auth/useAuth";
 import useAddPost from "../hooks/post/useAddPost";
 import usePostAnon from "../hooks/post/usePostAnon";
 import { useAppTheme } from "../hooks/useAppTheme";
+import useGetThemeById from "../hooks/post/useGetThemeById";
 
 const AddPost = ({
   postId,
@@ -21,6 +22,7 @@ const AddPost = ({
   isEdit = false,
 }) => {
   const minCharLength = 15;
+  const { themeId } = useParams();
   const { user, isAuthenticated } = useAuth();
   const { mode } = useAppTheme();
   const queryClient = useQueryClient();
@@ -75,6 +77,8 @@ const AddPost = ({
     onError: handlePostError,
   });
 
+  const { data: selectedTheme } = useGetThemeById({ themeId: themeId });
+
   const reset = () => {
     setPostContent("");
     setPostTitle("");
@@ -101,7 +105,7 @@ const AddPost = ({
           postAnon({
             post: postContent,
             title: postTitle,
-            themeId: writingTheme?.id,
+            themeId: writingTheme?.id || selectedTheme?.id,
           });
         }
       } catch (err) {
@@ -156,7 +160,10 @@ const AddPost = ({
       <BackButton />
       {/* Writing Theme */}
       <div className="my-2 ">
-        <WeeklyTheme writingTheme={writingTheme?.prompt} theme={mode} />
+        <WeeklyTheme
+          writingTheme={writingTheme?.prompt || selectedTheme?.prompt}
+          theme={mode}
+        />
       </div>
       {/* Text Area */}
       <TipTapEditor
