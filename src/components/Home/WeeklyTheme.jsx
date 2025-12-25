@@ -7,12 +7,13 @@ const WeeklyTheme = ({
     <div
       className={`
         w-full p-6 rounded-2xl overflow-hidden 
-        border border-gray-300 bg-white`}
+       bg-white drop-shadow-md
+        bg-gradient-to-r from-[#209cff33] to-[#68e0cf66]`}
     >
       {/* Main Theme  */}
       <div className="text-center relative z-10">
-        <p className="text-gray-600 text-sm mb-2">{title}</p>
-        <h2 className="text-2xl font-semibold text-emerald-700">
+        <p className="text-gray-700 text-sm mb-2">{title}</p>
+        <h2 className="text-2xl font-semibold text-radix-green">
           {writingTheme}
         </h2>
       </div>

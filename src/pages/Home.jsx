@@ -149,7 +149,9 @@ function Home() {
                         mode === "dark" ? "text-white" : "text-black"
                       }`}
                     >
-                      <Text size={"2"}>Filter by Popular Themes:</Text>
+                      <Text size={"2"} className="font-semibold">
+                        Filter by Popular Themes:
+                      </Text>
                       <IconButton
                         size="small"
                         onClick={() => setShowPopularThemes((prev) => !prev)}
@@ -233,7 +235,7 @@ const WritingThemeSection = ({
         ) : (
           <WeeklyTheme theme={mode} writingTheme={activeTheme?.prompt} />
         )}
-        <div className="mt-2">
+        <div className="mt-4">
           <PostInputBox onClick={handlePostInputClick} theme={mode} />
         </div>
       </Box>
