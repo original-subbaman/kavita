@@ -25,6 +25,7 @@ import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { setShowIntro } from "../slice/homeIntroSlice";
 
+const ALL_FEED_TYPE = { id: "all", prompt: "All" };
 function Home() {
   const { user } = useAuth();
   const { mode } = useAppTheme();
@@ -36,7 +37,7 @@ function Home() {
 
   const [filter, setFilter] = useState({
     feedType: "all",
-    theme: null,
+    theme: ALL_FEED_TYPE,
   });
   const [response, setResponse] = useState({
     success: false,
@@ -84,7 +85,7 @@ function Home() {
     themes.push(...popularThemes.data);
   }
 
-  const activeTheme = filter.theme || currWeeklyTheme;
+  const activeTheme = currWeeklyTheme;
 
   return (
     <>
@@ -175,7 +176,7 @@ function Home() {
                       unmountOnExit
                     >
                       <PopularThemes
-                        seletedTheme={filter.theme || currWeeklyTheme}
+                        seletedTheme={filter.theme}
                         setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
                         themes={themes}
                       />
@@ -192,7 +193,8 @@ function Home() {
                 {/* Post Section */}
                 <PostActionsProvider onPostAction={() => {}}>
                   <div
-                    className={`md:w-[800px] drop-shadow-md border border-gray-300 
+                    className={`md:w-[800px] drop-shadow-md 
+                      ${mode === "dark" ? "bg-brownish-dark" : "bg-slate-50"}
                       rounded-2xl p-2 my-4 mx-2 md:mx-0 
                       min-h-[80vh] flex flex-col justify-stretch
                       `}
