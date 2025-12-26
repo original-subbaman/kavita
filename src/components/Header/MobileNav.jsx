@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Box, Flex, Text, Quote } from "@radix-ui/themes";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   BookmarkFilledIcon,
   ExitIcon,
@@ -13,6 +13,7 @@ import quill from "../../assets/quill.png";
 import useGetProfile from "../../hooks/user/useGetProfile";
 import { AnimatePresence, motion } from "framer-motion";
 import { getInitialsOfName } from "../../utils/Helper";
+import { useAppTheme } from "../../hooks/useAppTheme";
 
 const NavItem = ({
   to,
@@ -32,14 +33,12 @@ const NavItem = ({
     >
       {React.cloneElement(icon, {
         className: `${icon.props.className ?? ""} ${
-          isActive ? "text-white font-semibold" : "text-radix-green"
+          isActive ? "text-white " : "text-radix-green"
         }`,
       })}
       <Text
         size={size}
-        className={`${
-          isActive ? "text-white font-semibold" : "text-[#30a46c]"
-        }`}
+        className={`${isActive ? "text-white " : "text-[#30a46c]"}`}
       >
         {label}
       </Text>
@@ -106,9 +105,25 @@ const item = {
 
 function MobileNav({ openSideNav, onClose }) {
   const { pathname } = useLocation();
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const { mode } = useAppTheme();
+
+  const bgMain = mode === "dark" ? "bg-dark-light" : "bg-slate-50";
+  const fullNameColor = mode === "dark" ? "text-white" : "text-black";
+  const userNameColor = mode === "dark" ? "text-gray-400" : "text-gray-600";
+
   const { data: profile } = useGetProfile({ userId: user.id });
   const initials = getInitialsOfName(user.name);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate(0);
+    } catch (error) {
+      console.error("Error logging out:", error.message);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -133,7 +148,7 @@ function MobileNav({ openSideNav, onClose }) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed top-0 left-0 h-full w-64 bg-aurora z-[100]"
+            className={`fixed top-0 left-0 h-full w-64 ${bgMain} z-[100]`}
           >
             <Flex direction="column" className="h-full w-full gap-4">
               <Box className="flex items-center justify-start text-radix-green h-10 px-3">
@@ -162,9 +177,9 @@ function MobileNav({ openSideNav, onClose }) {
                   </Box>
                 )}
 
-                <div className="flex flex-col items-start gap-0 text-white">
-                  <Text>{user.name}</Text>
-                  <Text size={"2"} color="grass">
+                <div className="flex flex-col items-start gap-0">
+                  <Text className={fullNameColor}>{user.full_name}</Text>
+                  <Text size={"2"} className={userNameColor}>
                     {user.user_name}
                   </Text>
                 </div>
@@ -195,7 +210,8 @@ function MobileNav({ openSideNav, onClose }) {
                 <Button
                   variant="ghost"
                   color="primary"
-                  className="flex items-center gap-2 font-bold"
+                  className="flex items-center justify-start gap-2 font-bold w-full h-full"
+                  onClick={handleLogout}
                 >
                   <ExitIcon />
                   Log out
