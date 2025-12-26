@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import FlowerBook from "../../assets/flower-book.png";
 import { useAppTheme } from "../../hooks/useAppTheme";
+import { useMediaQuery } from "@mui/material";
 
 const textVariants = {
   hidden: { opacity: 0, y: 32 },
@@ -13,11 +14,16 @@ const textVariants = {
 
 const HeroSection = ({ onReadPoemsClick, onSubmitYoursClick }) => {
   const { mode } = useAppTheme();
+  const isMobile = useMediaQuery("(max-width:600px)");
   const isDarkMode = mode === "dark";
   return (
-    <section className="relative min-h-[100vh] flex items-center justify-center">
+    <section
+      className={`flex items-center justify-center ${
+        isMobile ? "h-full" : "min-h-[100vh]"
+      } `}
+    >
       {/* Content */}
-      <div className="text-center  max-w-2xl flex flex-col items-center mb-[17rem]">
+      <div className="text-center max-w-2xl flex flex-col items-center justify-center md:mb-40">
         <div className="relative flex flex-col items-center group">
           <a
             href="https://www.freepik.com/free-vector/book-with-flowers-book-day-icon_89158245.htm#fromView=image_search_similar&page=1&position=0&uuid=157381af-cd03-4966-a3c8-7854d7f4e2b8&query=open+book?log-in=google"

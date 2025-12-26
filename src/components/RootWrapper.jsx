@@ -5,9 +5,11 @@ import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 import MobileNav from "./Header/MobileNav";
 import { useAppTheme } from "../hooks/useAppTheme";
+import { useMediaQuery } from "@mui/material";
 function RootWrapper({ showHeader = true, children }) {
   const { isAuthenticated } = useAuth();
   const { mode } = useAppTheme();
+  const isMobile = useMediaQuery("(max-width:600px)");
   const [openSideNav, setOpenSideNav] = useState(false);
 
   return (
@@ -25,7 +27,7 @@ function RootWrapper({ showHeader = true, children }) {
         />
       )}
       <main
-        className={`w-full font-primary min-h-[100dvh] ${
+        className={`w-full font-primary  min-h-[100dvh] ${
           mode === "dark" ? "bg-dark-light color-white" : "bg-white color-black"
         } overflow-hidden`}
       >

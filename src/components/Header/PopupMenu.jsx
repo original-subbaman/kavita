@@ -25,7 +25,7 @@ function PopupMenu({ name, theme }) {
     <Popover.Root>
       <div className={`flex items-center gap-2 rounded cursor-pointer p-2`}>
         <p
-          className={`text-xl ${
+          className={`text-xl hidden lg:block ${
             theme === "dark" ? "text-white" : "text-radix-green"
           }`}
         >

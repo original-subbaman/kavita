@@ -11,60 +11,6 @@ import LinkText from "./LinkText";
 import LoginButton from "./LoginButton";
 import PopupMenu from "./PopupMenu";
 
-function NavLinks({ location }) {
-  return (
-    <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-8">
-      <NavLink to={"/"}>
-        <LinkText isActive={location.pathname === "/"}>Home</LinkText>
-      </NavLink>
-      <NavLink to={"/inspiration"}>
-        <LinkText isActive={location.pathname === "/inspiration"}>
-          Inspiration
-        </LinkText>
-      </NavLink>
-      <NavLink to={"/my-posts"}>
-        <LinkText isActive={location.pathname === "/my-posts"}>
-          My Posts
-        </LinkText>
-      </NavLink>
-    </nav>
-  );
-}
-
-function UserMenu({ count, userName }) {
-  return (
-    <>
-      <NavLink to="/notifications" className="h-8">
-        <Button variant="soft" className="h-8">
-          <Badge badgeContent={count > 99 ? "99+" : count} color="success">
-            <BellIcon />
-          </Badge>
-        </Button>
-      </NavLink>
-      <div className="hidden md:block">
-        <PopupMenu name={userName} />
-      </div>
-    </>
-  );
-}
-
-function GoHomeButton({ navigate }) {
-  return (
-    <Button
-      size="4"
-      variant="ghost"
-      className="cursor-pointer hover:bg-transparent 
-        hover:shadow-none md:flex md:items-center 
-        md:gap-1 font-primary text-radix-green 
-        text-2xl font-bold"
-      onClick={() => navigate("/")}
-    >
-      Kavita
-      <img src={quill} className="w-6 h-6" />
-    </Button>
-  );
-}
-
 function Header({ toggleSideNav, theme }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -79,8 +25,8 @@ function Header({ toggleSideNav, theme }) {
     <header
       className={`flex justify-between font-primary 
     text-white ${theme === "dark" ? "bg-dark-light" : "bg-white"} items-center 
-    h-16 px-4 md:px-64  sticky 
-    top-0 z-[100]`}
+      h-16 px-4 xl:px-64  sticky 
+      top-0 z-[100]`}
     >
       {/* Left side: GoHomeButton for unauthenticated, Hamburger for authenticated mobile */}
       {!isAuthenticated && isMobile && (
@@ -135,4 +81,57 @@ function Header({ toggleSideNav, theme }) {
   );
 }
 
+function NavLinks({ location }) {
+  return (
+    <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-8">
+      <NavLink to={"/"}>
+        <LinkText isActive={location.pathname === "/"}>Home</LinkText>
+      </NavLink>
+      <NavLink to={"/inspiration"}>
+        <LinkText isActive={location.pathname === "/inspiration"}>
+          Inspiration
+        </LinkText>
+      </NavLink>
+      <NavLink to={"/my-posts"}>
+        <LinkText isActive={location.pathname === "/my-posts"}>
+          My Posts
+        </LinkText>
+      </NavLink>
+    </nav>
+  );
+}
+
+function UserMenu({ count, userName }) {
+  return (
+    <>
+      <NavLink to="/notifications" className="h-8">
+        <Button variant="soft" className="h-8">
+          <Badge badgeContent={count > 99 ? "99+" : count} color="success">
+            <BellIcon />
+          </Badge>
+        </Button>
+      </NavLink>
+      <div className="hidden md:block">
+        <PopupMenu name={userName} />
+      </div>
+    </>
+  );
+}
+
+function GoHomeButton({ navigate }) {
+  return (
+    <Button
+      size="4"
+      variant="ghost"
+      className="cursor-pointer hover:bg-transparent 
+        hover:shadow-none md:flex md:items-center 
+        md:gap-1 font-primary text-radix-green 
+        text-2xl font-bold"
+      onClick={() => navigate("/")}
+    >
+      Kavita
+      <img src={quill} className="w-6 h-6" />
+    </Button>
+  );
+}
 export default Header;
