@@ -16,6 +16,7 @@ import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import TermsAndConditions from "../components/Login_Signup/TermsAndConditions";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import ResponseSnackbar from "../components/ResponseSnackbar";
+import { useAppTheme } from "../hooks/useAppTheme";
 
 const REQUIRED_NAME_ERROR = "Name is required";
 const REQUIRED_EMAIL_ERROR = "Email is required";
@@ -24,6 +25,8 @@ const REQUIRED_USER_NAME_ERROR = "User name is required";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { mode } = useAppTheme();
+
   const formRef = useRef(null);
   const [gender, setGender] = useState("Male");
   const [loading, setLoading] = useState(false);
@@ -85,7 +88,10 @@ const Signup = () => {
   };
 
   return (
-    <LoginWrapper title={"Signup"}>
+    <LoginWrapper
+      title={"Create Your Account"}
+      subtitle={"Unleash the poet in you"}
+    >
       {/* Success Snackbar */}
       <ResponseSnackbar
         open={response.success}
@@ -198,7 +204,11 @@ const Signup = () => {
           <LoadingButton
             loading={loading}
             type={"submit"}
-            className="w-full"
+            className={`w-full ${
+              mode === "dark"
+                ? "disabled:text-gray-700 disabled:bg-gray-500/10"
+                : "disabled:text-gray-300 "
+            }`}
             disabled={!checked || disabledSubmit}
             size={"3"}
             my={"3"}

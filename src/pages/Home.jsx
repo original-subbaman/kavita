@@ -26,6 +26,7 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { setShowIntro } from "../slice/homeIntroSlice";
 
 const ALL_FEED_TYPE = { id: "all", prompt: "All" };
+
 function Home() {
   const { user } = useAuth();
   const { mode } = useAppTheme();

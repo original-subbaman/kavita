@@ -10,9 +10,11 @@ import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import useAuth from "../hooks/auth/useAuth";
+import { useAppTheme } from "../hooks/useAppTheme";
 
 const Login = () => {
   const navigate = useNavigate();
+  const mode = useAppTheme();
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState({
     success: false,
@@ -60,7 +62,10 @@ const Login = () => {
   };
 
   return (
-    <LoginWrapper title={"Login"}>
+    <LoginWrapper
+      title={"Welcome Back!"}
+      subtitle={"Login to your account to continue"}
+    >
       {/* Success Snackbar */}
       <ResponseSnackbar
         open={response.success}
