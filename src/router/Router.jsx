@@ -14,6 +14,8 @@ import Profile from "../pages/Profile.jsx";
 import Signup from "../pages/Signup.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import AddPost from "../pages/AddPost.jsx";
+import LandingPage from "../pages/Landing.jsx";
+import { Layout } from "../components/layout/Layout.jsx";
 
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword.jsx"));
 const ResetPassword = lazy(() => import("../pages/ResetPassword.jsx"));
@@ -21,12 +23,12 @@ const ResetPassword = lazy(() => import("../pages/ResetPassword.jsx"));
 function CreateRouter() {
   return createBrowserRouter([
     {
-      element: <RootWrapper />,
+      element: <Layout/>,
       path: "/",
       children: [
         {
           index: true,
-          element: <Home />,
+          element: <LandingPage />,
         },
         {
           path: "post/:id",

@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { useAppTheme } from "../../hooks/useAppTheme";
 import AppLogo from "../AppLogo";
-import Header from "../Header/Header";
+import Header from "../layout/Header";
 
 const LoginWrapper = ({ title, subtitle, children }) => {
   const { mode } = useAppTheme();

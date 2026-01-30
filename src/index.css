@@ -3,6 +3,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Cal+Sans&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,10 +14,180 @@ body {
   scroll-behavior: smooth !important;
 }
 
+/* Kavita - Poetry Platform Design System
+   Inspired by Sikkim's monasteries, mountains, and prayer flags */
 @layer base {
-  input:focus,
-  textarea:focus,
-  select:focus {
-    @apply outline-none ring-0;
+  :root {
+    /* Core backgrounds - warm cream like handmade paper */
+    --background: 40 30% 97%;
+    --foreground: 20 15% 15%;
+
+    /* Card surfaces */
+    --card: 40 25% 99%;
+    --card-foreground: 20 15% 15%;
+
+    /* Popover */
+    --popover: 40 25% 99%;
+    --popover-foreground: 20 15% 15%;
+
+    /* Primary - Deep monastery maroon */
+    --primary: 348 60% 32%;
+    --primary-foreground: 40 30% 97%;
+
+    /* Secondary - Soft mist */
+    --secondary: 210 20% 92%;
+    --secondary-foreground: 20 15% 25%;
+
+    /* Muted - Gentle fog */
+    --muted: 40 15% 92%;
+    --muted-foreground: 20 10% 45%;
+
+    /* Accent - Saffron gold */
+    --accent: 38 85% 55%;
+    --accent-foreground: 20 15% 15%;
+
+    /* Destructive */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 40 30% 97%;
+
+    /* Borders */
+    --border: 30 15% 88%;
+    --input: 30 15% 88%;
+    --ring: 348 60% 32%;
+
+    --radius: 0.75rem;
+
+    /* Custom colors - Prayer flag inspired */
+    --prayer-blue: 210 55% 55%;
+    --prayer-green: 150 40% 40%;
+    --prayer-yellow: 45 90% 60%;
+    --prayer-red: 0 65% 50%;
+    --prayer-white: 40 20% 96%;
+
+    /* Mountain gradients */
+    --gradient-mountain: linear-gradient(180deg, hsl(210 30% 85%) 0%, hsl(40 30% 97%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(348 60% 32%) 0%, hsl(38 85% 55%) 100%);
+    --gradient-mist: linear-gradient(180deg, hsl(40 30% 97%) 0%, hsl(210 20% 92%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(20 15% 15% / 0.08);
+    --shadow-card: 0 2px 12px -2px hsl(20 15% 15% / 0.06);
+    --shadow-elevated: 0 12px 40px -8px hsl(20 15% 15% / 0.12);
+
+    /* Sidebar */
+    --sidebar-background: 40 25% 98%;
+    --sidebar-foreground: 20 15% 25%;
+    --sidebar-primary: 348 60% 32%;
+    --sidebar-primary-foreground: 40 30% 97%;
+    --sidebar-accent: 38 85% 55%;
+    --sidebar-accent-foreground: 20 15% 15%;
+    --sidebar-border: 30 15% 90%;
+    --sidebar-ring: 348 60% 32%;
+  }
+
+  .dark {
+    --background: 20 15% 10%;
+    --foreground: 40 20% 92%;
+
+    --card: 20 15% 12%;
+    --card-foreground: 40 20% 92%;
+
+    --popover: 20 15% 12%;
+    --popover-foreground: 40 20% 92%;
+
+    --primary: 348 55% 55%;
+    --primary-foreground: 20 15% 10%;
+
+    --secondary: 20 12% 18%;
+    --secondary-foreground: 40 20% 88%;
+
+    --muted: 20 12% 18%;
+    --muted-foreground: 40 15% 60%;
+
+    --accent: 38 80% 50%;
+    --accent-foreground: 20 15% 10%;
+
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 40 20% 92%;
+
+    --border: 20 12% 20%;
+    --input: 20 12% 20%;
+    --ring: 348 55% 55%;
+
+    --sidebar-background: 20 15% 8%;
+    --sidebar-foreground: 40 20% 88%;
+    --sidebar-primary: 348 55% 55%;
+    --sidebar-primary-foreground: 20 15% 10%;
+    --sidebar-accent: 38 80% 50%;
+    --sidebar-accent-foreground: 20 15% 10%;
+    --sidebar-border: 20 12% 18%;
+    --sidebar-ring: 348 55% 55%;
   }
 }
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Poetry text styling */
+  .font-poetry {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+
+  .font-display {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+}
+
+@layer components {
+  /* Prayer flag decorative element */
+  .prayer-flags {
+    @apply flex gap-1;
+  }
+
+  .prayer-flag {
+    @apply w-2 h-8 rounded-sm;
+  }
+
+  /* Poem card hover effect */
+  .poem-card {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .poem-card:hover {
+    @apply -translate-y-1;
+    box-shadow: var(--shadow-elevated);
+  }
+
+  /* Subtle paper texture feel */
+  .paper-texture {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  /* Elegant underline for links */
+  .elegant-underline {
+    @apply relative inline-block;
+  }
+
+  .elegant-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-px bg-primary scale-x-0 origin-right transition-transform duration-300;
+  }
+
+  .elegant-underline:hover::after {
+    @apply scale-x-100 origin-left;
+  }
+
+  /* Mountain silhouette background */
+  .mountain-bg {
+    background: linear-gradient(180deg, transparent 0%, hsl(var(--muted)) 100%);
+  }
+}
+
+

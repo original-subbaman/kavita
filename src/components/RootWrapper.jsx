@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import useAuth from "../hooks/auth/useAuth";
-import Footer from "./Footer/Footer";
-import Header from "./Header/Header";
+import Footer from "./layout/Footer";
+import Header from "./layout/Header";
 import MobileNav from "./Header/MobileNav";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useMediaQuery } from "@mui/material";
