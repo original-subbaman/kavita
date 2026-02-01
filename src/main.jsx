@@ -21,7 +21,7 @@ function AppWithDynamicTheme() {
 
   return (
     <ThemeProvider theme={MuiTheme}>
-      <Theme appearance={mode} accentColor={accentColor}>
+      <Theme appearance={mode}>
         <RouterProvider router={CreateRouter()} />
       </Theme>
     </ThemeProvider>
@@ -41,5 +41,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </AppThemeProvider>
       </Provider>
     </React.StrictMode>
-  </QueryClientProvider>
+  </QueryClientProvider>,
 );

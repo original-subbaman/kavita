@@ -1,7 +1,13 @@
-import { ArrowRight, BookOpen, Globe, PenLine, Sparkles, Users } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Globe,
+  PenLine,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/Button";
-import { PrayerFlags } from "../components/ui/PrayerFlags";
 
 const LandingPage = () => {
   const languages = [
@@ -16,22 +22,26 @@ const LandingPage = () => {
     {
       icon: PenLine,
       title: "Write & Publish",
-      description: "Compose your verses in any language. Our elegant editor respects your words.",
+      description:
+        "Compose your verses in any language. Our elegant editor respects your words.",
     },
     {
       icon: BookOpen,
       title: "Discover Poetry",
-      description: "Explore poems from across Sikkim's diverse linguistic landscape.",
+      description:
+        "Explore poems from across Sikkim's diverse linguistic landscape.",
     },
     {
       icon: Users,
       title: "Connect with Poets",
-      description: "Build community with fellow writers who share your passion for words.",
+      description:
+        "Build community with fellow writers who share your passion for words.",
     },
     {
       icon: Sparkles,
       title: "Language Wall",
-      description: "Save your favorite lines and build a personal collection of beauty.",
+      description:
+        "Save your favorite lines and build a personal collection of beauty.",
     },
   ];
 
@@ -41,14 +51,6 @@ const LandingPage = () => {
       <section className="relative overflow-hidden">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-secondary/50 via-background to-background" />
-        
-        {/* Decorative prayer flags */}
-        <div className="absolute top-8 left-1/4 opacity-30 animate-float">
-          <PrayerFlags size="lg" />
-        </div>
-        <div className="absolute top-16 right-1/3 opacity-20 animate-float" style={{ animationDelay: "2s" }}>
-          <PrayerFlags size="md" />
-        </div>
 
         <div className="container mx-auto px-4 py-20 md:py-32 relative">
           <div className="max-w-3xl mx-auto text-center">
@@ -59,28 +61,44 @@ const LandingPage = () => {
             </div>
 
             {/* Main heading */}
-            <h1 className="font-display text-5xl md:text-7xl font-bold text-foreground leading-tight mb-6 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <h1
+              className="font-display text-5xl md:text-7xl font-bold text-foreground leading-tight mb-6 opacity-0 animate-fade-in"
+              style={{ animationDelay: "0.1s" }}
+            >
               Where Every Voice{" "}
               <span className="text-primary">Finds Its Verse</span>
             </h1>
 
             {/* Subheading */}
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8 max-w-2xl mx-auto opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              कविता is a sanctuary for poets from the Himalayan heartland. Share your
-              poetry in Nepali, Bhutia, Lepcha, Limbu, or English—and discover the
-              beauty of multilingual verse.
+            <p
+              className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8 max-w-2xl mx-auto opacity-0 animate-fade-in"
+              style={{ animationDelay: "0.2s" }}
+            >
+              कविता is a sanctuary for poets from the Himalayan heartland. Share
+              your poetry in Nepali, Bhutia, Lepcha, Limbu, or English—and
+              discover the beauty of multilingual verse.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+            <div
+              className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-in"
+              style={{ animationDelay: "0.3s" }}
+            >
               <Link to="/auth?mode=signup">
-                <Button size="lg" className="gap-2 w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-8">
+                <Button
+                  size="lg"
+                  className="gap-2 w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-8"
+                >
                   Start Writing
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
               <Link to="/feed">
-                <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto border-border hover:bg-secondary">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="gap-2 w-full sm:w-auto border-border hover:bg-secondary"
+                >
                   <BookOpen className="w-4 h-4" />
                   Explore Poems
                 </Button>
@@ -88,7 +106,10 @@ const LandingPage = () => {
             </div>
 
             {/* Language pills */}
-            <div className="mt-12 flex flex-wrap justify-center gap-2 opacity-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <div
+              className="mt-12 flex flex-wrap justify-center gap-2 opacity-0 animate-fade-in"
+              style={{ animationDelay: "0.4s" }}
+            >
               {languages.map((lang) => (
                 <span
                   key={lang.english}
@@ -113,7 +134,8 @@ const LandingPage = () => {
               A Space for Every Poet
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Everything you need to write, share, and celebrate poetry from Sikkim's rich cultural tapestry.
+              Everything you need to write, share, and celebrate poetry from
+              Sikkim's rich cultural tapestry.
             </p>
           </div>
 
@@ -159,7 +181,9 @@ const LandingPage = () => {
                 चराको गीत सुन्छु बिहान..."
               </blockquote>
               <div className="text-center">
-                <p className="text-muted-foreground">— From "हिमालको छायामा" by Tashi Wangchuk</p>
+                <p className="text-muted-foreground">
+                  — From "हिमालको छायामा" by Tashi Wangchuk
+                </p>
                 <Link to="/feed" className="inline-block mt-4">
                   <Button variant="ghost" className="gap-2 text-primary">
                     Discover More
@@ -179,10 +203,15 @@ const LandingPage = () => {
             Ready to Share Your Story?
           </h2>
           <p className="text-primary-foreground/80 max-w-xl mx-auto mb-8">
-            Join poets from across Sikkim in celebrating the beauty of language and verse.
+            Join poets from across Sikkim in celebrating the beauty of language
+            and verse.
           </p>
           <Link to="/auth?mode=signup">
-            <Button size="lg" variant="secondary" className="gap-2 bg-card text-foreground hover:bg-card/90">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="gap-2 bg-card text-foreground hover:bg-card/90"
+            >
               Create Your Account
               <ArrowRight className="w-4 h-4" />
             </Button>
@@ -194,4 +223,3 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
-

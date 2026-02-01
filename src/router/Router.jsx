@@ -23,12 +23,16 @@ const ResetPassword = lazy(() => import("../pages/ResetPassword.jsx"));
 function CreateRouter() {
   return createBrowserRouter([
     {
-      element: <Layout/>,
+      element: <Layout />,
       path: "/",
       children: [
         {
           index: true,
           element: <LandingPage />,
+        },
+        {
+          path: "home",
+          element: <Home />,
         },
         {
           path: "post/:id",
@@ -70,7 +74,7 @@ function CreateRouter() {
             </ProtectedRoute>
           ),
         },
-        { path: "posts/new/:themeId", element: <AddPost /> },
+        { path: "posts/new", element: <AddPost /> },
       ],
     },
     { path: "/login-redirect", element: <LoginRedirect /> },

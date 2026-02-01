@@ -14,7 +14,7 @@ import LinkText from "../Header/LinkText";
 import LoginButton from "../Header/LoginButton";
 import PopupMenu from "../Header/PopupMenu";
 import { useState } from "react";
-import {cn} from "../../utils/Helper";
+import { cn } from "../../utils/Helper";
 
 function Header({ toggleSideNav, theme }) {
   const location = useLocation();
@@ -32,10 +32,11 @@ function Header({ toggleSideNav, theme }) {
 
   const navLinks = [
     { path: "/home", label: "Home", icon: Home },
-    { path: "/write", label: "Write", icon: PenLine },
+    { path: "/post/new", label: "Write", icon: PenLine },
     { path: "/inspiration", label: "Language Wall", icon: Bookmark },
     { path: "/profile", label: "Profile", icon: User },
   ];
+
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4">
@@ -49,15 +50,16 @@ function Header({ toggleSideNav, theme }) {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-2">
             {navLinks.map((link) => (
               <Link key={link.path} to={link.path}>
                 <Button
                   variant={isActive(link.path) ? "secondary" : "ghost"}
                   size="sm"
                   className={cn(
-                    "gap-2 transition-all",
-                    isActive(link.path) && "bg-secondary text-primary font-medium"
+                    "gap-2 transition-all px-3 py-2 hover:rounded-md hover:bg-accent text-black ",
+                    isActive(link.path) &&
+                      "bg-secondary text-primary font-medium rounded-md",
                   )}
                 >
                   <link.icon className="w-4 h-4" />
@@ -70,12 +72,19 @@ function Header({ toggleSideNav, theme }) {
           {/* Desktop Auth */}
           <div className="hidden md:flex items-center gap-2">
             <Link to="/auth">
-              <Button variant="ghost" size="sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-primary rounded-md hover:bg-accent px-3 py-1 transition-colors duration-300"
+              >
                 Sign In
               </Button>
             </Link>
             <Link to="/auth?mode=signup">
-              <Button size="sm" className="bg-primary hover:bg-primary/90">
+              <Button
+                size="sm"
+                className="bg-primary px-3 py-1 hover:bg-primary/90 rounded-md text-primary-foreground"
+              >
                 Get Started
               </Button>
             </Link>
