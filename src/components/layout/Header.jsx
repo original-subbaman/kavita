@@ -32,7 +32,7 @@ function Header({ toggleSideNav, theme }) {
 
   const navLinks = [
     { path: "/home", label: "Home", icon: Home },
-    { path: "/post/new", label: "Write", icon: PenLine },
+    { path: "/posts/new", label: "Write", icon: PenLine },
     { path: "/inspiration", label: "Language Wall", icon: Bookmark },
     { path: "/profile", label: "Profile", icon: User },
   ];

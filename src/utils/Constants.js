@@ -33,3 +33,7 @@ export const NotificationTarget = {
   post: "post",
   comment: "comment",
 };
+export const LanguageScripts = {
+  DEVANAGARI: "Devanagari",
+  LATIN: "Latin",
+};
