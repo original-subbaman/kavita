@@ -446,7 +446,7 @@ export async function reportComment(
   commentId,
   userId,
   reason,
-  additionalInfo
+  additionalInfo,
 ) {
   try {
     if (!postId || !commentId || !userId || !reason) {
@@ -470,7 +470,7 @@ export async function reportComment(
     if (reportError) {
       console.error(
         "Supabase error (reportComment - insert):",
-        reportError.message
+        reportError.message,
       );
       throw new Error(`Failed to report comment: ${reportError.message}`);
     }
@@ -484,7 +484,7 @@ export async function reportComment(
     if (commentError) {
       console.error(
         "Supabase error (reportComment - update):",
-        commentError.message
+        commentError.message,
       );
       throw new Error(`Failed to hide comment: ${commentError.message}`);
     }
@@ -525,10 +525,10 @@ export async function reportPost(postId, userId, reason, additionalInfo) {
     if (fetchError) {
       console.error(
         "Supabase error (check existing report):",
-        fetchError.message
+        fetchError.message,
       );
       throw new Error(
-        `Failed to check for existing report: ${fetchError.message}`
+        `Failed to check for existing report: ${fetchError.message}`,
       );
     }
 
@@ -779,7 +779,8 @@ export async function getPopularThemes() {
     const { data, error } = await supabase
       .from("writing_themes")
       .select("*")
-      .in("prompt", popularThemes);
+      .in("prompt", popularThemes)
+      .order("prompt", { ascending: true });
 
     if (error) {
       return { success: false, data: [] };
