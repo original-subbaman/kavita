@@ -167,8 +167,9 @@ function TipTapEditor({
     content: initialContent,
     editorProps: {
       attributes: {
-        style: `background-color: ${bgColor}; border-radius: 0.25rem;`,
-        class: "p-4 mt-2 border rounded-md w-full min-h-[25rem]",
+        // style: `background-color: ${bgColor}; border-radius: 0.25rem;`,
+        style: `background-color: #fff; border-radius: 0.375rem;`,
+        class: "font-poetry p-4 mt-2 border rounded-md w-full min-h-[25rem]",
       },
     },
     onUpdate({ editor }) {
@@ -185,7 +186,8 @@ function TipTapEditor({
     content: initialTitle,
     editorProps: {
       attributes: {
-        style: `background-color: ${bgColor}; border-radius: 0.25rem;`,
+        // style: `background-color: ${bgColor}; border-radius: 0.25rem;`,
+        style: `border-radius: 0.375rem;`,
         class: "p-4 mt-2 h-12 border w-full",
       },
     },
@@ -196,8 +198,8 @@ function TipTapEditor({
 
   return (
     <div className="mx-2 md:mx-0">
-      <MenuBar editor={contentEditor} bgColor={bgColor} />
-      <EditorContent editor={titleEditor} />
+      {/* <MenuBar editor={contentEditor} bgColor={bgColor} /> */}
+      {/* <EditorContent editor={titleEditor} /> */}
       <EditorContent editor={contentEditor} />
     </div>
   );

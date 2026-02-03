@@ -1,29 +1,29 @@
-import { Button, Container, Flex } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
+import { Eye, Save, Send, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { verifyCaptcha } from "../api/utils.api";
-import BackButton from "../components/BackButton";
-import WeeklyTheme from "../components/Home/WeeklyTheme";
-import TipTapEditor from "../components/PromptSection/TipTapEditor";
 import ResponseSnackbar from "../components/ResponseSnackbar";
-import useAuth from "../hooks/auth/useAuth";
-import useAddPost from "../hooks/post/useAddPost";
-import usePostAnon from "../hooks/post/usePostAnon";
-import { useAppTheme } from "../hooks/useAppTheme";
-import useGetThemeById from "../hooks/post/useGetThemeById";
-import { Label } from "../components/ui/Label";
 import Input from "../components/ui/Input";
-import { Send, Eye, Save, Sparkles } from "lucide-react";
+import DOMPurify from "dompurify";
+import { Label } from "../components/ui/Label";
 import {
   Select,
-  SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectTrigger,
   SelectValue,
 } from "../components/ui/Select";
-import { Textarea } from "../components/ui/Textarea";
+import useAuth from "../hooks/auth/useAuth";
+import useAddPost from "../hooks/post/useAddPost";
+import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
+import usePostAnon from "../hooks/post/usePostAnon";
+import TipTapEditor from "../components/PromptSection/TipTapEditor";
 import { LanguageScripts } from "../utils/Constants";
+import { stripHtmlTags } from "../utils/Helper";
+
+const DEFAULT_THEME_ID = "24b7e05f-c018-4f03-855f-c5d8deb6d111"; // General
 
 const AddPost = ({
   postId,
@@ -34,27 +34,19 @@ const AddPost = ({
   isEdit = false,
 }) => {
   const minCharLength = 15;
-  const { themeId } = useParams();
   const { user, isAuthenticated } = useAuth();
-  const { mode } = useAppTheme();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [hasAttemptedPost, setHasAttemptedPost] = useState(false);
   const [postTitle, setPostTitle] = useState(title || "");
   const [postContent, setPostContent] = useState(content || "");
   const [isPosting, setIsPosting] = useState(false);
   const [script, setScript] = useState("Latin");
-  const [theme, setTheme] = useState("");
+  const [selectedTheme, setSelectedTheme] = useState("");
   const [isPreview, setIsPreview] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
   });
-
-  const location = useLocation();
-  const writingTheme = location.state?.writingTheme;
-
-  const postButtonTitle = isAuthenticated ? "Post" : "Post Annonymously";
 
   // Shared mutation handlers
   const handlePostSuccess = () => {
@@ -92,7 +84,7 @@ const AddPost = ({
     onError: handlePostError,
   });
 
-  const { data: selectedTheme } = useGetThemeById({ themeId: themeId });
+  const { data: themes, isFetching: isFetchingThemes } = useGetPopularThemes();
 
   const reset = () => {
     setPostContent("");
@@ -100,8 +92,6 @@ const AddPost = ({
   };
 
   const handlePublish = async () => {
-    setHasAttemptedPost(true);
-
     if (postTitle.trim().length === 0) {
       setSnackbar({
         open: true,
@@ -111,6 +101,16 @@ const AddPost = ({
       return;
     }
 
+    if (postContent.trim().length < minCharLength) {
+      setSnackbar({
+        open: true,
+        message: `Poem must be at least ${minCharLength} characters long`,
+        severity: "info",
+      });
+      return;
+    }
+
+    // Post anon flow
     if (!isEdit && !isAuthenticated) {
       try {
         setIsPosting(true);
@@ -120,7 +120,7 @@ const AddPost = ({
           postAnon({
             post: postContent,
             title: postTitle,
-            themeId: writingTheme?.id || selectedTheme?.id,
+            themeId: selectedTheme || DEFAULT_THEME_ID, // Default theme ID (general)
           });
         }
       } catch (err) {
@@ -141,7 +141,7 @@ const AddPost = ({
       addPost({
         post: postContent,
         title: postTitle,
-        themeId: writingTheme?.id,
+        themeId: selectedTheme || DEFAULT_THEME_ID, // Default theme ID (general)
       });
       return;
     }
@@ -159,9 +159,7 @@ const AddPost = ({
 
   const handleSaveDraft = () => {};
 
-  // Button is enabled initially, disables only after first attempt if invalid
-  const isPostButtonDisabled =
-    hasAttemptedPost && (postContent.length === 0 || isPosting);
+  const sanitizePostContent = DOMPurify.sanitize(postContent);
 
   return (
     <div>
@@ -222,16 +220,23 @@ const AddPost = ({
             {/* Select Theme */}
             <div className="space-y-2">
               <Label className="text-foreground font-medium">Theme</Label>
-              <Select value={theme} onValueChange={setTheme}>
+              <Select value={selectedTheme} onValueChange={setSelectedTheme}>
                 <SelectTrigger className="bg-card border-border">
                   <SelectValue placeholder="Select theme" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.values(LanguageScripts).map((script) => (
-                    <SelectItem key={script} value={script}>
-                      {script}
-                    </SelectItem>
-                  ))}
+                  {isFetchingThemes ? <div>Loading...</div> : null}
+                  {themes && themes.data.length > 0 ? (
+                    themes.data.map((theme) => (
+                      <SelectItem key={theme.id} value={theme.id}>
+                        {theme.prompt}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="p-4 text-sm text-muted-foreground">
+                      No themes available
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -241,12 +246,19 @@ const AddPost = ({
               <Label htmlFor="content" className="text-foreground font-medium">
                 Your Poem
               </Label>
-              <Textarea
+
+              {/* <Textarea
                 id="content"
                 placeholder="Let your words flow..."
                 value={postContent}
                 onChange={(e) => setPostContent(e.target.value)}
                 className="min-h-[350px] font-poetry text-lg leading-relaxed bg-card border-border resize-none"
+              /> */}
+              <TipTapEditor
+                initialContent={postContent}
+                initialTitle={postTitle}
+                onContentChange={setPostContent}
+                onTitleChange={setPostTitle}
               />
             </div>
 
@@ -255,9 +267,10 @@ const AddPost = ({
               <Button
                 onClick={handlePublish}
                 className="gap-2 bg-primary hover:bg-primary/90"
+                disabled={isPosting || isPostingAnon}
               >
                 <Send className="w-4 h-4" />
-                Publish Poem
+                {isPosting || isPostingAnon ? "Publishing..." : "Publish Poem"}
               </Button>
               <Button
                 variant="outline"
@@ -294,9 +307,13 @@ const AddPost = ({
                 <h2 className="font-display text-2xl font-bold text-foreground mb-6">
                   {postTitle || "Untitled Poem"}
                 </h2>
-                <div className="font-poetry text-lg leading-relaxed text-foreground whitespace-pre-line">
-                  {postContent || "Your poem will appear here..."}
-                </div>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      sanitizePostContent || "Your poem will appear here...",
+                  }}
+                  className="font-poetry text-lg leading-relaxed text-foreground whitespace-pre-line"
+                ></div>
               </div>
             ) : (
               <div className="text-center py-12">
