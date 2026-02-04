@@ -32,7 +32,7 @@ function InfinitePostSection({
   }, []);
 
   return (
-    <Container className={`px-3 sm:p-0 ${containerStyles}`}>
+    <div>
       <InfiniteScroll
         dataLength={posts ? posts.length : 0}
         next={() => fetchNextPage()}
@@ -40,43 +40,38 @@ function InfinitePostSection({
         loader={<div className="text-white text-2xl"></div>}
         style={{ overflow: "hidden" }}
       >
-        <ResponsiveMasonry breakpointCols={breakpointColumnsObj}>
-          <Masonry
-            className="my-masonry-grid"
-            columnClassName="my-masonry-grid_column"
-          >
-            {posts ? (
-              posts.map((post) => {
-                return (
-                  <motion.div
-                    initial={{ y: 30, opacity: 0, filter: "blur(10px)" }}
-                    animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                    style={{ width: "100%" }}
-                    key={post.id}
-                  >
-                    <NavLink to={`/post/${post.id}`} style={{ width: "100%" }}>
-                      <Post
-                        title={post?.post_title}
-                        content={post.post}
-                        author={
-                          post?.is_anon_post
-                            ? post?.anon_author
-                            : post?.profiles?.user_name
-                        }
-                        authorImg={post?.profiles?.profile_link}
-                        createdAt={post.created_at}
-                        bgColor={post.bg_color}
-                        height={"300px"}
-                      />
-                    </NavLink>
-                  </motion.div>
-                );
-              })
-            ) : (
-              <></>
-            )}
-          </Masonry>
-        </ResponsiveMasonry>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+          {posts ? (
+            posts.map((post) => {
+              return (
+                <motion.div
+                  initial={{ y: 30, opacity: 0, filter: "blur(10px)" }}
+                  animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                  style={{ width: "100%" }}
+                  key={post.id}
+                >
+                  <NavLink to={`/post/${post.id}`} style={{ width: "100%" }}>
+                    <Post
+                      title={post?.post_title}
+                      content={post.post}
+                      author={
+                        post?.is_anon_post
+                          ? post?.anon_author
+                          : post?.profiles?.user_name
+                      }
+                      authorImg={post?.profiles?.profile_link}
+                      createdAt={post.created_at}
+                      bgColor={post.bg_color}
+                      height={"300px"}
+                    />
+                  </NavLink>
+                </motion.div>
+              );
+            })
+          ) : (
+            <></>
+          )}
+        </div>
       </InfiniteScroll>
       {isFetchingNextPage && <Loading message={"Fetching more posts..."} />}
 
@@ -86,7 +81,7 @@ function InfinitePostSection({
             No more posts to show
           </div>
         ))}
-    </Container>
+    </div>
   );
 }
 
