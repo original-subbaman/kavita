@@ -1,6 +1,6 @@
-import { Box, Chip } from "@mui/material";
+import { Box } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAppTheme } from "../../hooks/useAppTheme";
+import { Feather } from "lucide-react";
 import { cn } from "../../utils/Helper";
 import { Button } from "../ui/Button";
 
@@ -37,29 +37,46 @@ const chipVariants = {
 
 const PopularThemes = ({ seletedTheme, setTheme, themes }) => {
   return (
-    <Box display="flex" gap={1} flexWrap="wrap">
-      {themes.map((t) => {
-        const isSelected = seletedTheme?.id === t.id;
-        return (
-          <AnimatePresence key={t.id}>
-            <motion.div
-              initial="hidden"
-              animate="show"
-              exit="hidden"
-              variants={chipVariants}
-              style={{ display: "inline-block" }}
-            >
-              <ThemeChip
-                theme={t?.prompt}
-                variant={isSelected ? "filled" : "outlined"}
-                isSelected={isSelected}
-                onClick={() => setTheme(t)}
-              />
-            </motion.div>
-          </AnimatePresence>
-        );
-      })}
-    </Box>
+    <div>
+      <div className="flex items-center gap-2 mb-4">
+        <Feather className="w-4 h-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-muted-foreground">
+          Browse by Theme
+        </span>
+      </div>
+      <Box
+        display="flex"
+        gap={1}
+        flexWrap={{ xs: "nowrap", md: "wrap" }}
+        justifyContent={{ xs: "space-around", md: "flex-start" }}
+        sx={{
+          overflowX: { xs: "auto", md: "unset" },
+          whiteSpace: { xs: "nowrap", md: "normal" },
+        }}
+      >
+        {themes.map((t) => {
+          const isSelected = seletedTheme?.id === t.id;
+          return (
+            <AnimatePresence key={t.id}>
+              <motion.div
+                initial="hidden"
+                animate="show"
+                exit="hidden"
+                variants={chipVariants}
+                style={{ display: "inline-block" }}
+              >
+                <ThemeChip
+                  theme={t?.prompt}
+                  variant={isSelected ? "filled" : "outlined"}
+                  isSelected={isSelected}
+                  onClick={() => setTheme(t)}
+                />
+              </motion.div>
+            </AnimatePresence>
+          );
+        })}
+      </Box>
+    </div>
   );
 };
 
