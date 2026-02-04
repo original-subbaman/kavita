@@ -1,31 +1,24 @@
 import { Box, Chip } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppTheme } from "../../hooks/useAppTheme";
+import { cn } from "../../utils/Helper";
+import { Button } from "../ui/Button";
 
-const ThemeChip = ({ label, variant = "outlined", onClick }) => {
-  const { mode } = useAppTheme();
-
-  const notSelectedColor =
-    mode === "dark" ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.87)";
-
-  const filledBg = "#F76B15";
-  const filledHover = "#F98944";
-
+const ThemeChip = ({ theme, variant = "outlined", isSelected, onClick }) => {
   return (
-    <Chip
-      label={label}
-      clickable
-      variant={variant}
+    <Button
+      variant={isSelected ? "default" : "outline"}
+      size="sm"
       onClick={onClick}
-      sx={{
-        backgroundColor: variant === "filled" ? filledBg : "transparent",
-        color: variant === "filled" ? "#FFFFFF" : notSelectedColor,
-        transition: "background-color 150ms ease",
-        "&:hover": {
-          backgroundColor: variant === "filled" ? filledHover : undefined,
-        },
-      }}
-    />
+      className={cn(
+        "gap-2 relative",
+        isSelected
+          ? "bg-primary text-primary-foreground"
+          : "border-border text-muted-foreground hover:text-foreground",
+      )}
+    >
+      {theme}
+    </Button>
   );
 };
 
@@ -43,32 +36,29 @@ const chipVariants = {
 };
 
 const PopularThemes = ({ seletedTheme, setTheme, themes }) => {
-  console.log("🚀 ~ PopularThemes ~ themes:", themes);
   return (
-    <Box
-      display="flex"
-      gap={1}
-      flexWrap="wrap"
-      justifyContent={"center"}
-      mx={2}
-    >
-      {themes.map((t) => (
-        <AnimatePresence key={t.id}>
-          <motion.div
-            initial="hidden"
-            animate="show"
-            exit="hidden"
-            variants={chipVariants}
-            style={{ display: "inline-block" }}
-          >
-            <ThemeChip
-              label={t?.prompt}
-              variant={seletedTheme?.id === t.id ? "filled" : "outlined"}
-              onClick={() => setTheme(t)}
-            />
-          </motion.div>
-        </AnimatePresence>
-      ))}
+    <Box display="flex" gap={1} flexWrap="wrap">
+      {themes.map((t) => {
+        const isSelected = seletedTheme?.id === t.id;
+        return (
+          <AnimatePresence key={t.id}>
+            <motion.div
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+              variants={chipVariants}
+              style={{ display: "inline-block" }}
+            >
+              <ThemeChip
+                theme={t?.prompt}
+                variant={isSelected ? "filled" : "outlined"}
+                isSelected={isSelected}
+                onClick={() => setTheme(t)}
+              />
+            </motion.div>
+          </AnimatePresence>
+        );
+      })}
     </Box>
   );
 };
