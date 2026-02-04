@@ -21,7 +21,6 @@ import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
 import usePostAnon from "../hooks/post/usePostAnon";
 import TipTapEditor from "../components/PromptSection/TipTapEditor";
 import { LanguageScripts } from "../utils/Constants";
-import { stripHtmlTags } from "../utils/Helper";
 
 const DEFAULT_THEME_ID = "24b7e05f-c018-4f03-855f-c5d8deb6d111"; // General
 
