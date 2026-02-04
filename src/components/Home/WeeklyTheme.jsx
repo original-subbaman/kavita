@@ -1,21 +1,36 @@
+import { Sparkles } from "lucide-react";
+
 const WeeklyTheme = ({
-  title = "✨ Today's writing theme:",
+  title = "Today's writing theme:",
   writingTheme,
-  theme,
+  themeDescription = "",
+  submissions = 0,
+  daysLeft = 7,
 }) => {
   return (
-    <div
-      className={`
-        w-full p-6 rounded-2xl overflow-hidden 
-       bg-white drop-shadow-md
-        bg-gradient-to-r from-[#209cff33] to-[#68e0cf66]`}
-    >
-      {/* Main Theme  */}
-      <div className="text-center relative z-10">
-        <p className="text-gray-700 text-sm mb-2">{title}</p>
-        <h2 className="text-2xl font-semibold text-radix-green">
+    <div className={"relative flex flex-col md:flex-row md:items-center gap-6"}>
+      <div className="flex-1">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="w-4 h-4 text-accent" />
+          <span className="text-sm font-medium text-accent">{title}</span>
+        </div>
+        <h2 className="font-display text-2xl font-bold text-foreground mb-2">
           {writingTheme}
         </h2>
+        <p className="text-muted-foreground text-sm leading-relaxed max-w-xl">
+          {themeDescription}
+        </p>
+      </div>
+
+      <div className="flex flex-row md:flex-col gap-4 md:gap-2 md:text-right">
+        <div>
+          <div className="text-2xl font-bold text-primary">{submissions}</div>
+          <div className="text-xs text-muted-foreground">submissions</div>
+        </div>
+        <div>
+          <div className="text-2xl font-bold text-accent">{daysLeft}</div>
+          <div className="text-xs text-muted-foreground">days left</div>
+        </div>
       </div>
     </div>
   );
