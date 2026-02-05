@@ -192,7 +192,11 @@ const WritingThemeSection = ({
       {isFetchingPrompt ? (
         <LoadingTheme />
       ) : (
-        <WeeklyTheme theme={mode} writingTheme={activeTheme?.prompt} />
+        <WeeklyTheme
+          theme={mode}
+          writingTheme={activeTheme?.prompt}
+          submissions={activeTheme?.submissionCount}
+        />
       )}
     </PromptSection>
   );

@@ -692,12 +692,26 @@ export async function getWritingTheme() {
       .limit(1)
       .single();
 
+    const { data: posts, error: countError } = await supabase
+      .from("post")
+      .select("*", { count: "exact" })
+      .eq("writing_theme", data?.writing_themes.id);
+
     if (error) {
       throw error;
     }
 
-    return { id: data?.writing_themes.id, prompt: data?.writing_themes.prompt };
+    if (countError) {
+      throw countError;
+    }
+
+    return {
+      id: data?.writing_themes.id,
+      prompt: data?.writing_themes.prompt,
+      submissionCount: posts ? posts.length : 0,
+    };
   } catch (error) {
+    console.log("🚀 ~ getWritingTheme ~ error:", error);
     throw error;
   }
 }

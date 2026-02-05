@@ -27,10 +27,10 @@ const WeeklyTheme = ({
           <div className="text-2xl font-bold text-primary">{submissions}</div>
           <div className="text-xs text-muted-foreground">submissions</div>
         </div>
-        <div>
+        {/* <div>
           <div className="text-2xl font-bold text-accent">{daysLeft}</div>
           <div className="text-xs text-muted-foreground">days left</div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
