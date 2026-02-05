@@ -21,6 +21,7 @@ import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
 import useGetWeeklyTheme from "../hooks/post/useGetWeeklyTheme";
 import { useAppTheme } from "../hooks/useAppTheme";
+import useDebounceSearch from "../hooks/useDebounceSearch";
 
 const ALL_FEED_TYPE = { id: "all", prompt: "All" };
 
@@ -28,12 +29,9 @@ function Home() {
   const { user } = useAuth();
   const { mode } = useAppTheme();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery("(max-width:600px)");
-  const [showPopularThemes, setShowPopularThemes] = useState(!isMobile);
-  const showIntro = useSelector((state) => state.homeIntroReducer.showIntro);
-  const dispatch = useDispatch();
 
   const [filter, setFilter] = useState({
+    searchQuery: "",
     feedType: "all",
     theme: ALL_FEED_TYPE,
   });
@@ -42,6 +40,7 @@ function Home() {
     error: false,
     message: "",
   });
+  const debounceSearchQuery = useDebounceSearch(filter.searchQuery);
 
   const { data: popularThemes, isFetched: isPopularThemesFetched } =
     useGetPopularThemes();
@@ -56,6 +55,7 @@ function Home() {
     useGetInfinitePosts({
       userId: user?.id,
       feedType: filter.feedType,
+      searchQuery: debounceSearchQuery,
       theme:
         filter.theme && filter.theme?.id === "all"
           ? undefined
@@ -124,35 +124,20 @@ function Home() {
             {/* Filters */}
             <Box className="flex flex-col gap-4 mb-4">
               {/* Filter by Popular Themes */}
-              <div className="">
-                <div
-                  className={`flex items-center justify-between ${
-                    mode === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  <Text size={"2"} className="font-semibold">
-                    Filter by Popular Themes:
-                  </Text>
-                  <IconButton
-                    size="small"
-                    onClick={() => setShowPopularThemes((prev) => !prev)}
-                    aria-label={showPopularThemes ? "Collapse" : "Expand"}
-                    sx={{ color: mode === "dark" ? "#fff" : "#222" }}
-                  >
-                    {showPopularThemes ? <MdExpandMore /> : <MdExpandLess />}
-                  </IconButton>
-                </div>
-                {/* <Collapse in={showPopularThemes} timeout="auto" unmountOnExit> */}
-                <PopularThemes
-                  seletedTheme={filter.theme}
-                  setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
-                  themes={themes}
-                />
-                {/* </Collapse> */}
-              </div>
+              <PopularThemes
+                seletedTheme={filter.theme}
+                setTheme={(t) => setFilter((f) => ({ ...f, theme: t }))}
+                themes={themes}
+              />
 
               {/* Fitler by feed type */}
-              <PostFilter setOption={setFilter} />
+              <PostFilter
+                searchQuery={filter.searchQuery}
+                setSearchQuery={(value) =>
+                  setFilter((prev) => ({ ...prev, searchQuery: value }))
+                }
+                setOption={setFilter}
+              />
             </Box>
 
             {/* Post Section */}

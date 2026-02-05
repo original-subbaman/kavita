@@ -48,6 +48,7 @@ export async function fetchPosts({ date }) {
  * @throws {Error} - Throws if fetch fails.
  */
 export async function fetchPostsPagination({
+  searchQuery,
   pageParam,
   userId,
   feedType,
@@ -88,6 +89,12 @@ export async function fetchPostsPagination({
       } else {
         return { data: [], nextCursor: undefined, hasMore: false };
       }
+    }
+
+    if (searchQuery) {
+      query = query.or(
+        `post_title.ilike.%${searchQuery}%,anon_author.ilike.%${searchQuery}%`,
+      );
     }
 
     query = query.order("created_at", { ascending: false }).limit(limit);
