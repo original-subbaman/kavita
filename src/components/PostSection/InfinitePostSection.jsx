@@ -1,7 +1,5 @@
-import { Container } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { NavLink } from "react-router-dom";
 import ErrorMessage from "../ErrorMessage";
 import Loading from "../Loading";
@@ -63,6 +61,8 @@ function InfinitePostSection({
                       createdAt={post.created_at}
                       bgColor={post.bg_color}
                       height={"300px"}
+                      likes={post.likes[0]?.count}
+                      comments={post.post_comment[0]?.count}
                     />
                   </NavLink>
                 </motion.div>

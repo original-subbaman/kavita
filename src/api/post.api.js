@@ -59,7 +59,12 @@ export async function fetchPostsPagination({
   try {
     let query = supabase
       .from("post")
-      .select("*, profiles (id, full_name, user_name, profile_link, status)")
+      .select(
+        `*, 
+        profiles (id, full_name, user_name, profile_link, status),
+        post_comment (count),
+        likes:likes (count)`,
+      )
       .eq("is_hidden", false);
 
     if (userId && !feedType) {
