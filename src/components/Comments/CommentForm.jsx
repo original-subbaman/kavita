@@ -1,6 +1,8 @@
-import { Flex, TextArea, Button, Text, Theme } from "@radix-ui/themes";
+import { Avatar, AvatarFallback } from "../ui/Avatar";
 import { useState } from "react";
+import { Button } from "../ui/Button";
 import CharLimitTextArea from "./CharLimitTextArea";
+
 const CommentForm = ({
   handleSubmit,
   submitLabel,
@@ -18,39 +20,34 @@ const CommentForm = ({
     setText("");
   };
   return (
-    <Theme accentColor="green">
-      <form onSubmit={onSubmit} className="flex flex-col gap-2 text-white">
-        <Text size={"4"} weight={"bold"} className="text-white mb-2">
-          Leave a comment
-        </Text>
+    <form
+      onSubmit={onSubmit}
+      className="flex gap-4  pb-6 border-b border-border"
+    >
+      <Avatar className="w-10 h-10">
+        <AvatarFallback className="bg-secondary">Y</AvatarFallback>
+      </Avatar>
+      <div className="flex-1">
         <CharLimitTextArea
           text={text}
           setText={setText}
           isAuthenticated={isAuthenticated}
         />
-        <div className="flex justify-end">
+        <Button type="submit" disabled={isTextAreaDisabled} className="w-36">
+          {submitLabel}
+        </Button>
+        {hasCancelButton && (
           <Button
             variant="soft"
             size={"3"}
             type="submit"
-            disabled={isTextAreaDisabled}
-            className="w-36"
+            onClick={handleCancel}
           >
-            {submitLabel}
+            Cancel
           </Button>
-          {hasCancelButton && (
-            <Button
-              variant="soft"
-              size={"3"}
-              type="submit"
-              onClick={handleCancel}
-            >
-              Cancel
-            </Button>
-          )}
-        </div>
-      </form>
-    </Theme>
+        )}
+      </div>
+    </form>
   );
 };
 

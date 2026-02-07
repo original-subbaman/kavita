@@ -23,7 +23,7 @@ const Comment = ({
   const dispatch = useDispatch();
   const fiveMin = 300000;
   // If comment created is less than 5 min we allow edit else we dont allow edit
-  const timePassed = new Date() - new Date(comment.createdAt) > fiveMin;
+  const timePassed = new Date() - new Date(comment.created_at) > fiveMin;
   // If null (not logged in) this value is false
   const canDelete = currentUserId === comment.userId && !timePassed;
   const canReport = currentUserId !== comment.userId && isAuthenticated;
@@ -39,25 +39,16 @@ const Comment = ({
     activeComment.id === comment.id;
 
   return (
-    <Box
-      className={` my-2 rounded-md p-4  ${
-        theme === "dark"
-          ? "bg-slate-600/30 text-white"
-          : "border border-gray-300 text-black"
-      }`}
-    >
-      <Box className="mb-4">
-        <Text weight={"medium"} className="block" size={"4"}>
+    <Box>
+      <Box className="">
+        <span className="font-medium text-foreground mr-1">
           {comment.userName}
-        </Text>
-        <Text
-          size={"2"}
-          className={`${theme === "dark" ? "text-gray-500" : "text-gray-600"}`}
-        >
-          {convertISOTimeToIST(comment.created_at)}
-        </Text>
+        </span>
+        <span className="text-xs text-muted-foreground">
+          {new Date(comment.created_at).toLocaleDateString()}
+        </span>
       </Box>
-      {!isEditing && <Text>{comment.comment}</Text>}
+      {!isEditing && <p className="text-foreground">{comment.comment}</p>}
       {isEditing && (
         <CommentForm
           submitLabel={"Update"}

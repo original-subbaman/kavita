@@ -1,5 +1,5 @@
 import { AlertDialogPortal } from "@radix-ui/react-alert-dialog";
-import { AlertDialogRoot, Box } from "@radix-ui/themes";
+import { AlertDialogRoot, Box, Section } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +23,7 @@ import CommentForm from "./CommentForm";
 
 const CommentSection = ({
   postId,
+  commentCount = 0,
   onPostComment,
   onPostCommentError,
   setReportError,
@@ -33,10 +34,10 @@ const CommentSection = ({
   const { user, isAuthenticated } = useAuth();
   const dispatch = useDispatch();
   const openDeleteComment = useSelector(
-    (state) => state.postDetail.openDeleteComment
+    (state) => state.postDetail.openDeleteComment,
   );
   const openReportComment = useSelector(
-    (state) => state.postDetail.openReportComment
+    (state) => state.postDetail.openReportComment,
   );
   const deleteCommentId = useSelector((state) => state.postDetail.commentId);
   const { success, error, message } = useSelector((state) => state.response);
@@ -86,7 +87,7 @@ const CommentSection = ({
   };
 
   return (
-    <Box>
+    <Section className="bg-card border border-border rounded-xl p-6 md:p-8 shadow-card">
       {/* Delete Comment Dialog */}
       <AlertDialogRoot open={openDeleteComment}>
         <AlertDialogPortal>
@@ -118,6 +119,11 @@ const CommentSection = ({
         message={message}
         onClose={() => dispatch(setError(false))}
       />
+      <div className="flex items-center gap-3 mb-6">
+        <h2 className="font-semibold text-xl text-foreground">
+          Comments ({commentCount})
+        </h2>
+      </div>
       {/* Comment Form */}
       <CommentForm
         submitLabel="Post Comment"
@@ -125,7 +131,7 @@ const CommentSection = ({
         isAuthenticated={isAuthenticated}
       />
       {/* Comment List */}
-      <Box as="div">
+      <div className="my-6">
         {/* {isFetching && <Loading message={"Fetching comments"} />} */}
         {isError && <ErrorMessage message={"Failed to load comments"} />}
         {comments &&
@@ -143,8 +149,8 @@ const CommentSection = ({
               theme={mode}
             />
           ))}
-      </Box>
-    </Box>
+      </div>
+    </Section>
   );
 };
 

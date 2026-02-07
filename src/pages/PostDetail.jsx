@@ -1,29 +1,20 @@
 import { AlertDialogPortal } from "@radix-ui/react-alert-dialog";
-import {
-  ArrowTopRightIcon,
-  HeartFilledIcon,
-  HeartIcon,
-} from "@radix-ui/react-icons";
-import {
-  AlertDialogRoot,
-  Box,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Section,
-  Text,
-} from "@radix-ui/themes";
+import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import { AlertDialogRoot, Box } from "@radix-ui/themes";
 import DOMPurify from "dompurify";
+import { motion } from "framer-motion";
+import { Calendar, Flag, Heart, MessageCircle, Share2 } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppTheme } from "../hooks/useAppTheme";
+import BackButton from "../components/BackButton";
 import CommentSection from "../components/Comments/CommentSection";
 import ReportPostDialog from "../components/PostDetail/ReportPostDialog";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import ScrollToTop from "../components/ScrollToTop";
 import SelectedText from "../components/SelectedText";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/Avatar";
+import { Button } from "../components/ui/Button";
 import useAuth from "../hooks/auth/useAuth";
 import useRecordLanguage from "../hooks/language/useRecordLanguage";
 import useCreateNotification from "../hooks/notification/useCreateNotification";
@@ -31,13 +22,14 @@ import useRemovePostNotification from "../hooks/notification/useRemovePostNotifi
 import useGetPost from "../hooks/post/useGetPost";
 import useReportPost from "../hooks/post/useReportPost";
 import useToggleLikeOnPost from "../hooks/post/useToggleLikeOnPost";
+import { useAppTheme } from "../hooks/useAppTheme";
 import { actionTypes } from "../reducers/responseReducer";
 import { setOpenReportPost } from "../slice/postDetailSlice";
 import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { NotificationTarget, NotificationType } from "../utils/Constants";
 import { convertISOTimestamp } from "../utils/Date";
-import { motion } from "framer-motion";
-import BackButton from "../components/BackButton";
+import { cn } from "../utils/Helper";
+import { postComment } from "../api/post.api";
 
 const containerVariants = {
   hidden: {},
@@ -64,7 +56,7 @@ export default function PostDetail() {
   let { id } = useParams();
 
   const openReportPost = useSelector(
-    (state) => state.postDetail.openReportPost
+    (state) => state.postDetail.openReportPost,
   );
   const { success, error, message } = useSelector((state) => state.response);
   const dispatch = useDispatch();
@@ -81,6 +73,7 @@ export default function PostDetail() {
       return { ...response.post, hasLiked: response.hasLiked };
     },
   });
+  console.log("🚀 ~ PostDetail ~ post:", post);
 
   const isAnonPost = post?.is_anon_post;
   const author = isAnonPost ? post?.anon_author : post?.profiles.user_name;
@@ -91,6 +84,8 @@ export default function PostDetail() {
   const hasLiked = post?.hasLiked;
   const contentBGColor = post?.bg_color;
   const isAuthorCurrUser = user?.id === authorId;
+  const likesCount = post?.likes[0]?.count || 0;
+  const commentCount = post?.post_comment[0]?.count || 0;
 
   // Mutations
 
@@ -149,7 +144,7 @@ export default function PostDetail() {
     () => dispatch(setSuccess("Post reported successfully")),
     (error) => {
       dispatch(setError(error?.message || "Error reporting post"));
-    }
+    },
   );
 
   const { mutate: notifyUser } = useCreateNotification(
@@ -158,7 +153,7 @@ export default function PostDetail() {
     },
     (error) => {
       console.log(error);
-    }
+    },
   );
 
   const { mutate: rmPostNotification } = useRemovePostNotification(
@@ -167,7 +162,7 @@ export default function PostDetail() {
     },
     (error) => {
       console.log(error);
-    }
+    },
   );
 
   // Handlers
@@ -233,7 +228,7 @@ export default function PostDetail() {
   function navigateToAuthorProfile() {
     navigate(`/author/${authorId}`);
   }
-
+  let authorAvatar = post?.profiles?.profile_link;
   return (
     <>
       <ScrollToTop />
@@ -264,111 +259,106 @@ export default function PostDetail() {
         severity={"success"}
         message={message}
       />
-      <Container size={"2"} className="mx-3 md:mx-0">
-        {/* Author Section */}
-        <Section size={"1"} className={` text-start`}>
-          <Flex gap={"2"} align={"start"}>
-            <BackButton size="3" />
-            <Box>
-              {author ? (
-                <Box className="flex items-center gap-4">
-                  <AnimatedText text={author || ""} theme={mode} />
-                  {!isAnonPost && (
-                    <Button
-                      variant="ghost"
-                      size={"2"}
-                      color="orange"
-                      onClick={navigateToAuthorProfile}
-                    >
-                      View More <ArrowTopRightIcon />
-                    </Button>
-                  )}
-                </Box>
-              ) : (
-                <div className="h-[28px]"></div>
-              )}
-              <Text className="text-gray-500">
-                Posted On: {convertISOTimestamp(createdAt)}
-              </Text>
-            </Box>
-          </Flex>
-        </Section>
-        {/* Capture Language Section */}
-        <div className="mb-8">
-          <SelectedText
-            selectedText={selectedText}
-            captureLanguage={handleCaptureLanguage}
-            theme={mode}
-          />
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+          <BackButton size="3" />
+          <p>Back to Feed</p>
         </div>
-        {/* Post Title */}
-        <Section
-          className={`
-          pt-4 pb-0 px-4 font-mono m-0 rounded-t-lg drop-shadow-md 
-          ${
-            mode === "dark"
-              ? "bg-brownish-dark text-white "
-              : "bg-slate-50 text-black"
-          }
-          md:px-8`}
-        >
-          {postTitle && (
-            <motion.div
-              initial={{ opacity: 0, filter: "blur(10px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-            >
-              <div
-                dangerouslySetInnerHTML={{ __html: postTitle || "" }}
-                className="font-bold text-start font-primary text-2xl"
-              />
-            </motion.div>
-          )}
-        </Section>
-        {/* Post Section */}
-        <Section
-          className={`
-          min-h-[50vh] px-4 py-4 rounded-b-lg drop-shadow-md
-          ${
-            mode === "dark"
-              ? "bg-brownish-dark text-white"
-              : "bg-slate-50 text-black"
-          }
-          mb-2 md:px-8`}
-        >
-          {content && (
-            <motion.div
-              initial={{ opacity: 0, filter: "blur(10px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-            >
-              <div
-                dangerouslySetInnerHTML={{ __html: content || "" }}
-                onMouseMove={(event) => getSelectionText()}
-                onMouseUp={(event) => window.getSelection().removeAllRanges()}
-                className="[&_p]:min-h-[1rem] prose text-start font-primary text-xl"
-              />
-            </motion.div>
-          )}
-        </Section>
-        <Box className="flex items-end justify-end   gap-4 my-0  max-h-['10px']">
-          {/* Like Button */}
-          <Button
-            className="cursor-pointer"
-            onClick={() => handleLikePost(id, user?.id)}
-          >
-            {hasLiked ? <HeartFilledIcon /> : <HeartIcon />}
-            Like
-          </Button>
-          {/* Report Button */}
-          {!isAuthorCurrUser && (
+
+        <article className="bg-card border border-border rounded-xl p-8 md:p-12 shadow-soft mb-8">
+          {/* Header */}
+          <PostHeader
+            author={author}
+            authorAvatar={authorAvatar}
+            isAnonPost={isAnonPost}
+            navigateToAuthorProfile={navigateToAuthorProfile}
+            createdAt={createdAt}
+          />
+          {/* Post Title */}
+          <div>
+            {postTitle && (
+              <motion.div
+                initial={{ opacity: 0, filter: "blur(10px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+              >
+                <div
+                  dangerouslySetInnerHTML={{ __html: postTitle || "" }}
+                  className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4"
+                />
+              </motion.div>
+            )}
+          </div>
+          {/* Post Content */}
+          <div>
+            {content && (
+              <motion.div
+                initial={{ opacity: 0, filter: "blur(10px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+              >
+                <div
+                  dangerouslySetInnerHTML={{ __html: content || "" }}
+                  onMouseMove={(event) => getSelectionText()}
+                  onMouseUp={(event) => window.getSelection().removeAllRanges()}
+                  className="font-poetry text-xl md:text-2xl leading-relaxed text-foreground whitespace-pre-line mb-8"
+                />
+              </motion.div>
+            )}
+          </div>
+
+          {/* Capture Language Section */}
+          <div className="mb-8">
+            <SelectedText
+              selectedText={selectedText}
+              captureLanguage={handleCaptureLanguage}
+              theme={mode}
+            />
+          </div>
+
+          {/* Actions */}
+          <Box className="flex items-center gap-2 pt-6 border-t border-border">
+            {/* Like Button */}
             <Button
-              className="cursor-pointer"
-              color="gray"
-              onClick={handleReportClick}
+              variant="ghost"
+              onClick={() => handleLikePost(id, user?.id)}
+              className={cn(
+                "gap-2",
+                hasLiked
+                  ? "text-prayer-red"
+                  : "text-muted-foreground hover:text-primary",
+              )}
             >
-              Report
+              <Heart className={cn("w-5 h-5", hasLiked && "fill-current")} />
+              <span>{likesCount + (hasLiked ? 1 : 0)}</span>
             </Button>
-          )}
-        </Box>
+            {/* Comment */}
+            <Button
+              variant="ghost"
+              className="gap-2 text-muted-foreground hover:text-primary"
+            >
+              <MessageCircle className="w-5 h-5" />
+              <span>{commentCount}</span>
+            </Button>
+            <Button
+              variant="ghost"
+              className="gap-2 text-muted-foreground hover:text-primary "
+            >
+              <Share2 className="w-5 h-5" />
+              Share
+            </Button>
+            {/* Report Button */}
+            {!isAuthorCurrUser && (
+              <Button
+                variant="ghost"
+                onClick={handleReportClick}
+                className="text-muted-foreground hover:text-primary ml-auto"
+              >
+                <Flag className="w-5 h-5 mr-1" />
+                Report
+              </Button>
+            )}
+          </Box>
+        </article>
+
         <Box className="mb-8">
           <CommentSection
             postId={id}
@@ -381,17 +371,63 @@ export default function PostDetail() {
             }
           />
         </Box>
-      </Container>
+      </div>
     </>
   );
 }
 
-function AnimatedText({ text, theme }) {
+function PostHeader({
+  author,
+  authorAvatar,
+  isAnonPost,
+  navigateToAuthorProfile,
+  createdAt,
+}) {
+  return (
+    <div className="flex items-start justify-between mb-8 pb-6 border-b border-border">
+      <div className="flex items-center gap-4">
+        <Avatar className="w-14 h-14">
+          <AvatarImage src={authorAvatar} alt={author} />
+          <AvatarFallback className="bg-secondary text-secondary-foreground text-lg">
+            {author?.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+        <div>
+          <div className="flex gap-1">
+            <AnimatedText text={author || ""} />
+            {author ? (
+              <Box className="flex items-center gap-4">
+                {!isAnonPost && (
+                  <Button
+                    variant="ghost"
+                    size={"2"}
+                    color="orange"
+                    onClick={navigateToAuthorProfile}
+                  >
+                    View More <ArrowTopRightIcon />
+                  </Button>
+                )}
+              </Box>
+            ) : (
+              <div className="h-[28px]"></div>
+            )}
+          </div>
+          <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3" />
+              {convertISOTimestamp(createdAt)}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AnimatedText({ text }) {
   return (
     <motion.div
-      className={`flex overflow-hidden font-primary font-bold text-lg ${
-        theme === "dark" ? "text-white" : "text-black"
-      }`}
+      className={`flex overflow-hidden font-primary font-semibold text-lg text-foreground`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
