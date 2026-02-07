@@ -229,7 +229,12 @@ export async function fetchPostAndLikeStatus(postId, userId) {
     // Fetch the post
     const { data: post, error: postError } = await supabase
       .from("post")
-      .select("*, profiles (id, full_name, user_name)")
+      .select(
+        `*, 
+        profiles (id, full_name, user_name),
+        likes (count),
+        post_comment (count)`,
+      )
       .eq("id", postId)
       .single();
 
