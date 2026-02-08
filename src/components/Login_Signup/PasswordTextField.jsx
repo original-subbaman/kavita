@@ -36,10 +36,10 @@ const PasswordTextField = ({ register, error }) => {
             <Eye className="w-4 h-4" />
           )}
         </button>
-        {error && (
-          <span className="text-xs text-red-500 mt-1 block">{error}</span>
-        )}
       </div>
+      {error && (
+        <span className="text-xs text-red-500 mt-1 block">{error}</span>
+      )}
     </div>
   );
 };
