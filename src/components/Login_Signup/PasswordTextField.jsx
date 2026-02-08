@@ -1,56 +1,46 @@
-import CustomTextField from "../CustomTextField";
-import { IconButton } from "@radix-ui/themes";
-import {
-  EyeClosedIcon,
-  EyeOpenIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
-import { TextFieldProps } from "./TextFieldProps";
+import { Eye, EyeOff, Lock } from "lucide-react";
 import { useState } from "react";
-import { PasswordRules } from "../../utils/Constants";
-const PasswordTextField = ({
-  name,
-  control,
-  error,
-  label = "Enter Password",
-  rules = PasswordRules,
-}) => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const togglePasswordVisibility = () => setIsPasswordVisible((prev) => !prev);
+import Input from "../ui/Input";
+import { Label } from "../ui/Label";
+
+const PasswordTextField = ({ register, error }) => {
+  const [showPassword, setShowPassword] = useState(false);
   return (
-    <CustomTextField
-      name={name}
-      control={control}
-      placeholder={label}
-      inputVariant={TextFieldProps.inputVariant}
-      size={TextFieldProps.size}
-      type={isPasswordVisible ? "text" : "password"}
-      rules={rules}
-      error={error}
-      startIcon={<DotsHorizontalIcon />}
-      endIcon={
-        isPasswordVisible ? (
-          <IconButton
-            onClick={togglePasswordVisibility}
-            variant="ghost"
-            type="button"
-            size={"3"}
-          >
-            <EyeOpenIcon height={"16"} width={"16"} />
-          </IconButton>
-        ) : (
-          <IconButton
-            onClick={togglePasswordVisibility}
-            variant="ghost"
-            type="button"
-            size={"3"}
-            className="p-2"
-          >
-            <EyeClosedIcon height={"16"} width={"16"} />
-          </IconButton>
-        )
-      }
-    />
+    <div className="space-y-2">
+      <Label htmlFor="password" className="text-foreground">
+        Password
+      </Label>
+      <div className="relative">
+        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          id="password"
+          type={showPassword ? "text" : "password"}
+          placeholder="Enter your password"
+          className="pl-10 pr-10 bg-card border-border"
+          {...register("password", {
+            required: "Password is required",
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters",
+            },
+          })}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+        >
+          {showPassword ? (
+            <EyeOff className="w-4 h-4" />
+          ) : (
+            <Eye className="w-4 h-4" />
+          )}
+        </button>
+        {error && (
+          <span className="text-xs text-red-500 mt-1 block">{error}</span>
+        )}
+      </div>
+    </div>
   );
 };
 

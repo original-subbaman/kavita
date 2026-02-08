@@ -1,20 +1,17 @@
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CircularLoadingSvg from "../components/Common/CircularLoadingSvg";
+import EmailTextField from "../components/Login_Signup/EmailTextField";
 import LoginWrapper from "../components/Login_Signup/LoginWrapper";
+import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import { Button } from "../components/ui/Button";
-import Input from "../components/ui/Input";
-import { Label } from "../components/ui/Label";
 import useAuth from "../hooks/auth/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [response, setResponse] = useState({
     success: false,
     error: false,
@@ -83,70 +80,9 @@ const Login = () => {
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Email */}
-        <div className="space-y-2">
-          <Label htmlFor="email" className="text-foreground">
-            Email
-          </Label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              className="pl-10 bg-card border-border"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Invalid email address",
-                },
-              })}
-            />
-            {errors.email && (
-              <span className="text-xs text-red-500 mt-1 block">
-                {errors.email.message}
-              </span>
-            )}
-          </div>
-        </div>
+        <EmailTextField register={register} error={errors.email} />
         {/* Password */}
-        <div className="space-y-2">
-          <Label htmlFor="password" className="text-foreground">
-            Password
-          </Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              className="pl-10 pr-10 bg-card border-border"
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              })}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            >
-              {showPassword ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )}
-            </button>
-            {errors.password && (
-              <span className="text-xs text-red-500 mt-1 block">
-                {errors.password.message}
-              </span>
-            )}
-          </div>
-        </div>
+        <PasswordTextField register={register} error={errors.password} />
 
         {/* Forgot Password */}
         <div className="flex justify-end my-4">

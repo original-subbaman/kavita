@@ -2,7 +2,11 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import DecorativeLeftPanel from "./DecorativeLeftPanel";
 
-const LoginWrapper = ({ title, subtitle, children }) => {
+const LoginWrapper = ({
+  title = "Welcome Back",
+  subtitle = "Continue exploring poetry",
+  children,
+}) => {
   return (
     <div className="min-h-screen flex">
       <DecorativeLeftPanel />
@@ -29,11 +33,9 @@ const LoginWrapper = ({ title, subtitle, children }) => {
           {/* Header */}
           <div className="mb-8">
             <h1 className="font-display text-3xl font-bold text-foreground mb-2">
-              Welcome back
+              {title}
             </h1>
-            <p className="text-muted-foreground">
-              Continue your poetry journey
-            </p>
+            <p className="text-muted-foreground">{subtitle}</p>
           </div>
 
           {children}
