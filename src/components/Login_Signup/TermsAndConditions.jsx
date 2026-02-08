@@ -1,17 +1,26 @@
 import { APP_NAME } from "../../utils/Constants";
 import { Dialog, Flex, Button } from "@radix-ui/themes";
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "../ui/Dialog";
 
 const TermsAndConditions = ({ open, onOpenChange }) => {
   return (
-    <Dialog.Content size={"2"} style={{ width: "750px" }}>
-      <Dialog.Title>Terms and Conditions</Dialog.Title>
-      <Dialog.Description>{Terms}</Dialog.Description>
+    <DialogContent size={"2"} style={{ width: "750px" }}>
+      <DialogTitle>Terms and Conditions</DialogTitle>
+      <DialogDescription className="overflow-auto max-h-[400px]">
+        {Terms}
+      </DialogDescription>
       <Flex gap="3" mt="4" justify="end">
-        <Dialog.Close>
+        <DialogClose>
           <Button>Close</Button>
-        </Dialog.Close>
+        </DialogClose>
       </Flex>
-    </Dialog.Content>
+    </DialogContent>
   );
 };
 const Terms = (

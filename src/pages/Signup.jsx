@@ -1,21 +1,20 @@
-import {
-  EnvelopeClosedIcon,
-  Pencil1Icon,
-  PersonIcon,
-} from "@radix-ui/react-icons";
-import { Checkbox, Dialog, Flex, Text } from "@radix-ui/themes";
+import { PersonIcon } from "@radix-ui/react-icons";
+import { Flex, Text } from "@radix-ui/themes";
+import { AtSign } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signUpWithEmail } from "../api/auth.api";
-import { isUserNameAvailable } from "../api/user.api";
-import CustomTextField from "../components/CustomTextField";
 import LoadingButton from "../components/LoadingButton";
+import EmailTextField from "../components/Login_Signup/EmailTextField";
 import LoginWrapper from "../components/Login_Signup/LoginWrapper";
 import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import TermsAndConditions from "../components/Login_Signup/TermsAndConditions";
-import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
 import ResponseSnackbar from "../components/ResponseSnackbar";
+import { Checkbox } from "../components/ui/Checkbox";
+import { Dialog } from "../components/ui/Dialog";
+import Input from "../components/ui/Input";
+import { Label } from "../components/ui/Label";
 import { useAppTheme } from "../hooks/useAppTheme";
 
 const REQUIRED_NAME_ERROR = "Name is required";
@@ -30,6 +29,7 @@ const Signup = () => {
   const formRef = useRef(null);
   const [gender, setGender] = useState("Male");
   const [loading, setLoading] = useState(false);
+  const [openTerms, setOpenTerms] = useState(false);
   const [disabledSubmit, setDisabledSubmit] = useState(false);
   const [checked, setChecked] = useState(false);
   const [response, setResponse] = useState({
@@ -44,6 +44,7 @@ const Signup = () => {
   };
 
   const {
+    register,
     handleSubmit,
     control,
     formState: { errors },
@@ -59,7 +60,7 @@ const Signup = () => {
         email,
         password,
         name,
-        user_name
+        user_name,
       );
 
       // Success case
@@ -89,8 +90,8 @@ const Signup = () => {
 
   return (
     <LoginWrapper
-      title={"Create Your Account"}
-      subtitle={"Unleash the poet in you"}
+      title="Create Your Account"
+      subtitle="Start your journey as a poet today"
     >
       {/* Success Snackbar */}
       <ResponseSnackbar
@@ -120,45 +121,52 @@ const Signup = () => {
       <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
         <Flex direction={"column"} gap={"4"}>
           <Flex direction={"column"} gap={"4"}>
-            <CustomTextField
-              control={control}
-              name={"name"}
-              placeholder="Enter Full Name"
-              inputVariant={TextFieldProps.inputVariant}
-              size={TextFieldProps.size}
-              startIcon={<PersonIcon />}
-              rules={{ required: REQUIRED_NAME_ERROR }}
-              error={errors?.name?.message}
-            />
-            <CustomTextField
-              control={control}
-              name={"user_name"}
-              placeholder="Enter User Name"
-              inputVariant={TextFieldProps.inputVariant}
-              size={TextFieldProps.size}
-              startIcon={<Pencil1Icon />}
-              rules={{
-                required: REQUIRED_USER_NAME_ERROR,
-                validate: async (value) => {
-                  const available = await isUserNameAvailable({
-                    username: value,
-                  });
-                  return available || "Username is already taken";
-                },
-              }}
-              error={errors?.user_name?.message}
-            />
-            <CustomTextField
-              control={control}
-              name={"email"}
-              placeholder="Enter Email"
-              type={"email"}
-              inputVariant={TextFieldProps.inputVariant}
-              size={TextFieldProps.size}
-              startIcon={<EnvelopeClosedIcon />}
-              rules={{ required: REQUIRED_EMAIL_ERROR }}
-              error={errors?.email?.message}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="fullname" className="text-foreground">
+                Full Name
+              </Label>
+              <div className="relative">
+                <PersonIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="fullname"
+                  type="text"
+                  placeholder="Enter your full name"
+                  className="pl-10 bg-card border-border"
+                  {...register("name", {
+                    required: REQUIRED_NAME_ERROR,
+                  })}
+                />
+                {errors.name && (
+                  <span className="text-xs text-red-500 mt-1 block">
+                    {errors.name.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="username" className="text-foreground">
+                Username
+              </Label>
+              <div className="relative">
+                <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Choose a username"
+                  className="pl-10 bg-card border-border"
+                  {...register("user_name", {
+                    required: REQUIRED_USER_NAME_ERROR,
+                  })}
+                />
+                {errors.user_name && (
+                  <span className="text-xs text-red-500 mt-1 block">
+                    {errors.user_name.message}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <EmailTextField register={register} error={errors.email} />
           </Flex>
           {/* <Flex gap={"4"} align={"stretch"}>
             <CustomTextField
@@ -181,26 +189,31 @@ const Signup = () => {
               defaultValue={"Male"}
             />
           </Flex> */}
-          <PasswordTextField
-            name={"password"}
-            control={control}
-            error={errors?.password?.message}
-          />
-          {/* Terms and Conditions */}
-          <Dialog.Root>
-            <TermsAndConditions />
-            <Dialog.Trigger>
-              <span className="text-sm text-center cursor-pointer underline text-blue-500">
-                Read Terms and Conditions
-              </span>
-            </Dialog.Trigger>
-          </Dialog.Root>
+          <PasswordTextField register={register} error={errors.password} />
+
           <Text as="label" size="2">
             <Flex gap="2">
               <Checkbox checked={checked} onCheckedChange={setChecked} />
-              Agree to Terms and Conditions
+              <Label
+                htmlFor="terms"
+                className="text-sm text-muted-foreground font-normal leading-snug cursor-pointer"
+              >
+                I agree to the{" "}
+                <button
+                  type="button"
+                  className="text-primary hover:underline font-medium"
+                  onClick={() => setOpenTerms(true)}
+                >
+                  Terms & Conditions
+                </button>
+              </Label>
             </Flex>
           </Text>
+          {/* Terms and Conditions */}
+          <Dialog open={openTerms} onOpenChange={setOpenTerms}>
+            <TermsAndConditions />
+          </Dialog>
+
           <LoadingButton
             loading={loading}
             type={"submit"}
@@ -215,16 +228,15 @@ const Signup = () => {
           >
             Sign Up
           </LoadingButton>
-          <Text as="p" align={"center"}>
+          <p className="text-center  font-medium">
             Already have an account?{" "}
-            <Text
-              as="span"
-              className="text-blue-500 cursor-pointer"
+            <span
+              className="text-primary hover:underline font-medium"
               onClick={() => navigate("/login")}
             >
               Login here
-            </Text>
-          </Text>
+            </span>
+          </p>
         </Flex>
       </form>
     </LoginWrapper>
