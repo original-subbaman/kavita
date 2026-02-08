@@ -80,9 +80,15 @@ const Login = () => {
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Email */}
-        <EmailTextField register={register} error={errors.email} />
+        <EmailTextField
+          register={register}
+          error={errors.email ? errors.email.message : ""}
+        />
         {/* Password */}
-        <PasswordTextField register={register} error={errors.password} />
+        <PasswordTextField
+          register={register}
+          error={errors.password ? errors.password.message : ""}
+        />
 
         {/* Forgot Password */}
         <div className="flex justify-end my-4">
