@@ -5,17 +5,16 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signUpWithEmail } from "../api/auth.api";
-import LoadingButton from "../components/LoadingButton";
 import EmailTextField from "../components/Login_Signup/EmailTextField";
 import LoginWrapper from "../components/Login_Signup/LoginWrapper";
 import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import TermsAndConditions from "../components/Login_Signup/TermsAndConditions";
 import ResponseSnackbar from "../components/ResponseSnackbar";
+import { Button } from "../components/ui/Button";
 import { Checkbox } from "../components/ui/Checkbox";
 import { Dialog } from "../components/ui/Dialog";
 import Input from "../components/ui/Input";
 import { Label } from "../components/ui/Label";
-import { useAppTheme } from "../hooks/useAppTheme";
 
 const REQUIRED_NAME_ERROR = "Name is required";
 const REQUIRED_EMAIL_ERROR = "Email is required";
@@ -24,8 +23,6 @@ const REQUIRED_USER_NAME_ERROR = "User name is required";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { mode } = useAppTheme();
-
   const formRef = useRef(null);
   const [gender, setGender] = useState("Male");
   const [loading, setLoading] = useState(false);
@@ -125,17 +122,19 @@ const Signup = () => {
               <Label htmlFor="fullname" className="text-foreground">
                 Full Name
               </Label>
-              <div className="relative">
-                <PersonIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="fullname"
-                  type="text"
-                  placeholder="Enter your full name"
-                  className="pl-10 bg-card border-border"
-                  {...register("name", {
-                    required: REQUIRED_NAME_ERROR,
-                  })}
-                />
+              <div>
+                <div className="relative">
+                  <PersonIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    id="fullname"
+                    type="text"
+                    placeholder="Enter your full name"
+                    className="pl-10 bg-card border-border"
+                    {...register("name", {
+                      required: REQUIRED_NAME_ERROR,
+                    })}
+                  />
+                </div>
                 {errors.name && (
                   <span className="text-xs text-red-500 mt-1 block">
                     {errors.name.message}
@@ -158,15 +157,18 @@ const Signup = () => {
                     required: REQUIRED_USER_NAME_ERROR,
                   })}
                 />
-                {errors.user_name && (
-                  <span className="text-xs text-red-500 mt-1 block">
-                    {errors.user_name.message}
-                  </span>
-                )}
               </div>
+              {errors.user_name && (
+                <span className="text-xs text-red-500 mt-1 block">
+                  {errors.user_name.message}
+                </span>
+              )}
             </div>
 
-            <EmailTextField register={register} error={errors.email} />
+            <EmailTextField
+              register={register}
+              error={errors.email ? errors.email.message : ""}
+            />
           </Flex>
           {/* <Flex gap={"4"} align={"stretch"}>
             <CustomTextField
@@ -189,10 +191,13 @@ const Signup = () => {
               defaultValue={"Male"}
             />
           </Flex> */}
-          <PasswordTextField register={register} error={errors.password} />
+          <PasswordTextField
+            register={register}
+            error={errors.password ? errors.password.message : ""}
+          />
 
           <Text as="label" size="2">
-            <Flex gap="2">
+            <Flex gap="2" align="center">
               <Checkbox checked={checked} onCheckedChange={setChecked} />
               <Label
                 htmlFor="terms"
@@ -213,21 +218,22 @@ const Signup = () => {
           <Dialog open={openTerms} onOpenChange={setOpenTerms}>
             <TermsAndConditions />
           </Dialog>
-
-          <LoadingButton
-            loading={loading}
-            type={"submit"}
-            className={`w-full ${
-              mode === "dark"
-                ? "disabled:text-gray-700 disabled:bg-gray-500/10"
-                : "disabled:text-gray-300 "
-            }`}
-            disabled={!checked || disabledSubmit}
-            size={"3"}
-            my={"3"}
+          <Button
+            type="submit"
+            className="w-full bg-primary hover:bg-primary/90"
+            size="lg"
+            disabled={loading || !checked || disabledSubmit}
           >
-            Sign Up
-          </LoadingButton>
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <CircularLoadingSvg />
+                Registering...
+              </div>
+            ) : (
+              "Sign Up"
+            )}
+          </Button>
+
           <p className="text-center  font-medium">
             Already have an account?{" "}
             <span
