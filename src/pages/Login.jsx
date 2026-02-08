@@ -1,21 +1,20 @@
-import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
-import { Flex, Text } from "@radix-ui/themes";
+import { ArrowLeft, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import CustomTextField from "../components/CustomTextField";
-import LoadingButton from "../components/LoadingButton";
-import LoginWrapper from "../components/Login_Signup/LoginWrapper";
-import PasswordTextField from "../components/Login_Signup/PasswordTextField";
-import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
+import { Link, useNavigate } from "react-router-dom";
+import DecorativeLeftPanel from "../components/Login_Signup/DecorativeLeftPanel";
 import ResponseSnackbar from "../components/ResponseSnackbar";
+import { Button } from "../components/ui/Button";
+import Input from "../components/ui/Input";
+import { Label } from "../components/ui/Label";
 import useAuth from "../hooks/auth/useAuth";
-import { useAppTheme } from "../hooks/useAppTheme";
+import CircularLoadingSvg from "../components/Common/CircularLoadingSvg";
 
 const Login = () => {
   const navigate = useNavigate();
-  const mode = useAppTheme();
+
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [response, setResponse] = useState({
     success: false,
     error: false,
@@ -23,10 +22,15 @@ const Login = () => {
   });
 
   const {
+    register,
     handleSubmit,
-    control,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const { login } = useAuth();
 
@@ -62,10 +66,7 @@ const Login = () => {
   };
 
   return (
-    <LoginWrapper
-      title={"Welcome Back!"}
-      subtitle={"Login to your account to continue"}
-    >
+    <div className="min-h-screen flex">
       {/* Success Snackbar */}
       <ResponseSnackbar
         open={response.success}
@@ -80,54 +81,142 @@ const Login = () => {
         message={response.message}
         severity={"error"}
       />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Flex direction={"column"} gap={"4"}>
-          <CustomTextField
-            name={"email"}
-            control={control}
-            placeholder="Enter Email"
-            inputVariant={TextFieldProps.inputVariant}
-            size={TextFieldProps.size}
-            startIcon={<EnvelopeClosedIcon />}
-            error={errors?.email?.message}
-            rules={{ required: "Please enter your email" }}
-          />
-          <PasswordTextField
-            name={"password"}
-            control={control}
-            rules={{ required: "Please enter your password" }}
-            error={errors?.password?.message}
-          />
-        </Flex>
-        <Flex justify={"end"} my={"3"}>
-          <Text
-            className="text-blue-500 cursor-pointer"
-            onClick={handleForgotPassword}
+      <DecorativeLeftPanel />
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 bg-background">
+        <div className="w-full max-w-md">
+          {/* Mobile logo */}
+          <div className="lg:hidden mb-8">
+            <Link to="/" className="flex items-center gap-3">
+              <span className="font-display text-2xl font-semibold text-primary">
+                कविता
+              </span>
+            </Link>
+          </div>
+
+          {/* Back link */}
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
           >
-            Forgot Password?
-          </Text>
-        </Flex>
-        <LoadingButton
-          loading={loading}
-          type={"submit"}
-          className="w-full"
-          size={"3"}
-          my={"3"}
-        >
-          Sign In
-        </LoadingButton>
-        <Text as="p" align={"center"} mt={"4"}>
-          New to Kavita?{" "}
-          <Text
-            as="span"
-            className="text-blue-500 cursor-pointer"
-            onClick={() => navigate("/signup", { replace: true })}
-          >
-            Register here
-          </Text>
-        </Text>
-      </form>
-    </LoginWrapper>
+            <ArrowLeft className="w-4 h-4" />
+            Back to home
+          </Link>
+
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="font-display text-3xl font-bold text-foreground mb-2">
+              Welcome back
+            </h1>
+            <p className="text-muted-foreground">
+              Continue your poetry journey
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Email */}
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-foreground">
+                Email
+              </Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  className="pl-10 bg-card border-border"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Invalid email address",
+                    },
+                  })}
+                />
+                {errors.email && (
+                  <span className="text-xs text-red-500 mt-1 block">
+                    {errors.email.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            {/* Password */}
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-foreground">
+                Password
+              </Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  className="pl-10 pr-10 bg-card border-border"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+                {errors.password && (
+                  <span className="text-xs text-red-500 mt-1 block">
+                    {errors.password.message}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Forgot Password */}
+            <div className="flex justify-end my-4">
+              <button
+                type="button"
+                className="text-sm text-primary hover:underline"
+                onClick={handleForgotPassword}
+              >
+                Forgot password?
+              </button>
+            </div>
+            <Button
+              type="submit"
+              className="w-full bg-primary hover:bg-primary/90"
+              size="lg"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <CircularLoadingSvg />
+                  Signing In...
+                </div>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
+            <div className="mt-6 text-center text-sm text-muted-foreground">
+              New to Kavita?{" "}
+              <button
+                className="text-primary font-medium hover:underline"
+                onClick={() => navigate("/signup", { replace: true })}
+              >
+                Register here
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 };
 

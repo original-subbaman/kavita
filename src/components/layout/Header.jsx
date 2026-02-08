@@ -71,7 +71,7 @@ function Header({ toggleSideNav, theme }) {
 
           {/* Desktop Auth */}
           <div className="hidden md:flex items-center gap-2">
-            <Link to="/auth">
+            <Link to="/login">
               <Button
                 variant="ghost"
                 size="sm"
@@ -80,7 +80,7 @@ function Header({ toggleSideNav, theme }) {
                 Sign In
               </Button>
             </Link>
-            <Link to="/auth?mode=signup">
+            <Link to="/signup">
               <Button
                 size="sm"
                 className="bg-primary px-3 py-1 hover:bg-primary/90 rounded-md text-primary-foreground"
@@ -123,12 +123,12 @@ function Header({ toggleSideNav, theme }) {
                 </Link>
               ))}
               <div className="flex gap-2 pt-4 border-t border-border mt-2">
-                <Link to="/auth" className="flex-1">
+                <Link to="/login" className="flex-1">
                   <Button variant="outline" className="w-full">
                     Sign In
                   </Button>
                 </Link>
-                <Link to="/auth?mode=signup" className="flex-1">
+                <Link to="/signup" className="flex-1">
                   <Button className="w-full">Get Started</Button>
                 </Link>
               </div>
