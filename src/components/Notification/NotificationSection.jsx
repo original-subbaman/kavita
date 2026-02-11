@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { Card, CardContent } from "../ui/Card";
+import { cn } from "../../utils/Helper";
 
 const IconButton = ({
   onClick,
@@ -48,7 +50,9 @@ function NotificationSection({
   return (
     <ul className="space-y-4">
       <div className="flex gap-2 items-center justify-between w-full">
-        <p className="text-gray-500 text-xl font-bold">{title}</p>
+        <p className="text-gray-500 text-xl font-display font-semibold">
+          {title}
+        </p>
         <div className="flex items-center gap-1">
           <IconButton
             onClick={handlePrev}
@@ -65,33 +69,34 @@ function NotificationSection({
         </div>
       </div>
       {notifications && notifications.length === 0 && (
-        <p className="text-gray-500">You're all caught up 🎉</p>
+        <p className="text-gray-500 text-sm">You're all caught up 🎉</p>
       )}
       {notifications &&
         notifications.length > 0 &&
-        notifications.map((notification) => (
-          <li
-            key={notification.id}
-            className={clsx(
-              "p-4 rounded-lg shadow-sm border flex justify-between items-start transition",
-              notification.read
-                ? "bg-gray-50 border-gray-200"
-                : "bg-blue-50 border-blue-300"
-            )}
-          >
-            <div>
-              <h2
-                className={clsx(
-                  "font-medium",
-                  notification.read ? "text-gray-700" : "text-blue-900"
+        notifications.map((notification) => {
+          return (
+            <li key={notification.id}>
+              <Card
+                className={cn(
+                  "transition-colors",
+                  !notification.read && "border-primary/30 bg-primary/5",
                 )}
               >
-                {notification.title}
-              </h2>
-              <p className="text-sm text-gray-600">{notification.message}</p>
-            </div>
-          </li>
-        ))}
+                <CardContent className="flex items-start gap-4 p-4">
+                  <div className="flex-1 min-w-0">
+                    <h2 className={"font-display"}>{notification.title}</h2>
+                    <p className="text-sm text-foreground">
+                      {notification.message}
+                    </p>
+                  </div>
+                  {!notification.read && (
+                    <div className="w-2 h-2 rounded-full bg-primary mt-2" />
+                  )}
+                </CardContent>
+              </Card>
+            </li>
+          );
+        })}
     </ul>
   );
 }

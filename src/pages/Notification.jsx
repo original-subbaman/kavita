@@ -56,10 +56,13 @@ function Notification() {
   }, [userId]);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-green-700 text-2xl font-semibold mb-6">
-        Notifications
-      </h1>
+    <div className="container mx-auto px-4 py-8 max-w-2xl">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="font-display text-3xl font-bold text-foreground">
+          Notifications
+        </h1>
+      </div>
+
       <div className="flex flex-col gap-8">
         {isFetchingNotifications || isFetchingRecentNotifications ? (
           <Loading />
