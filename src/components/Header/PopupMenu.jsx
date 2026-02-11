@@ -1,8 +1,14 @@
-import { Button, Box, Flex, Popover } from "@radix-ui/themes";
+import { Button, Box, Flex } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetProfile from "../../hooks/user/useGetProfile";
 import { getInitialsOfName } from "../../utils/Helper";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  PopoverClose,
+} from "../ui/Popover";
 
 function PopupMenu({ name, theme }) {
   const navigate = useNavigate();
@@ -19,57 +25,56 @@ function PopupMenu({ name, theme }) {
     }
   };
 
-  const initials = getInitialsOfName(user.name);
+  const initials = getInitialsOfName(name);
 
   return (
-    <Popover.Root>
-      <div className={`flex items-center gap-2 rounded cursor-pointer p-2`}>
-        <p
-          className={`text-xl hidden lg:block ${
-            theme === "dark" ? "text-white" : "text-radix-green"
-          }`}
-        >
-          {name}
-        </p>
-        <Popover.Trigger>
+    <Popover className=" p-0">
+      <div className={`flex items-center gap-2 rounded-md cursor-pointer p-2`}>
+        <p className={`text-xl hidden lg:block`}>{name}</p>
+        <PopoverTrigger>
           {profile ? (
             <img
               src={profile}
               alt="Profile"
-              className="rounded-full    "
+              className="rounded-full"
               style={{ height: "32px", width: "32px", objectFit: "cover" }} // Adjust height/width as needed
             />
           ) : (
             <Box
-              color="green"
               height="7"
               width="7"
               className="flex items-center 
               justify-center 
-              rounded-full border-2 
-              border-radix-green 
-              bg-radix-grass bg-opacity-30"
+              rounded-full border-2 border-primary text-primary bg-white"
             >
               {initials}
             </Box>
           )}
-        </Popover.Trigger>
+        </PopoverTrigger>
       </div>
-      <Popover.Content>
+      <PopoverContent>
         <Flex direction="column" gap="2">
-          <Popover.Close>
-            <Button variant="ghost" onClick={() => navigate("/profile")}>
+          <PopoverClose>
+            <Button
+              variant="ghost"
+              className="hover:bg-accent py-1 px-2 rounded-md"
+              onClick={() => navigate("/profile")}
+            >
               Profile
             </Button>
-          </Popover.Close>
-          <Popover.Close>
-            <Button variant="ghost" onClick={handleLogout}>
+          </PopoverClose>
+          <PopoverClose>
+            <Button
+              variant="ghost"
+              className="hover:bg-accent py-1 px-2 rounded-md"
+              onClick={handleLogout}
+            >
               Log out
             </Button>
-          </Popover.Close>
+          </PopoverClose>
         </Flex>
-      </Popover.Content>
-    </Popover.Root>
+      </PopoverContent>
+    </Popover>
   );
 }
 

@@ -1,20 +1,15 @@
-import { Badge, useMediaQuery } from "@mui/material";
-import { BellIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { useMediaQuery } from "@mui/material";
+import { BellIcon } from "@radix-ui/react-icons";
 import { Button } from "@radix-ui/themes";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Bookmark, Home, Menu, PenLine, User, X } from "lucide-react";
+import { useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import quill from "../../assets/quill.png";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetNotificationCount from "../../hooks/notification/useGetNotificationCount";
-import { useAppTheme } from "../../hooks/useAppTheme";
-import { Link } from "react-router-dom";
-import { PrayerFlags } from "../ui/PrayerFlags";
-import { PenLine, User, Bookmark, Home, Menu, X } from "lucide-react";
-import ToggleThemeButton from "../Common/ToggleThemeButton";
-import LinkText from "../Header/LinkText";
-import LoginButton from "../Header/LoginButton";
-import PopupMenu from "../Header/PopupMenu";
-import { useState } from "react";
 import { cn } from "../../utils/Helper";
+import PopupMenu from "../Header/PopupMenu";
+import Badge from "../ui/Badge";
 
 function Header({ toggleSideNav, theme }) {
   const location = useLocation();
@@ -43,7 +38,7 @@ function Header({ toggleSideNav, theme }) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <PrayerFlags size="sm" />
+            <img src={quill} alt="Logo" className="h-8 w-8" />
             <span className="font-display text-2xl font-semibold text-primary">
               कविता
             </span>
@@ -132,9 +127,7 @@ function Header({ toggleSideNav, theme }) {
                       </Button>
                     </Link>
                   ))}
-                  <div className="flex gap-2 pt-4 border-t border-border mt-2">
-                    <UserMenu count={count} userName={userName} />
-                  </div>
+                  <UserMenu count={count} userName={userName} />
                 </>
               ) : (
                 <div className="flex gap-2 pt-4 border-t border-border mt-2">
@@ -156,57 +149,25 @@ function Header({ toggleSideNav, theme }) {
   );
 }
 
-function NavLinks({ location }) {
-  return (
-    <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-8">
-      <NavLink to={"/"}>
-        <LinkText isActive={location.pathname === "/"}>Home</LinkText>
-      </NavLink>
-      <NavLink to={"/inspiration"}>
-        <LinkText isActive={location.pathname === "/inspiration"}>
-          Inspiration
-        </LinkText>
-      </NavLink>
-      <NavLink to={"/my-posts"}>
-        <LinkText isActive={location.pathname === "/my-posts"}>
-          My Posts
-        </LinkText>
-      </NavLink>
-    </nav>
-  );
-}
-
 function UserMenu({ count, userName }) {
   return (
-    <>
-      <NavLink to="/notifications" className="h-8">
-        <Button variant="soft" className="h-8">
-          <Badge badgeContent={count > 99 ? "99+" : count} color="success">
-            <BellIcon />
+    <div className="flex items-center gap-2">
+      <NavLink to="/notifications">
+        <Button
+          variant="ghost"
+          className="h-8 w-6 text-black hover:bg-accent hover:text-white
+          rounded-full transition-colors duration-200"
+        >
+          <Badge content={count} max={99} invisible={count === 0}>
+            <BellIcon className="h-5 w-5" />
           </Badge>
         </Button>
       </NavLink>
       <div className="hidden md:block">
         <PopupMenu name={userName} />
       </div>
-    </>
+    </div>
   );
 }
 
-function GoHomeButton({ navigate }) {
-  return (
-    <Button
-      size="4"
-      variant="ghost"
-      className="cursor-pointer hover:bg-transparent 
-        hover:shadow-none md:flex md:items-center 
-        md:gap-1 font-primary text-radix-green 
-        text-2xl font-bold"
-      onClick={() => navigate("/")}
-    >
-      Kavita
-      <img src={quill} className="w-6 h-6" />
-    </Button>
-  );
-}
 export default Header;
