@@ -73,7 +73,6 @@ export default function PostDetail() {
       return { ...response.post, hasLiked: response.hasLiked };
     },
   });
-  console.log("🚀 ~ PostDetail ~ post:", post);
 
   const isAnonPost = post?.is_anon_post;
   const author = isAnonPost ? post?.anon_author : post?.profiles.user_name;
