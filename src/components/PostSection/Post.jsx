@@ -82,16 +82,14 @@ function Post({
         )}
       </div>
 
-      <Link to={`/poem/${id}`} className="block group">
-        <div
-          className="font-display text-xl text-foreground mb-3 group-hover:text-primary transition-colors"
-          dangerouslySetInnerHTML={{ __html: sanitizePostTitle || "untitled" }}
-        />
-        <div
-          className="font-poetry text-lg text-muted-foreground leading-relaxed line-clamp-4 whitespace-pre-line"
-          dangerouslySetInnerHTML={{ __html: sanitizedPost }}
-        />
-      </Link>
+      <div
+        className="font-display text-xl text-foreground mb-3 group-hover:text-primary transition-colors"
+        dangerouslySetInnerHTML={{ __html: sanitizePostTitle || "untitled" }}
+      />
+      <div
+        className="font-poetry text-lg text-muted-foreground leading-relaxed line-clamp-4 whitespace-pre-line"
+        dangerouslySetInnerHTML={{ __html: sanitizedPost }}
+      />
 
       {/* Actions */}
       <div className="flex items-center gap-1 mt-5 pt-4 border-t border-border">
