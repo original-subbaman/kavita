@@ -48,7 +48,7 @@ export async function getLanguage({ userId }) {
   try {
     const { data, error } = await supabase
       .from("language")
-      .select("*")
+      .select("*, post(*, profiles(*))")
       .eq("user_id", userId);
 
     if (error) {
