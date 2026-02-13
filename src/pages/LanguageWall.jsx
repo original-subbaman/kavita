@@ -1,20 +1,11 @@
-import { SizeIcon, TrashIcon } from "@radix-ui/react-icons";
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  IconButton,
-  ScrollArea,
-  Text,
-  Tooltip,
-} from "@radix-ui/themes";
+import { Box, IconButton, Text, Tooltip } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
-import { CupertinoPane } from "cupertino-pane";
-import DOMPurify from "dompurify";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { Quote, Globe } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+
 import "../components/BottomPane/bottom-pane.css";
 import DeleteQuoteDialog from "../components/LanguageWall/DeleteQuoteDialog";
+import { QuoteCard } from "../components/LanguageWall/QuoteCard";
 import Loading from "../components/Loading";
 import QuoteSearchBox from "../components/QuoteSearchBox";
 import ResponseSnackbar from "../components/ResponseSnackbar";
@@ -22,38 +13,21 @@ import useAuth from "../hooks/auth/useAuth";
 import useDeleteLanguage from "../hooks/language/useDeleteLanguage";
 import useFilterLanguage from "../hooks/language/useFilterLanguage";
 import useGetLanguage from "../hooks/language/useGetLanguage";
-import useGetPostById from "../hooks/post/useGetPostById";
-import { useAppTheme } from "../hooks/useAppTheme";
 import useDebounceSearch from "../hooks/useDebounceSearch";
-import { convertISOTimeToIST } from "../utils/Date";
 
 function LanguageWall(props) {
   const { user } = useAuth();
-  const { mode } = useAppTheme();
   const queryClient = useQueryClient();
 
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounceSearch(searchTerm);
 
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [postId, setPostId] = useState();
   const [selectedQuote, setSelectedQuote] = useState();
+  const [selectedPoet, setSelectedPoet] = useState();
   const [response, setResponse] = useState();
 
-  let paneRef = useRef(null);
   let paneInstanceRef = useRef(null);
-
-  useEffect(() => {
-    paneInstanceRef.current = new CupertinoPane(paneRef.current, {
-      darkMode: true,
-      backdrop: true,
-      draggableOver: true,
-      showDraggable: true,
-      breaks: {
-        top: { enabled: true, height: 600, bounce: true },
-      },
-    });
-  }, []);
 
   const { mutate: deleteQuote } = useDeleteLanguage({
     onSuccess: () => {
@@ -73,9 +47,6 @@ function LanguageWall(props) {
     },
   });
 
-  const { data: post } = useGetPostById({ postId: postId });
-  const postHTML = DOMPurify.sanitize(post?.post);
-
   const {
     data: quotes,
     isLoading: isFetching,
@@ -85,6 +56,7 @@ function LanguageWall(props) {
   });
 
   const filteredList = useFilterLanguage(quotes, debounceSearch);
+  const poetsQuoteMap = usePoetsQuoteMap(quotes);
 
   const handleDeleteQuote = () => {
     deleteQuote({ userId: user.id, quoteId: selectedQuote?.id });
@@ -92,7 +64,10 @@ function LanguageWall(props) {
     closePane();
   };
 
-  const handleOpenDeleteDialog = () => setDeleteDialog(true);
+  const handleOpenDeleteDialog = (id) => {
+    setSelectedQuote(quotes.find((quote) => quote.id === id));
+    setDeleteDialog(true);
+  };
   const handleCloseDeleteDialog = () => setDeleteDialog(false);
 
   const handleSearchChange = (event) => setSearchTerm(event.target.value);
@@ -105,7 +80,6 @@ function LanguageWall(props) {
       });
       return;
     }
-    setPostId(postId);
     setSelectedQuote(quote);
     paneInstanceRef.current.present({ animate: true });
   };
@@ -118,7 +92,7 @@ function LanguageWall(props) {
   };
 
   return (
-    <Container className="pt-8" size={"2"}>
+    <div className="container mx-auto px-4 py-8" size={"2"}>
       {/* Response Snackbar */}
       {response && (
         <ResponseSnackbar
@@ -128,7 +102,6 @@ function LanguageWall(props) {
           onClose={() => setResponse(null)}
         />
       )}
-
       {/* Delete Quote Dialog */}
       <DeleteQuoteDialog
         open={deleteDialog}
@@ -137,173 +110,199 @@ function LanguageWall(props) {
         handleCancel={handleCloseDeleteDialog}
         handleDelete={handleDeleteQuote}
       />
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+          Language Wall
+        </h1>
+        <p className="text-muted-foreground max-w-2xl">
+          Your personal collection of favorite lines and quotes from poems.
+          Select text while reading any poem to save it here.
+        </p>
+      </div>
 
-      {/* Quote Search Box */}
-      <Box className="mx-3 mb-2">
-        <QuoteSearchBox
-          size="2"
-          handleSearchChange={handleSearchChange}
-          theme={mode}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <Sidebar
+          poets={poetsQuoteMap}
+          quotes={quotes || []}
+          selectedPoet={selectedPoet}
+          setSelectedPoet={setSelectedPoet}
         />
-        <Text
-          size="1"
-          className={`font-light ${
-            mode === "dark" ? "text-gray-300" : "text-gray-500"
-          }`}
-        >
-          * Click on a quote to view post
-        </Text>
-      </Box>
+        <div className="lg:col-span-3">
+          {/* Quote Search Box */}
+          <QuoteSearchBox
+            searchQuery={searchTerm}
+            handleSearchChange={handleSearchChange}
+          />
 
-      {isFetching && <Loading message={"Loading..."} />}
+          {isFetching && <Loading message={"Loading..."} />}
 
-      {isLanguageFetched && quotes.length === 0 && <NoQuotes />}
+          {isLanguageFetched && quotes.length === 0 && <NoQuotes />}
 
-      {isLanguageFetched && quotes.length > 0 && (
-        <QuoteList
-          quotes={filteredList}
-          handleQuoteClick={handleQuoteClick}
-          theme={mode}
-        />
-      )}
-
-      {/* Cupertino Pane */}
-      <PostPane
-        post={post}
-        ref={paneRef}
-        selectedQuote={selectedQuote}
-        postHTML={postHTML}
-        onExpand={() => paneInstanceRef.current.moveToBreak("top")}
-        onDelete={handleOpenDeleteDialog}
-        convertISOTimeToIST={convertISOTimeToIST}
-      />
-    </Container>
+          {isLanguageFetched && quotes.length > 0 && (
+            <QuoteList
+              quotes={filteredList}
+              handleQuoteClick={handleQuoteClick}
+              handleDeleteQuote={handleOpenDeleteDialog}
+            />
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
-const QuoteList = ({ quotes, handleQuoteClick, theme }) => {
+const Sidebar = ({ poets, selectedPoet, setSelectedPoet, quotes }) => {
   return (
-    <Container
-      className={`${
-        theme === "dark" ? "text-white" : "text-black"
-      } font-madimiOne mx-4`}
-      py={{ sm: "8", md: "2" }}
-    >
-      {quotes.map((quote, index) => (
-        <Text
-          mr={"3"}
-          key={quote.id}
-          onClick={() => handleQuoteClick(quote.post_id, quote)}
-          className={` ${index % 3 === 0 ? "text-2xl" : "text-md"}  
-          hover:bg-radix-green/20 hover:px-[2px] 
-          duration-500 transition-all cursor-pointer tracking-wider`}
-        >
-          {quote.language}
-        </Text>
-      ))}
-    </Container>
+    <aside className="lg:col-span-1">
+      <div className="bg-card border border-border rounded-lg p-5 shadow-card sticky top-24">
+        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+          <Globe className="w-4 h-4 text-primary" />
+          Poets
+        </h3>
+        <div className="space-y-2">
+          {(() => {
+            const poetNames = Object.keys(poets);
+            const totalCount = poetNames.reduce(
+              (sum, poet) => sum + poets[poet],
+              0,
+            );
+            return [
+              <button
+                key="all"
+                onClick={() => setSelectedPoet && setSelectedPoet("all")}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors ${
+                  selectedPoet === "all"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                <span>All Poets</span>
+                <span
+                  className={`text-xs px-2 py-0.5 rounded-full ${
+                    selectedPoet === "all"
+                      ? "bg-primary-foreground/20"
+                      : "bg-muted"
+                  }`}
+                >
+                  {totalCount}
+                </span>
+              </button>,
+              ...poetNames.map((poet) => (
+                <button
+                  key={poet}
+                  onClick={() => setSelectedPoet && setSelectedPoet(poet)}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors ${
+                    selectedPoet === poet
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <span>{poet}</span>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full ${
+                      selectedPoet === poet
+                        ? "bg-primary-foreground/20"
+                        : "bg-muted"
+                    }`}
+                  >
+                    {poets[poet]}
+                  </span>
+                </button>
+              )),
+            ];
+          })()}
+        </div>
+
+        {/* Stats */}
+        <div className="mt-6 pt-6 border-t border-border">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-primary mb-1">
+              {quotes.length}
+            </div>
+            <div className="text-sm text-muted-foreground">Saved Quotes</div>
+          </div>
+        </div>
+      </div>
+    </aside>
   );
 };
 
-const PostPane = forwardRef(
-  (
-    { post, selectedQuote, postHTML, onExpand, onDelete, convertISOTimeToIST },
-    ref
-  ) => {
-    return (
-      <div
-        ref={ref}
-        style={{
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "10px",
-        }}
-      >
-        <Box>
-          <Box className="flex justify-between border-b pb-2">
-            <PostMeta
-              author={post?.user?.user_name}
-              createdAt={convertISOTimeToIST(post?.created_at)}
-              quotedOn={convertISOTimeToIST(selectedQuote?.created_at)}
-            />
-
-            <div className="flex flex-col space-y-2 mt-3">
-              <FloatingIconButton
-                content="Expand"
-                icon={<SizeIcon style={{ color: "#7a7a7e" }} />}
-                onClick={onExpand}
-              />
-              <FloatingIconButton
-                content="Trash"
-                icon={<TrashIcon style={{ color: "#7a7a7e" }} />}
-                onClick={onDelete}
+const QuoteList = ({ quotes, handleQuoteClick, handleDeleteQuote }) => {
+  return (
+    <div className="space-y-4">
+      {quotes.map((quote, index) => {
+        const isPostByAnon = quote?.post?.is_anon_post;
+        return (
+          <>
+            <div
+              key={quote.id}
+              className="opacity-0 animate-fade-in"
+              style={{ animationDelay: `${0.05 * index}s` }}
+              onClick={() => handleQuoteClick(quote.post_id, quote)}
+            >
+              <QuoteCard
+                id={quote.id}
+                text={quote.language}
+                poemTitle={quote?.post?.post_title || "Unknown Title"}
+                poemId={quote?.post?.id}
+                author={
+                  isPostByAnon
+                    ? quote?.post?.anon_author
+                    : quote?.post?.profiles?.user_name
+                }
+                onDelete={handleDeleteQuote}
               />
             </div>
-          </Box>
-
-          <ScrollArea className="mt-6">
-            <div
-              dangerouslySetInnerHTML={{ __html: postHTML }}
-              style={{ fontFamily: "lora" }}
-            />
-          </ScrollArea>
-        </Box>
-      </div>
-    );
-  }
-);
+          </>
+        );
+      })}
+    </div>
+  );
+};
 
 const NoQuotes = () => {
   return (
-    <Flex
-      align={"center"}
-      justify={"center"}
-      className="min-h-[50vh] text-gray-500"
-    >
-      <Heading as="h1">No quotes to show</Heading>
-    </Flex>
+    <div className="bg-card border border-border rounded-xl p-12 text-center shadow-card">
+      <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+        <Quote className="w-8 h-8 text-muted-foreground" />
+      </div>
+      <h3 className="font-semibold text-lg text-foreground mb-2">
+        No quotes saved yet
+      </h3>
+      <p className="text-muted-foreground max-w-md mx-auto">
+        Start building your collection! While reading any poem, select text to
+        save your favorite lines to your Language Wall.
+      </p>
+    </div>
   );
 };
 
-const PostMeta = ({
-  author,
-  createdAt = "--/--/--",
-  quotedOn = "--/--/--",
-}) => {
-  return (
-    <Box className="flex flex-col">
-      <Text size="4" weight="bold" className="font-lora">
-        Author: {author}
-      </Text>
-      <Text size="2" weight="medium" color="gray">
-        <span style={{ fontWeight: "bold" }}>Posted On:</span> {createdAt}
-      </Text>
-      <Text size="2" weight="medium" color="gray">
-        <span style={{ fontWeight: "bold" }}>Quote Saved On:</span> {quotedOn}
-      </Text>
-    </Box>
-  );
-};
-
-const FloatingIconButton = ({ content, icon, onClick, style = {} }) => {
-  return (
-    <Tooltip title={content}>
-      <IconButton
-        style={{
-          color: "darkgray",
-          borderRadius: "50%",
-          background: "#ebebeb",
-          padding: "1px",
-          width: "26px",
-          height: "26px",
-          ...style, // allow overriding styles
-        }}
-        onClick={onClick}
-      >
-        {icon}
-      </IconButton>
-    </Tooltip>
-  );
-};
+// Custom hook to generate a map of poet names to their quote counts
+function usePoetsQuoteMap(quotes) {
+  return useMemo(() => {
+    const poetQuoteMap = {};
+    if (!quotes) return poetQuoteMap;
+    quotes.forEach((quote) => {
+      const isAnon = quote?.post?.is_anon_post;
+      if (isAnon) {
+        const anonAuthor = quote?.post?.anon_author || "Unknown Author";
+        if (!poetQuoteMap[anonAuthor]) {
+          poetQuoteMap[anonAuthor] = 1;
+        } else {
+          poetQuoteMap[anonAuthor]++;
+        }
+      } else {
+        const poet = quote?.post?.profiles?.user_name || "Unknown Author";
+        if (!poetQuoteMap[poet]) {
+          poetQuoteMap[poet] = 1;
+        } else {
+          poetQuoteMap[poet]++;
+        }
+      }
+    });
+    return poetQuoteMap;
+  }, [quotes]);
+}
 
 export default LanguageWall;
