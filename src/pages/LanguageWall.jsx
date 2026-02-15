@@ -1,6 +1,5 @@
-import { Box, IconButton, Text, Tooltip } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
-import { Quote, Globe } from "lucide-react";
+import { Globe, Quote } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 
 import "../components/BottomPane/bottom-pane.css";
@@ -11,7 +10,6 @@ import QuoteSearchBox from "../components/QuoteSearchBox";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import useAuth from "../hooks/auth/useAuth";
 import useDeleteLanguage from "../hooks/language/useDeleteLanguage";
-import useFilterLanguage from "../hooks/language/useFilterLanguage";
 import useGetLanguage from "../hooks/language/useGetLanguage";
 import useDebounceSearch from "../hooks/useDebounceSearch";
 
@@ -47,16 +45,20 @@ function LanguageWall(props) {
     },
   });
 
-  const {
-    data: quotes,
-    isLoading: isFetching,
-    isFetched: isLanguageFetched,
-  } = useGetLanguage({
+  const { data: quotesData, isLoading: isFetching } = useGetLanguage({
     userId: user.id,
+    filters: {
+      poet: selectedPoet && selectedPoet !== "all" ? selectedPoet : undefined,
+      quote: debounceSearch || undefined,
+    },
   });
 
-  const filteredList = useFilterLanguage(quotes, debounceSearch);
-  const poetsQuoteMap = usePoetsQuoteMap(quotes);
+  const { data: quotesForPoets } = useGetLanguage({
+    userId: user.id,
+    staleTime: Infinity,
+  });
+
+  const poetsQuoteMap = usePoetsQuoteMap(quotesForPoets);
 
   const handleDeleteQuote = () => {
     deleteQuote({ userId: user.id, quoteId: selectedQuote?.id });
@@ -65,7 +67,7 @@ function LanguageWall(props) {
   };
 
   const handleOpenDeleteDialog = (id) => {
-    setSelectedQuote(quotes.find((quote) => quote.id === id));
+    setSelectedQuote(quotesData.find((quote) => quote.id === id));
     setDeleteDialog(true);
   };
   const handleCloseDeleteDialog = () => setDeleteDialog(false);
@@ -124,9 +126,9 @@ function LanguageWall(props) {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         <Sidebar
           poets={poetsQuoteMap}
-          quotes={quotes || []}
           selectedPoet={selectedPoet}
           setSelectedPoet={setSelectedPoet}
+          quotesLength={quotesForPoets ? quotesForPoets.length : 0}
         />
         <div className="lg:col-span-3">
           {/* Quote Search Box */}
@@ -137,11 +139,11 @@ function LanguageWall(props) {
 
           {isFetching && <Loading message={"Loading..."} />}
 
-          {isLanguageFetched && quotes.length === 0 && <NoQuotes />}
+          {quotesData && quotesData?.length === 0 && <NoQuotes />}
 
-          {isLanguageFetched && quotes.length > 0 && (
+          {quotesData && quotesData?.length > 0 && (
             <QuoteList
-              quotes={filteredList}
+              quotes={quotesData}
               handleQuoteClick={handleQuoteClick}
               handleDeleteQuote={handleOpenDeleteDialog}
             />
@@ -152,7 +154,7 @@ function LanguageWall(props) {
   );
 }
 
-const Sidebar = ({ poets, selectedPoet, setSelectedPoet, quotes }) => {
+const Sidebar = ({ poets, selectedPoet, setSelectedPoet, quotesLength }) => {
   return (
     <aside className="lg:col-span-1">
       <div className="bg-card border border-border rounded-lg p-5 shadow-card sticky top-24">
@@ -218,7 +220,7 @@ const Sidebar = ({ poets, selectedPoet, setSelectedPoet, quotes }) => {
         <div className="mt-6 pt-6 border-t border-border">
           <div className="text-center">
             <div className="text-3xl font-bold text-primary mb-1">
-              {quotes.length}
+              {quotesLength !== undefined ? quotesLength : "—"}
             </div>
             <div className="text-sm text-muted-foreground">Saved Quotes</div>
           </div>
@@ -231,30 +233,29 @@ const Sidebar = ({ poets, selectedPoet, setSelectedPoet, quotes }) => {
 const QuoteList = ({ quotes, handleQuoteClick, handleDeleteQuote }) => {
   return (
     <div className="space-y-4">
-      {quotes.map((quote, index) => {
-        const isPostByAnon = quote?.post?.is_anon_post;
+      {quotes.map((data, index) => {
+        const isPostByAnon = data?.post?.is_anon_post;
+        const quote = data.quotes;
         return (
-          <>
-            <div
-              key={quote.id}
-              className="opacity-0 animate-fade-in"
-              style={{ animationDelay: `${0.05 * index}s` }}
-              onClick={() => handleQuoteClick(quote.post_id, quote)}
-            >
-              <QuoteCard
-                id={quote.id}
-                text={quote.language}
-                poemTitle={quote?.post?.post_title || "Unknown Title"}
-                poemId={quote?.post?.id}
-                author={
-                  isPostByAnon
-                    ? quote?.post?.anon_author
-                    : quote?.post?.profiles?.user_name
-                }
-                onDelete={handleDeleteQuote}
-              />
-            </div>
-          </>
+          <div
+            key={quote.id}
+            className="opacity-0 animate-fade-in"
+            style={{ animationDelay: `${0.05 * index}s` }}
+            onClick={() => handleQuoteClick(quote.post_id, quote)}
+          >
+            <QuoteCard
+              id={quote.id}
+              text={quote.language}
+              poemTitle={data?.post?.post_title || "Unknown Title"}
+              poemId={data?.post?.id}
+              author={
+                isPostByAnon
+                  ? data?.post?.anon_author
+                  : data?.post?.profiles?.user_name
+              }
+              onDelete={handleDeleteQuote}
+            />
+          </div>
         );
       })}
     </div>
