@@ -41,15 +41,29 @@ export async function recordLanguage({ language, userId, postId }) {
  * Fetches all language records for a user.
  * @param {Object} params
  * @param {string} params.userId - The ID of the user.
+ * @param {Object} params.filters - Filters to apply to the query.
+ * @param {string} params.filters.poet - Filter by poet name.
  * @returns {Promise<Array>} - Array of language records.
  * @throws {Error} - Throws if fetch fails or no data is returned.
  */
-export async function getLanguage({ userId }) {
+export async function getLanguage({ userId, filters = {} }) {
   try {
-    const { data, error } = await supabase
-      .from("language")
-      .select("*, post(*, profiles(*))")
-      .eq("user_id", userId);
+    let whereClause = {
+      in_user_id: userId,
+    };
+
+    if (filters.poet) {
+      whereClause["poet"] = filters.poet;
+    }
+
+    if (filters.quote) {
+      whereClause["quote"] = filters.quote;
+    }
+
+    const { data, error } = await supabase.rpc(
+      "get_quotes_with_post",
+      whereClause,
+    );
 
     if (error) {
       throw new Error(`Failed to fetch languages: ${error.message}`);
@@ -61,7 +75,8 @@ export async function getLanguage({ userId }) {
 
     return data;
   } catch (err) {
-    throw err;
+    console.log("🚀 ~ getLanguage ~ err:", err);
+    return [];
   }
 }
 
