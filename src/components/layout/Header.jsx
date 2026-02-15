@@ -1,9 +1,8 @@
-import { useMediaQuery } from "@mui/material";
 import { BellIcon } from "@radix-ui/react-icons";
 import { Button } from "@radix-ui/themes";
 import { Bookmark, Home, Menu, PenLine, User, X } from "lucide-react";
 import { useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import quill from "../../assets/quill.png";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetNotificationCount from "../../hooks/notification/useGetNotificationCount";
@@ -11,13 +10,10 @@ import { cn } from "../../utils/Helper";
 import PopupMenu from "../Header/PopupMenu";
 import Badge from "../ui/Badge";
 
-function Header({ toggleSideNav, theme }) {
+function Header() {
   const location = useLocation();
-  const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
-  console.log("🚀 ~ Header ~ isAuthenticated:", isAuthenticated);
   const userName = user?.full_name;
-  const isMobile = useMediaQuery("(max-width:600px)");
 
   const { data: count } = useGetNotificationCount(user?.id, 0);
 
