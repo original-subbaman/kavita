@@ -15,7 +15,7 @@ function Profile() {
     userId: user.id,
   });
   const { data: likeCount, isFetching: isFetchingLikeCount } = useGetTotalLikes(
-    { userId: user.id }
+    { userId: user.id },
   );
   const { data: languageCount, isFetching: isFetchingLangCount } =
     useGetLanguageCount({
@@ -25,8 +25,11 @@ function Profile() {
     useGetLongestStreak({ userId: user.id });
 
   return (
-    <Container className="flex flex-col justify-be mx-3 min-h-screen py-4">
-      <UserDetailSection />
+    <div className="container mx-auto px-4 py-8">
+      {/* Profile Header */}
+      <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
+        <UserDetailSection />
+      </div>
       <div className="my-4">
         <ActivitySection />
       </div>
@@ -48,7 +51,7 @@ function Profile() {
           value={isFetchingLongestStreak ? 0 : longestStreak[0]?.streak_length}
         />
       </Grid>
-    </Container>
+    </div>
   );
 }
 

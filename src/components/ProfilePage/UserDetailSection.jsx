@@ -1,7 +1,6 @@
-import { Avatar } from "@mui/material";
-import { Button, Text } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetProfile from "../../hooks/user/useGetProfile";
 import useGetUser from "../../hooks/user/useGetUser";
@@ -9,12 +8,23 @@ import useUpdateUser from "../../hooks/user/useUpdateUser";
 import useUploadProfile from "../../hooks/user/useUploadProfile";
 import { getInitialsOfName } from "../../utils/Helper";
 import ResponseSnackbar from "../ResponseSnackbar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
+import { Button } from "../ui/Button";
+import {
+  Edit,
+  Settings,
+  MapPin,
+  Calendar,
+  PenLine,
+  Heart,
+  Bookmark,
+  Users,
+} from "lucide-react";
 import EditProfileDialog from "./EditProfileDialog";
-import LittleInfo from "./LittleInfo";
-import ProfileSectionWrapper from "./ProfileSectionWrapper";
-import { useNavigate } from "react-router-dom";
 
 const defaultErrMsg = "Unexpected error! Please try again later";
+
+const STATS_ICON_STYLE = "w-3 h-3";
 
 function UserDetailSection(props) {
   const { user } = useAuth();
@@ -80,8 +90,44 @@ function UserDetailSection(props) {
     setResponse({ success: false, error: false });
   };
 
+  // Mock stats for demonstration; replace with real data as needed
+  const mockUserStats = {
+    postsCount: 42,
+    likesReceived: 128,
+    savedQuotes: 17,
+    followers: 256,
+  };
+
+  // Array of stat definitions
+  const stats = [
+    {
+      value: mockUserStats.postsCount,
+      label: "Poems",
+      Icon: PenLine,
+      className: "text-center",
+    },
+    {
+      value: mockUserStats.likesReceived,
+      label: "Likes",
+      Icon: Heart,
+      className: "text-center",
+    },
+    {
+      value: mockUserStats.savedQuotes,
+      label: "Saved",
+      Icon: Bookmark,
+      className: "text-center",
+    },
+    {
+      value: mockUserStats.followers,
+      label: "Followers",
+      Icon: Users,
+      className: "text-start",
+    },
+  ];
+
   return (
-    <ProfileSectionWrapper height={"15rem"}>
+    <div className="px-6 pb-6">
       {/* Success Snackbar */}
       <ResponseSnackbar
         open={response.success}
@@ -108,44 +154,79 @@ function UserDetailSection(props) {
           loading={isUpdating || isUploadingProfile ? "true" : "false"}
         />
       )}
-      <div className="flex justify-between">
-        <div className="flex gap-2">
-          <div className="w-1 h-8 bg-radix-green rounded-full"></div>
-          <Text size={"6"}>Profile</Text>
-        </div>
-        <div>
-          <Button onClick={() => setOpenEdit(true)}>Update</Button>
-        </div>
-      </div>
-      <div className="flex gap-8 mt-4">
-        <Avatar
-          src={profile}
-          sizes=""
-          sx={{
-            width: 80,
-            height: 80,
-            bgcolor: "#30a46c",
-            fontSize: "1.8rem",
-          }}
-        >
-          {getInitialsOfName(name)}
-        </Avatar>
-        <div className="w-full">
-          <div className="flex flex-col">
-            <Text size={"5"}>{name}</Text>
-            <Text size={"2"} className="text-gray-400">
-              {status}
-            </Text>
-          </div>
-          <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap justify-start sm:gap-20 w-full">
-            <LittleInfo title={"username"} info={username} />
-            <LittleInfo title={"email"} info={email || ""} />
-            <LittleInfo title={"address"} info={address} />
-            <LittleInfo title={"joined_on"} info={joinedOn} />
+
+      {/* Avatar and actions */}
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between my-4">
+        <div className="flex items-end gap-4">
+          <Avatar className="w-24 h-24 border-4 border-card shadow-lg">
+            <AvatarImage src={profile} alt={name} />
+            <AvatarFallback className="bg-secondary text-secondary-foreground text-2xl">
+              {getInitialsOfName(name)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="mb-2">
+            <h1 className="font-display text-2xl font-bold text-foreground">
+              {name}
+            </h1>
+            <p className="text-muted-foreground">@{username}</p>
           </div>
         </div>
+        <div className="flex gap-2 mt-4 sm:mt-0">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 border-border"
+            onClick={() => setOpenEdit(true)}
+          >
+            <Edit />
+            Edit Profile
+          </Button>
+          <Button variant="ghost" size="icon" className="h-9 w-9">
+            <Settings />
+          </Button>
+        </div>
       </div>
-    </ProfileSectionWrapper>
+
+      {/* Bio */}
+      <p className="text-foreground mb-4 max-w-2xl">{status}</p>
+
+      {/* Meta info */}
+      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
+        <span className="flex items-center gap-1">
+          <MapPin className="w-4 h-4 mb-1" />
+          {address || "Unknown"}
+        </span>
+        <span className="flex justify-center items-center gap-1">
+          <Calendar className="w-4 h-4 mb-1" />
+          Joined {joinedOn}
+        </span>
+      </div>
+
+      {/* Stats */}
+      <div className="flex flex-wrap gap-6">
+        {stats.map(({ value, label, Icon, className }, idx) => (
+          <StatItem
+            key={label}
+            value={value}
+            label={label}
+            Icon={Icon}
+            className={className}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StatItem({ value, label, Icon }) {
+  return (
+    <div className="text-start">
+      <div className="text-2xl font-bold text-foreground">{value}</div>
+      <div className="text-sm text-muted-foreground flex items-center gap-1">
+        <Icon className={STATS_ICON_STYLE} />
+        {label}
+      </div>
+    </div>
   );
 }
 
