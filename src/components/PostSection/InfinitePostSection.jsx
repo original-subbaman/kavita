@@ -12,12 +12,6 @@ function InfinitePostSection({
   hasNextPage,
   isFetchingNextPage,
   status,
-  breakpointColumnsObj = {
-    900: 3,
-    750: 2,
-    350: 1,
-  },
-  containerStyles,
 }) {
   if (status === "error") {
     return (
