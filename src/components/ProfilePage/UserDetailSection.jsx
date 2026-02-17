@@ -26,9 +26,8 @@ const defaultErrMsg = "Unexpected error! Please try again later";
 
 const STATS_ICON_STYLE = "w-3 h-3";
 
-function UserDetailSection(props) {
+function UserDetailSection({ userStats }) {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [openEdit, setOpenEdit] = useState(false);
   const [response, setResponse] = useState({
     success: false,
@@ -90,36 +89,28 @@ function UserDetailSection(props) {
     setResponse({ success: false, error: false });
   };
 
-  // Mock stats for demonstration; replace with real data as needed
-  const mockUserStats = {
-    postsCount: 42,
-    likesReceived: 128,
-    savedQuotes: 17,
-    followers: 256,
-  };
-
   // Array of stat definitions
   const stats = [
     {
-      value: mockUserStats.postsCount,
+      value: userStats.postsCount,
       label: "Poems",
       Icon: PenLine,
       className: "text-center",
     },
     {
-      value: mockUserStats.likesReceived,
+      value: userStats.likesReceived,
       label: "Likes",
       Icon: Heart,
       className: "text-center",
     },
     {
-      value: mockUserStats.savedQuotes,
+      value: userStats.savedQuotes,
       label: "Saved",
       Icon: Bookmark,
       className: "text-center",
     },
     {
-      value: mockUserStats.followers,
+      value: userStats.followers,
       label: "Followers",
       Icon: Users,
       className: "text-start",
