@@ -1,7 +1,19 @@
-import { Button, Dialog, Flex, Text, Box } from "@radix-ui/themes";
-import React, { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import CustomTextField from "../CustomTextField";
+import { Box, Flex } from "@radix-ui/themes";
+import { useRef, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import Input from "../ui/Input";
+import { Textarea } from "../ui/Textarea";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogFooter,
+} from "../../components/ui/Dialog";
+
+import { Button } from "../ui/Button";
+import { Label } from "../ui/Label";
 import UploadProfile from "./UploadProfile";
 
 function EditProfileDialog({
@@ -39,12 +51,12 @@ function EditProfileDialog({
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Content maxwidth="450px">
-        <Dialog.Title>Edit Profile</Dialog.Title>
-        <Dialog.Description size="2" mb="4">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent maxwidth="450px">
+        <DialogTitle>Edit Profile</DialogTitle>
+        <DialogDescription size="2" mb="4">
           Make changes to your profile.
-        </Dialog.Description>
+        </DialogDescription>
         <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
           <Box className="flex justify-center">
             <UploadProfile
@@ -53,83 +65,86 @@ function EditProfileDialog({
               setProfile={setProfile}
             />
           </Box>
-          <Flex direction="column" gap="3">
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Name
-              </Text>
-              <CustomTextField
-                name={"name"}
-                placeholder={"Enter your full name"}
+
+          <div className="flex flex-col gap-2 mb-4">
+            <div>
+              <Label htmlFor="name">Name</Label>
+              <Controller
+                name="name"
                 control={control}
-                error={errors?.name?.message}
                 rules={{ required: "Name is required" }}
+                render={({ field }) => <Input id="name" {...field} />}
               />
-            </label>
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Username
-              </Text>
-              <CustomTextField
-                name={"user_name"}
-                placeholder={"Enter your username"}
+              {errors.name && (
+                <span className="text-red-500 text-xs">
+                  {errors.name.message}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="username">Username</Label>
+              <Controller
+                name="user_name"
                 control={control}
-                defaultValue={user?.user_name}
-                error={errors?.user_name?.message}
                 rules={{ required: "Username is required" }}
+                render={({ field }) => <Input id="username" {...field} />}
               />
-            </label>
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Address
-              </Text>
-              <CustomTextField
-                name={"address"}
-                placeholder={"Enter your address"}
+              {errors.username && (
+                <span className="text-red-500 text-xs">
+                  {errors.username.message}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="address">Address</Label>
+              <Controller
+                name="address"
                 control={control}
-                defaultValue={user?.address}
-                error={errors?.address?.message}
-                rules={{ required: "Address is required" }}
+                render={({ field }) => <Input id="address" {...field} />}
               />
-            </label>
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Bio
-              </Text>
-              <CustomTextField
-                name={"bio"}
-                placeholder={"Bio"}
+            </div>
+
+            <div>
+              <Label htmlFor="bio">Bio</Label>
+              <Controller
+                name="bio"
                 control={control}
-                defaultValue={user?.bio}
-                error={errors?.bio?.message}
+                render={({ field }) => (
+                  <Textarea id="bio" rows={3} {...field} />
+                )}
               />
-            </label>
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Status
-              </Text>
-              <CustomTextField
-                name={"status"}
-                placeholder={"Status"}
+            </div>
+
+            <div>
+              <Label htmlFor="status">Status</Label>
+              <Controller
+                name="status"
                 control={control}
-                defaultValue={user?.status}
-                error={errors?.status?.message}
+                render={({ field }) => (
+                  <Input
+                    id="status"
+                    placeholder="What are you up to?"
+                    {...field}
+                  />
+                )}
               />
-            </label>
-          </Flex>
-          <Flex gap="3" mt="4" justify="end">
-            <Dialog.Close>
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose>
               <Button variant="soft" color="gray">
                 Cancel
               </Button>
-            </Dialog.Close>
+            </DialogClose>
             <Button loading={loading} type="submit">
               Save
             </Button>
-          </Flex>
+          </DialogFooter>
         </form>
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 }
 

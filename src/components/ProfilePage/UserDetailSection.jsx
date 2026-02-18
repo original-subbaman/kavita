@@ -38,6 +38,9 @@ function UserDetailSection({ userStats }) {
 
   const onUpdateSuccess = (data) => {
     setResponse((prev) => ({ ...prev, success: true }));
+    queryClient.invalidateQueries({
+      queryKey: ["user_get_user", user.id],
+    });
   };
 
   const onUpdateError = (error) => {
@@ -57,12 +60,14 @@ function UserDetailSection({ userStats }) {
   const { mutate: updateProfile, isPending: isUploadingProfile } =
     useUploadProfile({
       onSuccess: (res) => {
-        queryClient.invalidateQueries({ queryKey: ["get_profile", user.id] });
+        queryClient.invalidateQueries({
+          queryKey: ["get_profile", user.id],
+        });
       },
       onError: onUpdateError,
     });
 
-  const { data, isFetched: isUserFetched } = useGetUser({
+  const { data: userInfo, isFetched: isUserFetched } = useGetUser({
     userId: user.id,
     table: "user",
   });
@@ -75,14 +80,16 @@ function UserDetailSection({ userStats }) {
   let status = "";
   let name = "";
   let email = "";
+  let bio = "";
 
   if (isUserFetched) {
-    joinedOn = new Date(data.created_at).toLocaleDateString("en-IN");
-    username = data.user_name;
-    address = data.address;
-    status = data.status || "You should update your status!";
-    name = data.name;
-    email = data.email;
+    joinedOn = new Date(userInfo.created_at).toLocaleDateString("en-IN");
+    username = userInfo.user_name;
+    address = userInfo.address;
+    status = userInfo.status || "You should update your status!";
+    name = userInfo.name;
+    email = userInfo.email;
+    bio = userInfo.bio;
   }
 
   const handleResponseClose = () => {
@@ -139,7 +146,14 @@ function UserDetailSection({ userStats }) {
           open={openEdit}
           setOpen={setOpenEdit}
           userId={user.id}
-          user={{ address, user_name: username, name, profile: profile }}
+          user={{
+            status,
+            bio,
+            address,
+            user_name: username,
+            name,
+            profile: profile,
+          }}
           updateUser={updateUser}
           updateProfile={updateProfile}
           loading={isUpdating || isUploadingProfile ? "true" : "false"}
