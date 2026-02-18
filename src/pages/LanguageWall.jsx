@@ -9,8 +9,8 @@ import Loading from "../components/Loading";
 import QuoteSearchBox from "../components/QuoteSearchBox";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import useAuth from "../hooks/auth/useAuth";
-import useDeleteLanguage from "../hooks/language/useDeleteLanguage";
-import useGetLanguage from "../hooks/language/useGetLanguage";
+import useDeleteQuote from "../hooks/language/useDeleteQuote";
+import useGetQuotes from "../hooks/language/useGetQuotes";
 import useDebounceSearch from "../hooks/useDebounceSearch";
 
 function LanguageWall(props) {
@@ -27,14 +27,14 @@ function LanguageWall(props) {
 
   let paneInstanceRef = useRef(null);
 
-  const { mutate: deleteQuote } = useDeleteLanguage({
+  const { mutate: deleteQuote } = useDeleteQuote({
     onSuccess: () => {
       setResponse({
         open: true,
         severity: "success",
         message: "Quote deleted successfully",
       });
-      queryClient.invalidateQueries({ queryKey: ["user_language", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["user_quotes", user.id] });
     },
     onError: () => {
       setResponse({
@@ -45,7 +45,7 @@ function LanguageWall(props) {
     },
   });
 
-  const { data: quotesData, isLoading: isFetching } = useGetLanguage({
+  const { data: quotesData, isLoading: isFetching } = useGetQuotes({
     userId: user.id,
     filters: {
       poet: selectedPoet && selectedPoet !== "all" ? selectedPoet : undefined,
@@ -53,7 +53,7 @@ function LanguageWall(props) {
     },
   });
 
-  const { data: quotesForPoets } = useGetLanguage({
+  const { data: quotesForPoets } = useGetQuotes({
     userId: user.id,
     staleTime: Infinity,
   });

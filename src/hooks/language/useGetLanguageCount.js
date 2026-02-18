@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { getLanguageCount } from "../../api/language.api";
+import { getQuotesCount } from "../../api/quotes.api";
 
-const useGetLanguageCount = ({ userId, staleTime = Infinity }) => {
+const useGetQuotesCount = ({ userId, staleTime = Infinity }) => {
   return useQuery({
     queryKey: ["get_language_count", userId],
-    queryFn: () => getLanguageCount(userId),
+    queryFn: () => getQuotesCount(userId),
     staleTime: staleTime,
     enabled: !!userId,
   });
 };
 
-export default useGetLanguageCount;
+export default useGetQuotesCount;

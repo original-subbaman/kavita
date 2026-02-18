@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { recordLanguage } from "../../api/language.api";
+import { recordQuote } from "../../api/quotes.api";
 
-const useRecordLanguage = ({ onSuccess, onError }) => {
+const useRecordQuote = ({ onSuccess, onError }) => {
   return useMutation({
     mutationFn: (params) =>
-      recordLanguage({
+      recordQuote({
         language: params.language,
         userId: params.userId,
         postId: params.postId,
@@ -14,4 +14,4 @@ const useRecordLanguage = ({ onSuccess, onError }) => {
   });
 };
 
-export default useRecordLanguage;
+export default useRecordQuote;

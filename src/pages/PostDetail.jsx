@@ -16,7 +16,7 @@ import SelectedText from "../components/SelectedText";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/Avatar";
 import { Button } from "../components/ui/Button";
 import useAuth from "../hooks/auth/useAuth";
-import useRecordLanguage from "../hooks/language/useRecordLanguage";
+import useRecordQuote from "../hooks/language/useRecordQuote";
 import useCreateNotification from "../hooks/notification/useCreateNotification";
 import useRemovePostNotification from "../hooks/notification/useRemovePostNotification";
 import useGetPost from "../hooks/post/useGetPost";
@@ -29,7 +29,6 @@ import { resetResponse, setError, setSuccess } from "../slice/responseSlice";
 import { NotificationTarget, NotificationType } from "../utils/Constants";
 import { convertISOTimestamp } from "../utils/Date";
 import { cn } from "../utils/Helper";
-import { postComment } from "../api/post.api";
 
 const containerVariants = {
   hidden: {},
@@ -113,7 +112,7 @@ export default function PostDetail() {
     },
   });
 
-  const { mutate: recordLanguage } = useRecordLanguage({
+  const { mutate: recordLanguage } = useRecordQuote({
     onSuccess: (data) => {
       dispatch(setSuccess("Language captured successfully"));
 
