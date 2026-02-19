@@ -1,12 +1,7 @@
 import DOMPurify from "dompurify";
-import { Link } from "react-router-dom";
-import { PostActions } from "../../context/PostActionContext";
-import usePostActions from "../../hooks/post/usePostActions";
-import { useAppTheme } from "../../hooks/useAppTheme";
+import { Heart, MessageCircle, User } from "lucide-react";
 import { cn, timeAgoUTC } from "../../utils/Helper";
-import { PostActionMenu } from "../MyPosts/PostActionMenu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
-import { User, Heart, MessageCircle, Bookmark } from "lucide-react";
 import { Button } from "../ui/Button";
 
 function Post({
@@ -25,26 +20,10 @@ function Post({
   isSaved,
   likes = 0,
   comments = 0,
-  showMenu = false,
   className,
 }) {
-  const { mode } = useAppTheme();
-  const { onPostAction } = usePostActions();
   const sanitizePostTitle = DOMPurify.sanitize(title);
   const sanitizedPost = DOMPurify.sanitize(content);
-
-  const handleDeletePost = () =>
-    onPostAction({ action: PostActions.delete, postId: id, data: authorId });
-
-  const handleEditPost = () =>
-    onPostAction({
-      action: PostActions.edit,
-      postId: id,
-      data: { content, title, bgColor },
-    });
-
-  const handleHidePost = () =>
-    onPostAction({ action: PostActions.hide, postId: id, data: !isHidden });
 
   return (
     <article
@@ -71,15 +50,6 @@ function Post({
             </div>
           </div>
         </div>
-        {showMenu && (
-          <PostActionMenu
-            mode={mode}
-            isHidden={isHidden}
-            handleHidePost={handleHidePost}
-            handleEditPost={handleEditPost}
-            handleDeletePost={handleDeletePost}
-          />
-        )}
       </div>
 
       <div
