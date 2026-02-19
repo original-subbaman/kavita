@@ -16,6 +16,7 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 import AddPost from "../pages/AddPost.jsx";
 import LandingPage from "../pages/Landing.jsx";
 import { Layout } from "../components/layout/Layout.jsx";
+import EditPost from "../pages/EditPost.jsx";
 
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword.jsx"));
 const ResetPassword = lazy(() => import("../pages/ResetPassword.jsx"));
@@ -37,6 +38,10 @@ function CreateRouter() {
         {
           path: "post/:id",
           element: <PostDetail />,
+        },
+        {
+          path: "post/:id/edit",
+          element: <EditPost />,
         },
         {
           path: "inspiration",

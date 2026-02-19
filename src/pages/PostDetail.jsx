@@ -3,7 +3,16 @@ import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 import { AlertDialogRoot, Box } from "@radix-ui/themes";
 import DOMPurify from "dompurify";
 import { motion } from "framer-motion";
-import { Calendar, Flag, Heart, MessageCircle, Share2 } from "lucide-react";
+import {
+  Calendar,
+  Flag,
+  Heart,
+  MessageCircle,
+  Share2,
+  Edit,
+  EyeOff,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -226,6 +235,11 @@ export default function PostDetail() {
   function navigateToAuthorProfile() {
     navigate(`/author/${authorId}`);
   }
+
+  const navigateToEdit = () => navigate(`/post/${id}/edit`);
+  function hidePoem() {}
+  function deletePoem() {}
+
   let authorAvatar = post?.profiles?.profile_link;
   return (
     <>
@@ -271,6 +285,10 @@ export default function PostDetail() {
             isAnonPost={isAnonPost}
             navigateToAuthorProfile={navigateToAuthorProfile}
             createdAt={createdAt}
+            canEditPost={isAuthenticated && isAuthorCurrUser}
+            navigateToEdit={navigateToEdit}
+            hidePoem={hidePoem}
+            deletePoem={deletePoem}
           />
           {/* Post Title */}
           <div>
@@ -380,37 +398,52 @@ function PostHeader({
   isAnonPost,
   navigateToAuthorProfile,
   createdAt,
+  canEditPost = false,
+  navigateToEdit,
+  hidePoem,
+  deletePoem,
 }) {
   return (
     <div className="flex items-start justify-between mb-8 pb-6 border-b border-border">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 w-full">
         <Avatar className="w-14 h-14">
           <AvatarImage src={authorAvatar} alt={author} />
           <AvatarFallback className="bg-secondary text-secondary-foreground text-lg">
             {author?.charAt(0)}
           </AvatarFallback>
         </Avatar>
-        <div>
-          <div className="flex gap-1">
-            <AnimatedText text={author || ""} />
-            {author ? (
-              <Box className="flex items-center gap-4">
-                {!isAnonPost && (
-                  <Button
-                    variant="ghost"
-                    size={"2"}
-                    color="orange"
-                    onClick={navigateToAuthorProfile}
-                  >
-                    View More <ArrowTopRightIcon />
-                  </Button>
-                )}
-              </Box>
-            ) : (
-              <div className="h-[28px]"></div>
+        <div className="w-full">
+          <div className="flex justify-between items-center w-full">
+            <div className="flex items-center gap-1">
+              <AnimatedText text={author || ""} />
+              {author ? (
+                <>
+                  {/* View More Button */}
+                  {!isAnonPost && (
+                    <Button
+                      variant="ghost"
+                      size="icon_xs"
+                      color="orange"
+                      onClick={navigateToAuthorProfile}
+                      aria-label="View More"
+                    >
+                      <ArrowTopRightIcon className="w-4 h-4" />
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <div className="h-[28px]"></div>
+              )}
+            </div>
+            {canEditPost && (
+              <PostActions
+                onEdit={navigateToEdit}
+                onHide={hidePoem}
+                onDelete={deletePoem}
+              />
             )}
           </div>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
               {convertISOTimestamp(createdAt)}
@@ -440,5 +473,26 @@ function AnimatedText({ text }) {
         </motion.span>
       ))}
     </motion.div>
+  );
+}
+
+function PostActions({ onEdit, onHide, onDelete }) {
+  return (
+    <div className="flex gap-1">
+      <Button variant="ghost" size="icon" aria-label="Edit" onClick={onEdit}>
+        <Edit />
+      </Button>
+      <Button variant="ghost" size="icon" aria-label="Hide" onClick={onHide}>
+        <EyeOff />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        aria-label="Delete"
+        onClick={onDelete}
+      >
+        <Trash2 />
+      </Button>
+    </div>
   );
 }
