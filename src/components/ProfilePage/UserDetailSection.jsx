@@ -186,9 +186,6 @@ function UserDetailSection({ userStats }) {
             <Edit />
             Edit Profile
           </Button>
-          <Button variant="ghost" size="icon" className="h-9 w-9">
-            <Settings />
-          </Button>
         </div>
       </div>
 

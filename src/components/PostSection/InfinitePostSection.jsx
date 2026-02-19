@@ -12,6 +12,9 @@ function InfinitePostSection({
   hasNextPage,
   isFetchingNextPage,
   status,
+  showMenu = false,
+  getPostLink = (post) => `/post/${post.id}`,
+  postGridStyles = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ",
 }) {
   if (status === "error") {
     return (
@@ -32,7 +35,7 @@ function InfinitePostSection({
         loader={<div className="text-white text-2xl"></div>}
         style={{ overflow: "hidden" }}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+        <div className={postGridStyles}>
           {posts ? (
             posts.map((post) => {
               return (
@@ -42,7 +45,7 @@ function InfinitePostSection({
                   style={{ width: "100%" }}
                   key={post.id}
                 >
-                  <NavLink to={`/post/${post.id}`} style={{ width: "100%" }}>
+                  <NavLink to={getPostLink(post)} style={{ width: "100%" }}>
                     <Post
                       title={post?.post_title}
                       content={post.post}
@@ -57,6 +60,7 @@ function InfinitePostSection({
                       height={"300px"}
                       likes={post.likes[0]?.count}
                       comments={post.post_comment[0]?.count}
+                      showMenu={showMenu}
                     />
                   </NavLink>
                 </motion.div>

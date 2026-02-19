@@ -4,7 +4,7 @@ import InfinitePostSection from "../components/PostSection/InfinitePostSection";
 import UserDetailSection from "../components/ProfilePage/UserDetailSection";
 import { Button } from "../components/ui/Button";
 import useAuth from "../hooks/auth/useAuth";
-import useGetLanguageCount from "../hooks/language/useGetLanguageCount";
+import useGetQuotesCount from "../hooks/language/useGetLanguageCount";
 import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetPostCount from "../hooks/post/useGetPostCount";
 import useFollowerCount from "../hooks/user/useFollowerCount";
@@ -24,7 +24,7 @@ function Profile() {
   );
 
   const { data: quoteCount, isFetching: isFetchingQuoteCount } =
-    useGetLanguageCount({
+    useGetQuotesCount({
       userId: user.id,
     });
 
@@ -59,9 +59,6 @@ function Profile() {
       <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden mb-8">
         <UserDetailSection userStats={userStats} />
       </div>
-      {/* <div className="my-4">
-        <ActivitySection />
-      </div> */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Sidebar */}
         <Sidebar userStats={userStats} />
@@ -80,7 +77,8 @@ function Profile() {
                 fetchNextPage={fetchNextPage}
                 isFetchingNextPage={isFetchingNextPage}
                 status={status}
-                containerStyles={"md:w-[800px]"}
+                showMenu={true}
+                postGridStyles="grid grid-cols-1 gap-6"
               />
             </PostActionsProvider>
           </div>
@@ -127,13 +125,13 @@ function Sidebar({ userStats }) {
       <div className="bg-card border border-border rounded-lg p-5 shadow-card">
         <h3 className="font-semibold text-foreground mb-4">Quick Links</h3>
         <div className="space-y-2">
-          <Link to="/write">
+          <Link to="/posts/new">
             <Button variant="ghost" className="w-full justify-start gap-2">
               <PenLine className="w-4 h-4" />
               Write New Poem
             </Button>
           </Link>
-          <Link to="/language-wall">
+          <Link to="/inspiration">
             <Button variant="ghost" className="w-full justify-start gap-2">
               <Bookmark className="w-4 h-4" />
               Language Wall
