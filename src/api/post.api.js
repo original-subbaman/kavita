@@ -789,6 +789,7 @@ export async function getThemeById(themeId) {
 export async function getPopularThemes() {
   try {
     const popularThemes = [
+      "General",
       "Love",
       "Loss",
       "Hope",
