@@ -84,7 +84,7 @@ const LandingPage = () => {
               className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-in"
               style={{ animationDelay: "0.3s" }}
             >
-              <Link to="/auth?mode=signup">
+              <Link to="/posts/new">
                 <Button
                   size="lg"
                   className="gap-2 w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-8"
@@ -93,7 +93,7 @@ const LandingPage = () => {
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-              <Link to="/feed">
+              <Link to="/home">
                 <Button
                   size="lg"
                   variant="outline"
