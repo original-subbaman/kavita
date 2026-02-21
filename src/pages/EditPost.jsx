@@ -1,12 +1,12 @@
 import { Button } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
-import { Eye, Save, Send, Sparkles } from "lucide-react";
+import DOMPurify from "dompurify";
+import { Eye, Send, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { verifyCaptcha } from "../api/utils.api";
+import { useLoaderData } from "react-router-dom";
+import TipTapEditor from "../components/PromptSection/TipTapEditor";
 import ResponseSnackbar from "../components/ResponseSnackbar";
 import Input from "../components/ui/Input";
-import DOMPurify from "dompurify";
 import { Label } from "../components/ui/Label";
 import {
   Select,
@@ -16,31 +16,26 @@ import {
   SelectValue,
 } from "../components/ui/Select";
 import useAuth from "../hooks/auth/useAuth";
-import useUpdatePost from "../hooks/post/useUpdatePost";
 import useGetPopularThemes from "../hooks/post/useGetPopularThemes";
-import usePostAnon from "../hooks/post/usePostAnon";
-import TipTapEditor from "../components/PromptSection/TipTapEditor";
+import useUpdatePost from "../hooks/post/useUpdatePost";
 import { LanguageScripts } from "../utils/Constants";
 
 const DEFAULT_THEME_ID = "24b7e05f-c018-4f03-855f-c5d8deb6d111"; // General
 
-const EditPost = ({
-  postId,
-  userId,
-  content,
-  title,
-  mutation,
-  isEdit = false,
-}) => {
+const EditPost = () => {
   const minCharLength = 15;
   const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const [postTitle, setPostTitle] = useState(title || "");
-  const [postContent, setPostContent] = useState(content || "");
-  const [isPosting, setIsPosting] = useState(false);
+  const post = useLoaderData();
+
   const [script, setScript] = useState("Latin");
-  const [selectedTheme, setSelectedTheme] = useState("");
+
+  const [postTitle, setPostTitle] = useState(post?.post_title || "");
+  const [postContent, setPostContent] = useState(post?.post || "");
+
+  const [selectedTheme, setSelectedTheme] = useState(
+    post?.writing_theme || DEFAULT_THEME_ID,
+  );
   const [isPreview, setIsPreview] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -57,10 +52,6 @@ const EditPost = ({
       message: "Edit successful",
       severity: "success",
     });
-    setTimeout(() => {
-      navigate("/", { state: { showPostSection: true } });
-    }, 3000);
-    reset();
   };
 
   const handlePostError = () => {
@@ -72,25 +63,15 @@ const EditPost = ({
     setAddPostDialog && setAddPostDialog(false);
   };
 
-  const { mutate: updatePost } = useUpdatePost({
+  const { mutate: updatePost, isPending: isUpdating } = useUpdatePost({
     userId: user?.id,
-    onSuccess: handlePostSuccess,
-    onError: handlePostError,
-  });
-
-  const { mutate: postAnon, isPending: isPostingAnon } = usePostAnon({
     onSuccess: handlePostSuccess,
     onError: handlePostError,
   });
 
   const { data: themes, isFetching: isFetchingThemes } = useGetPopularThemes();
 
-  const reset = () => {
-    setPostContent("");
-    setPostTitle("");
-  };
-
-  const handlePublish = async () => {
+  const handleUpdate = async () => {
     if (postTitle.trim().length === 0) {
       setSnackbar({
         open: true,
@@ -109,54 +90,17 @@ const EditPost = ({
       return;
     }
 
-    // Post anon flow
-    if (!isEdit && !isAuthenticated) {
-      try {
-        setIsPosting(true);
-        const token = await getRecaptchaToken("anon_create_post");
-        const res = await verifyCaptcha(token);
-        if (res.success) {
-          postAnon({
-            post: postContent,
-            title: postTitle,
-            themeId: selectedTheme || DEFAULT_THEME_ID, // Default theme ID (general)
-          });
-        }
-      } catch (err) {
-        console.log("🚀 ~ handleOnPostClick ~ err:", err);
-        setSnackbar({
-          open: true,
-          message: "Captcha verification failed",
-          severity: "error",
-        });
-      } finally {
-        setIsPosting(false);
-      }
-
-      return;
-    }
-
-    if (!isEdit && isAuthenticated) {
+    if (isAuthenticated) {
       updatePost({
+        postId: post?.id,
         post: postContent,
         title: postTitle,
         themeId: selectedTheme || DEFAULT_THEME_ID, // Default theme ID (general)
-      });
-      return;
-    }
-
-    if (isEdit && isAuthenticated) {
-      mutation({
-        post: postContent,
-        postId,
-        userId,
-        bgColor,
+        userId: user?.id,
       });
       return;
     }
   };
-
-  const handleSaveDraft = () => {};
 
   const sanitizePostContent = DOMPurify.sanitize(postContent);
 
@@ -246,13 +190,6 @@ const EditPost = ({
                 Your Poem
               </Label>
 
-              {/* <Textarea
-                id="content"
-                placeholder="Let your words flow..."
-                value={postContent}
-                onChange={(e) => setPostContent(e.target.value)}
-                className="min-h-[350px] font-poetry text-lg leading-relaxed bg-card border-border resize-none"
-              /> */}
               <TipTapEditor
                 initialContent={postContent}
                 initialTitle={postTitle}
@@ -264,20 +201,12 @@ const EditPost = ({
             {/* Actions */}
             <div className="flex flex-wrap gap-3">
               <Button
-                onClick={handlePublish}
+                onClick={handleUpdate}
                 className="gap-2 bg-primary hover:bg-primary/90"
-                disabled={isPosting || isPostingAnon}
+                disabled={isUpdating}
               >
                 <Send className="w-4 h-4" />
-                {isPosting || isPostingAnon ? "Publishing..." : "Publish Poem"}
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleSaveDraft}
-                className="gap-2 border-border"
-              >
-                <Save className="w-4 h-4" />
-                Save Draft
+                {isUpdating ? "Updating..." : "Update Poem"}
               </Button>
               <Button
                 variant="ghost"
@@ -342,16 +271,5 @@ const EditPost = ({
     </div>
   );
 };
-
-async function getRecaptchaToken(action = "submit") {
-  if (!window.grecaptcha) {
-    throw new Error("reCAPTCHA not loaded");
-  }
-
-  return await window.grecaptcha.execute(
-    import.meta.env.VITE_RECAPTCHA_SITE_KEY,
-    { action },
-  );
-}
 
 export default EditPost;
