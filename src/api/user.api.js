@@ -213,17 +213,17 @@ export async function getProfile(userId) {
     if (!userId) throw new Error("userId is required");
 
     const { data, error } = await supabase
-      .from("user")
-      .select("profile_url")
+      .from("profiles")
+      .select("profile_link")
       .eq("id", userId)
       .single();
 
     if (error) throw error;
-    if (!data?.profile_url) return null;
+    if (!data?.profile_link) return null;
 
     const {
       data: { publicUrl },
-    } = supabase.storage.from("profile_images").getPublicUrl(data.profile_url);
+    } = supabase.storage.from("profile_images").getPublicUrl(data.profile_link);
 
     return publicUrl;
   } catch (error) {
