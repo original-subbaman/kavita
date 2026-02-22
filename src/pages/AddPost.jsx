@@ -40,7 +40,7 @@ const AddPost = ({
   const [postContent, setPostContent] = useState(content || "");
   const [isPosting, setIsPosting] = useState(false);
   const [script, setScript] = useState("Latin");
-  const [selectedTheme, setSelectedTheme] = useState("");
+  const [selectedTheme, setSelectedTheme] = useState(DEFAULT_THEME_ID);
   const [isPreview, setIsPreview] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
