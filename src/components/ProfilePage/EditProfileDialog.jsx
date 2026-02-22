@@ -133,10 +133,8 @@ function EditProfileDialog({
             </div>
           </div>
           <DialogFooter>
-            <DialogClose>
-              <Button variant="soft" color="gray">
-                Cancel
-              </Button>
+            <DialogClose variant="soft" color="gray" className="mr-4">
+              Cancel
             </DialogClose>
             <Button loading={loading} type="submit">
               Save
