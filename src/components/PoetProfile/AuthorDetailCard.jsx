@@ -1,12 +1,12 @@
-import { PlusIcon } from "@radix-ui/react-icons";
-import { Avatar, Box, Button } from "@radix-ui/themes";
+import { UserCheck2 } from "lucide-react";
+import { Button } from "../../components/ui/Button";
 import { getInitialsOfName } from "../../utils/Helper";
-import { useAppTheme } from "../../hooks/useAppTheme";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
 
 const FollowButton = ({ onClick, isLoading = true }) => {
   return (
-    <Button variant="ghost" color="orange" onClick={onClick}>
-      <PlusIcon className="h-4 w-4" />
+    <Button variant="outline" size="xs" onClick={onClick}>
+      <UserCheck2 className="h-4 w-4" />
       Follow
     </Button>
   );
@@ -14,8 +14,9 @@ const FollowButton = ({ onClick, isLoading = true }) => {
 
 const UnfollowButton = ({ onClick, isLoading = true }) => {
   return (
-    <Button variant="ghost" color="orange" onClick={onClick}>
-      Unfollow
+    <Button variant="outline" size="xs" onClick={onClick}>
+      <UserCheck2 className="h-4 w-4" />
+      Following
     </Button>
   );
 };
@@ -24,7 +25,7 @@ const AuthorDetailCard = ({
   profile = "",
   username = "username",
   name = "John Doe",
-  bio = "Hakuna Matata! This is my bio.",
+  status = "Hakuna Matata! This is my bio.",
   poems = "100",
   followers = "0",
   showFollowButton = true,
@@ -33,32 +34,21 @@ const AuthorDetailCard = ({
   onFollowUser = () => {},
   onUnfollowUser = () => {},
 }) => {
-  const { mode } = useAppTheme();
-  const isDark = mode === "dark";
   return (
-    <Box
-      className={`${
-        mode === "dark" ? "bg-[#212327]" : "bg-white"
-      } rounded-xl p-8 border w-full`}
-    >
+    <div className="bg-card border border-border rounded-xl p-8 shadow-soft">
       <div className="flex flex-col md:flex-row gap-6 items-start">
-        {/* Avatar */}
-        <Avatar
-          className="h-24 w-24"
-          src={profile || getInitialsOfName(name)}
-        />
+        <Avatar className="w-24 h-24">
+          <AvatarImage src={profile || getInitialsOfName(name)} alt={name} />
+          <AvatarFallback className="bg-secondary text-secondary-foreground text-3xl">
+            {name.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
 
         {/* Profile Info */}
         <div className="flex-1">
           <div>
-            <div className="flex items-center gap-4 ">
-              <h1
-                className={`text-2xl ${
-                  isDark ? "text-white" : "text-gray-900"
-                }`}
-              >
-                {name.toLocaleLowerCase()}
-              </h1>
+            <div className="flex items-center gap-2 ">
+              <h1 className={"text-2xl"}>{name.toLocaleLowerCase()}</h1>
               {!isUserAuthor && isAuthenticated && (
                 <div>
                   {showFollowButton ? (
@@ -69,54 +59,32 @@ const AuthorDetailCard = ({
                 </div>
               )}
             </div>
-            <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>
-              @{username}
-            </p>
+            <p className={"text-muted-foreground mt-1"}>@{username}</p>
           </div>
 
           {/* Bio */}
-          <p
-            className={`${
-              isDark ? "text-gray-300" : "text-gray-600"
-            } mb-6 text-sm italic max-w-2xl leading-relaxed`}
-          >
-            {bio}
-          </p>
+          <p className={"text-foreground text-sm my-3 italic"}>"{status}"</p>
 
           {/* Stats */}
           <div className="flex gap-6">
             <div className="text-center">
-              <div
-                className={`${isDark ? "text-white" : "text-gray-900"} text-lg`}
-              >
-                {poems}
-              </div>
-              <div
-                className={`${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                } text-sm font-light`}
-              >
+              <div className={"font-semibold text-foreground"}>{poems}</div>
+              <div className={"text-muted-foreground text-sm font-light"}>
                 poems
               </div>
             </div>
             <div className="text-center">
-              <div
-                className={`${isDark ? "text-white" : "text-gray-900"} text-lg`}
-              >
+              <div className={"font-semibold text-foreground"}>
                 {followers.toLocaleString()}
               </div>
-              <div
-                className={`${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                } text-sm font-light`}
-              >
+              <div className={"text-muted-foreground text-sm font-light"}>
                 followers
               </div>
             </div>
           </div>
         </div>
       </div>
-    </Box>
+    </div>
   );
 };
 

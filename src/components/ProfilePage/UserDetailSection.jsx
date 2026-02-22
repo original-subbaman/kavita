@@ -1,6 +1,14 @@
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  Bookmark,
+  Calendar,
+  Edit,
+  Heart,
+  MapPin,
+  PenLine,
+  Users,
+} from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetProfile from "../../hooks/user/useGetProfile";
 import useGetUser from "../../hooks/user/useGetUser";
@@ -10,16 +18,6 @@ import { getInitialsOfName } from "../../utils/Helper";
 import ResponseSnackbar from "../ResponseSnackbar";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
 import { Button } from "../ui/Button";
-import {
-  Edit,
-  Settings,
-  MapPin,
-  Calendar,
-  PenLine,
-  Heart,
-  Bookmark,
-  Users,
-} from "lucide-react";
 import EditProfileDialog from "./EditProfileDialog";
 
 const defaultErrMsg = "Unexpected error! Please try again later";

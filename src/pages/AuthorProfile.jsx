@@ -1,4 +1,4 @@
-import { Container, Text } from "@radix-ui/themes";
+import { Container } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -6,7 +6,6 @@ import BackButton from "../components/BackButton";
 import AuthorDetailCard from "../components/PoetProfile/AuthorDetailCard";
 import InfinitePostSection from "../components/PostSection/InfinitePostSection";
 import ResponseSnackbar from "../components/ResponseSnackbar";
-import { PostActionsProvider } from "../context/PostActionContext";
 import useAuth from "../hooks/auth/useAuth";
 import useNotifyNewFolower from "../hooks/notification/useNotifyNewFollower";
 import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
@@ -92,7 +91,7 @@ const AuthorProfile = () => {
         `Unfollowed successfully`,
         queryClient.invalidateQueries({
           queryKey: ["follower_count", authorUserId],
-        })
+        }),
       ),
     onError: () => onError("Unable to unfollowe user. Please try again later."),
   });
@@ -131,7 +130,7 @@ const AuthorProfile = () => {
           username={author?.user_name || ""}
           name={author?.full_name || ""}
           poems={postCount || 0}
-          bio={author?.bio}
+          status={author?.status}
           followers={followerCount}
           isUserAuthor={isUserAuthor}
           isAuthenticated={isAuthenticated}
@@ -140,19 +139,18 @@ const AuthorProfile = () => {
           onUnfollowUser={handleUnfollowUser}
         />
       </div>
-      <p className="text-white my-4">Recent Posts</p>
-      <PostActionsProvider>
-        <InfinitePostSection
-          data={posts}
-          hasNextPage={hasNextPage}
-          fetchNextPage={fetchNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-          status={status}
-          breakpointColumnsObj={{
-            default: 1,
-          }}
-        />
-      </PostActionsProvider>
+      <p className="text-foreground font-semibold my-4">Recent Posts</p>
+      <InfinitePostSection
+        data={posts}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        status={status}
+        postGridStyles="grid grid-cols-1"
+        breakpointColumnsObj={{
+          default: 1,
+        }}
+      />
     </Container>
   );
 };
