@@ -42,14 +42,16 @@ export async function updateUser({ userId, user }) {
     if (!userId) throw new Error("userId is required");
     if (!user) throw new Error("User data is required");
 
-    const { data, error } = await supabase
-      .from("user")
-      .update(user)
-      .eq("id", userId)
-      .select();
+    const { data, error } = await supabase.rpc("update_user_and_profile", {
+      p_user_id: userId,
+      p_name: user.name,
+      p_user_name: user.user_name,
+      p_status: user.status,
+      p_address: user.address,
+      p_bio: user.bio,
+    });
 
     if (error) {
-      console.error("🚀 ~ updateUser ~ error:", error);
       throw error;
     }
 
