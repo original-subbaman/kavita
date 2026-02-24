@@ -1,4 +1,5 @@
-import { Button, Box, Flex } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
+import { User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetProfile from "../../hooks/user/useGetProfile";
@@ -9,6 +10,7 @@ import {
   PopoverTrigger,
   PopoverClose,
 } from "../ui/Popover";
+import { Button } from "../ui/Button";
 
 function PopupMenu({ name, theme }) {
   const navigate = useNavigate();
@@ -57,18 +59,22 @@ function PopupMenu({ name, theme }) {
           <PopoverClose>
             <Button
               variant="ghost"
-              className="hover:bg-accent py-1 px-2 rounded-md"
+              className="hover:bg-accent py-1 px-2 rounded-md flex items-center gap-2"
+              style={{ minWidth: 110 }}
               onClick={() => navigate("/profile")}
             >
+              <User size={18} className="mr-1" />
               Profile
             </Button>
           </PopoverClose>
           <PopoverClose>
             <Button
               variant="ghost"
-              className="hover:bg-accent py-1 px-2 rounded-md"
+              className="hover:bg-accent py-1 px-2 rounded-md flex items-center gap-2"
+              style={{ minWidth: 110 }}
               onClick={handleLogout}
             >
+              <LogOut size={18} className="mr-1" />
               Log out
             </Button>
           </PopoverClose>
