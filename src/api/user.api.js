@@ -118,6 +118,33 @@ export async function getUserActivityCount(userId, startDate, endDate) {
   }
 }
 
+/**
+ * Fetches the weekly activity count for a user using a stored procedure.
+ *
+ * @async
+ * @function getWeeklyActivityCount
+ * @param {string} userId - The UUID of the user.
+ * @returns {Promise<Object>} - Returns the weekly activity count data.
+ * @throws {Error} - Throws error if the stored procedure fails or userId is invalid.
+ */
+export async function getWeeklyActivityCount(userId) {
+  try {
+    const { data, error } = await supabase.rpc("get_weekly_activity_count", {
+      p_user_id: userId,
+    });
+
+    if (error) {
+      console.error("🚀 ~ getWeeklyActivityCount ~ error:", error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.log("🚀 ~ getWeeklyActivityCount ~ error:", error);
+    throw error;
+  }
+}
+
 export async function getLongestStreak(userId) {
   try {
     if (!userId) {
