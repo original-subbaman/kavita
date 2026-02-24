@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 import InfinitePostSection from "../components/PostSection/InfinitePostSection";
 import UserDetailSection from "../components/ProfilePage/UserDetailSection";
 import { Button } from "../components/ui/Button";
+import { PostActionsProvider } from "../context/PostActionContext";
 import useAuth from "../hooks/auth/useAuth";
 import useGetQuotesCount from "../hooks/language/useGetLanguageCount";
 import useGetInfinitePosts from "../hooks/post/useGetInfinitePosts";
 import useGetPostCount from "../hooks/post/useGetPostCount";
 import useFollowerCount from "../hooks/user/useFollowerCount";
-import useGetLongestStreak from "../hooks/user/useGetLongestStreak";
 import useGetTotalLikes from "../hooks/user/useGetTotalLikes";
-import { PostActionsProvider } from "../context/PostActionContext";
+import useGetWeeklyActivityCount from "../hooks/user/useGetWeeklyActivityCount";
 
 function Profile() {
   const { user } = useAuth();
@@ -28,8 +28,13 @@ function Profile() {
       userId: user.id,
     });
 
-  const { data: longestStreak, isFetching: isFetchingLongestStreak } =
-    useGetLongestStreak({ userId: user.id });
+  const { data: weeklyActivity } = useGetWeeklyActivityCount({
+    userId: user.id,
+    select: (data) => {
+      if (!data || data.length === 0) return [0, 0, 0, 0, 0, 0, 0];
+      return data.map((day) => day.post_count);
+    },
+  });
 
   const { data: followerCount } = useFollowerCount({ userId: user.id });
 
@@ -50,7 +55,7 @@ function Profile() {
     savedQuotes: quoteCount ?? 0,
     followers: followerCount ?? 0,
     following: 89,
-    weeklyPosts: [2, 1, 3, 0, 2, 1, 3],
+    weeklyPosts: weeklyActivity ?? [0, 0, 0, 0, 0, 0, 0],
   };
 
   return (
