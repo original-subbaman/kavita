@@ -8,7 +8,6 @@ const useFollowerCount = ({ userId, staleTime = Infinity }) => {
     staleTime: staleTime,
     enabled: !!userId,
     refetchOnMount: true,
-    initialData: 0,
   });
 };
 
