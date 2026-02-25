@@ -2,20 +2,20 @@ import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { Box, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import CustomTextField from "../components/CustomTextField";
-import LoadingButton from "../components/LoadingButton";
-import LoginWrapper from "../components/Login_Signup/LoginWrapper";
-import { TextFieldProps } from "../components/Login_Signup/TextFieldProps";
-import ResponseSnackbar from "../components/ResponseSnackbar";
-import useResetPasswordMail from "../hooks/auth/useResetPasswordMail";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/Button";
+import LoginWrapper from "../components/Login_Signup/LoginWrapper";
+import ResponseSnackbar from "../components/ResponseSnackbar";
+import Input from "../components/ui/Input";
+import useResetPasswordMail from "../hooks/auth/useResetPasswordMail";
 
 const ForgotPassword = () => {
   const [response, setResponse] = useState(null);
   const navigate = useNavigate();
   const {
     handleSubmit,
-    control,
+    register,
+    watch,
     formState: { errors },
   } = useForm();
 
@@ -45,9 +45,11 @@ const ForgotPassword = () => {
       navigate("/login", { replace: true });
     }
   }
+  const emailValue = watch("email", "");
+  const isEmailEmpty = !emailValue;
 
   return (
-    <LoginWrapper title={"Forgot Password"}>
+    <LoginWrapper title={"Forgot Password"} subtitle="">
       {response && (
         <ResponseSnackbar
           open
@@ -65,25 +67,37 @@ const ForgotPassword = () => {
           your password.
         </Text>
         <Box>
-          <CustomTextField
-            name={"email"}
-            control={control}
-            placeholder="Enter Email"
-            inputVariant={TextFieldProps.inputVariant}
-            size={TextFieldProps.size}
-            startIcon={<EnvelopeClosedIcon />}
-            error={errors?.email?.message}
-            rules={{ required: "Please enter your email" }}
-          />
-          <LoadingButton
-            loading={isPending}
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <EnvelopeClosedIcon />
+            </span>
+            <Input
+              type="email"
+              placeholder="Enter Email"
+              className="pl-10"
+              {...(register &&
+                register("email", {
+                  required: "Please enter your email",
+                  pattern: {
+                    value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+                    message: "Please enter a valid email address",
+                  },
+                }))}
+              aria-invalid={!!errors?.email}
+            />
+            {errors?.email?.message && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.email.message}
+              </span>
+            )}
+          </div>
+          <Button
             type={"submit"}
-            className="w-full"
-            size={"3"}
-            my={"3"}
+            className="w-full mt-2"
+            disabled={isPending || isEmailEmpty}
           >
             Send Recovery Email
-          </LoadingButton>
+          </Button>
         </Box>
       </form>
     </LoginWrapper>
