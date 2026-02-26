@@ -3,26 +3,34 @@ import { useState } from "react";
 import Input from "../ui/Input";
 import { Label } from "../ui/Label";
 
-const PasswordTextField = ({ register, error }) => {
+const PasswordTextField = ({
+  name = "password",
+  label = "Password",
+  placeholder = "Enter your password",
+  register,
+  error,
+  validationRules = {},
+}) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="space-y-2">
-      <Label htmlFor="password" className="text-foreground">
-        Password
+      <Label htmlFor={name} className="text-foreground">
+        {label}
       </Label>
       <div className="relative">
         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
-          id="password"
+          id={name}
           type={showPassword ? "text" : "password"}
-          placeholder="Enter your password"
+          placeholder={placeholder}
           className="pl-10 pr-10 bg-card border-border"
-          {...register("password", {
+          {...register(name, {
             required: "Password is required",
             minLength: {
               value: 6,
               message: "Password must be at least 6 characters",
             },
+            ...validationRules,
           })}
         />
         <button
