@@ -1,23 +1,29 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import LoadingButton from "../components/LoadingButton";
 import LoginWrapper from "../components/Login_Signup/LoginWrapper";
-import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 import ResponseSnackbar from "../components/ResponseSnackbar";
+import Input from "../components/ui/Input";
 import supabase from "../supabase_client/create_client";
-import { useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/Button";
+import { Eye, EyeOff } from "lucide-react";
+import PasswordTextField from "../components/Login_Signup/PasswordTextField";
 
 const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const {
     handleSubmit,
     control,
+    register,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({ mode: "onChange" });
 
   const newPassword = watch("new_password");
 
@@ -71,33 +77,44 @@ const ResetPassword = () => {
         />
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+        {/* New Password Input */}
         <PasswordTextField
-          name={"new_password"}
-          control={control}
+          name="new_password"
           label="Enter New Password"
-          rules={{ required: "Please enter your new password" }}
-          error={errors?.new_password?.message}
+          placeholder="Enter New Password"
+          register={register}
+          error={errors.new_password ? errors.new_password.message : ""}
         />
+
+        {/* Confirm Password Input */}
         <PasswordTextField
-          name={"confirm_password"}
-          control={control}
+          name="confirm_password"
           label="Enter Confirm Password"
-          rules={{
-            required: "Please re-enter your password",
+          placeholder="Enter Confirm Password"
+          register={register}
+          error={errors.confirm_password ? errors.confirm_password.message : ""}
+          validationRules={{
             validate: (value) =>
               value === newPassword || "*Password does not match",
           }}
-          error={errors?.confirm_password?.message}
         />
-        <LoadingButton
+
+        <Button
           loading={loading}
           type={"submit"}
           className="w-full"
-          size={"3"}
-          my={"3"}
+          mt={"3"}
+          disabled={
+            loading ||
+            !!errors.new_password ||
+            !!errors.confirm_password ||
+            !newPassword ||
+            !watch("confirm_password") ||
+            newPassword !== watch("confirm_password")
+          }
         >
           Reset Password
-        </LoadingButton>
+        </Button>
       </form>
     </LoginWrapper>
   );
