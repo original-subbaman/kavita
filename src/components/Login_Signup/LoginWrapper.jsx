@@ -1,12 +1,15 @@
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DecorativeLeftPanel from "./DecorativeLeftPanel";
+import { Button } from "../ui/Button";
 
 const LoginWrapper = ({
   title = "Welcome Back",
   subtitle = "Continue exploring poetry",
   children,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex">
       <DecorativeLeftPanel />
@@ -22,13 +25,16 @@ const LoginWrapper = ({
           </div>
 
           {/* Back link */}
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="
+            inline-flex items-center gap-2 text-sm text-muted-foreground 
+            hover:text-foreground hover:bg-transparent mb-8 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to home
-          </Link>
+            Go Back
+          </Button>
 
           {/* Header */}
           <div className="mb-8">
