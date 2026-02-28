@@ -52,7 +52,7 @@ const LandingPage = () => {
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-secondary/50 via-background to-background" />
 
-        <div className="container mx-auto px-4 py-20 md:py-32 relative">
+        <div className="container mx-auto px-4 py-20 md:py-40 relative">
           <div className="max-w-3xl mx-auto text-center">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-secondary/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-secondary-foreground mb-6 animate-fade-in">
@@ -103,21 +103,6 @@ const LandingPage = () => {
                   Explore Poems
                 </Button>
               </Link>
-            </div>
-
-            {/* Language pills */}
-            <div
-              className="mt-12 flex flex-wrap justify-center gap-2 opacity-0 animate-fade-in"
-              style={{ animationDelay: "0.4s" }}
-            >
-              {languages.map((lang) => (
-                <span
-                  key={lang.english}
-                  className="px-4 py-2 bg-card border border-border rounded-full text-sm font-medium text-foreground hover:border-primary/50 transition-colors cursor-default"
-                >
-                  {lang.name}
-                </span>
-              ))}
             </div>
           </div>
         </div>
@@ -182,9 +167,9 @@ const LandingPage = () => {
               </blockquote>
               <div className="text-center">
                 <p className="text-muted-foreground">
-                  — From "हिमालको छायामा" by Tashi Wangchuk
+                  — From "हिमालको छायामा" by Indra Hang
                 </p>
-                <Link to="/feed" className="inline-block mt-4">
+                <Link to="/home" className="inline-block mt-4">
                   <Button variant="ghost" className="gap-2 text-primary">
                     Discover More
                     <ArrowRight className="w-4 h-4" />
@@ -206,7 +191,7 @@ const LandingPage = () => {
             Join poets from across Sikkim in celebrating the beauty of language
             and verse.
           </p>
-          <Link to="/auth?mode=signup">
+          <Link to="/signup">
             <Button
               size="lg"
               variant="secondary"

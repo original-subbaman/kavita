@@ -19,7 +19,7 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Languages */}
+          {/* Languages
           <div>
             <h4 className="font-semibold mb-4 text-foreground">Languages</h4>
             <ul className="space-y-2 text-muted-foreground">
@@ -29,7 +29,7 @@ const Footer = () => {
               <li>लिम्बु (Limbu)</li>
               <li>English</li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Links */}
           <div>
@@ -37,7 +37,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  to="/feed"
+                  to="/home"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Browse Poems
@@ -45,7 +45,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/write"
+                  to="/posts/new"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Start Writing
@@ -53,7 +53,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/language-wall"
+                  to="/inspiration"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Language Wall
@@ -64,7 +64,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>© {year} कविता (Kavita). For Sikkim with ❤️.</p>
+          <p>© {year} कविता (Kavita). From Sikkim with ❤️.</p>
         </div>
       </div>
     </footer>
