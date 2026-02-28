@@ -9,11 +9,11 @@ import {
   ReaderIcon,
 } from "@radix-ui/react-icons";
 import useAuth from "../../hooks/auth/useAuth";
-import quill from "../../assets/quill.png";
 import useGetProfile from "../../hooks/user/useGetProfile";
 import { AnimatePresence, motion } from "framer-motion";
 import { getInitialsOfName } from "../../utils/Helper";
 import { useAppTheme } from "../../hooks/useAppTheme";
+import AppLogo from "../AppLogo";
 
 const NavItem = ({
   to,
@@ -152,10 +152,7 @@ function MobileNav({ openSideNav, onClose }) {
           >
             <Flex direction="column" className="h-full w-full gap-4">
               <Box className="flex items-center justify-start text-radix-green h-10 px-3">
-                <Text size={"4"} className="mt-[18px] flex items-center gap-1">
-                  Kavita
-                  <img src={quill} className="w-6 h-6" />
-                </Text>
+                <AppLogo />
               </Box>
 
               <Box className="flex items-center justify-start gap-3 border-y-[1px] border-gray-400  w-full h-[6rem] px-3">

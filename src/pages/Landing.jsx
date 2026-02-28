@@ -47,12 +47,8 @@ const LandingPage = () => {
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-secondary/50 via-background to-background" />
-
-        <div className="container mx-auto px-4 py-20 md:py-40 relative">
+      <section className="relative overflow-hidden py-32 md:py-0 md:min-h-screen flex flex-col justify-center">
+        <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-secondary/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-secondary-foreground mb-6 animate-fade-in">
@@ -74,9 +70,7 @@ const LandingPage = () => {
               className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8 max-w-2xl mx-auto opacity-0 animate-fade-in"
               style={{ animationDelay: "0.2s" }}
             >
-              कविता is a sanctuary for poets from the Himalayan heartland. Share
-              your poetry in Nepali, Bhutia, Lepcha, Limbu, or English—and
-              discover the beauty of multilingual verse.
+              कविता is a sanctuary for poets from the Himalayan heartland.
             </p>
 
             {/* CTA Buttons */}
@@ -106,13 +100,10 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-
-        {/* Mountain silhouette */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-muted/30 to-transparent" />
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="bg-muted/30 min-h-screen flex flex-col justify-center">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -147,7 +138,7 @@ const LandingPage = () => {
       </section>
 
       {/* Sample Poetry Section */}
-      <section className="py-20">
+      <section className="py-20 flex flex-col justify-center">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
@@ -182,7 +173,7 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
+      <section className="py-20 bg-primary text-primary-foreground ">
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
             Ready to Share Your Story?

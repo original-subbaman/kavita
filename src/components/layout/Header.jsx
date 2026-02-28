@@ -1,14 +1,14 @@
 import { BellIcon } from "@radix-ui/react-icons";
-import { Button } from "@radix-ui/themes";
-import { Bookmark, Home, Menu, PenLine, User, X } from "lucide-react";
+import { Bell, Bookmark, Home, Menu, PenLine, User, X } from "lucide-react";
 import { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import quill from "../../assets/quill.png";
 import useAuth from "../../hooks/auth/useAuth";
 import useGetNotificationCount from "../../hooks/notification/useGetNotificationCount";
 import { cn } from "../../utils/Helper";
+import AppLogo from "../AppLogo";
 import PopupMenu from "../Header/PopupMenu";
 import Badge from "../ui/Badge";
+import { Button } from "../ui/Button";
 
 function Header() {
   const location = useLocation();
@@ -26,17 +26,20 @@ function Header() {
     { path: "/posts/new", label: "Write", icon: PenLine },
     { path: "/inspiration", label: "Language Wall", icon: Bookmark },
   ];
-
+  const mobileNavLinks = [
+    { path: "/home", label: "Home", icon: Home },
+    { path: "/posts/new", label: "Write", icon: PenLine },
+    { path: "/inspiration", label: "Language Wall", icon: Bookmark },
+    { path: "/notifications", label: "Notifications", icon: Bell },
+    { path: "/profile", label: "Profile", icon: User },
+  ];
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <img src={quill} alt="Logo" className="h-8 w-8" />
-            <span className="font-display text-2xl font-semibold text-primary">
-              कविता
-            </span>
+            <AppLogo />
           </Link>
 
           {/* Desktop Navigation (Authenticated Only) */}
@@ -107,7 +110,7 @@ function Header() {
             <div className="flex flex-col gap-2">
               {isAuthenticated ? (
                 <>
-                  {navLinks.map((link) => (
+                  {mobileNavLinks.map((link) => (
                     <Link
                       key={link.path}
                       to={link.path}
@@ -122,10 +125,10 @@ function Header() {
                       </Button>
                     </Link>
                   ))}
-                  <UserMenu count={count} userName={userName} />
+                  {/* <UserMenu count={count} userName={userName} /> */}
                 </>
               ) : (
-                <div className="flex gap-2 pt-4 border-t border-border mt-2">
+                <div className="flex gap-2">
                   <Link to="/login" className="flex-1">
                     <Button variant="outline" className="w-full">
                       Sign In
