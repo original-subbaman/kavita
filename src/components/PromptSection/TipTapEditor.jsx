@@ -19,6 +19,8 @@ import {
 import "./editor_styles.css";
 import { DefaultBGColor } from "./InputAlertDialog";
 import Placeholder from "@tiptap/extension-placeholder";
+import { Mark } from "@tiptap/react";
+import { useEffect } from "react";
 
 const ToolbarButton = ({
   onClick,
@@ -149,11 +151,37 @@ function MenuBar({ editor, bgColor, setBgColor }) {
   );
 }
 
+const LanguageMark = Mark.create({
+  name: "language",
+
+  addAttributes() {
+    return {
+      lang: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("lang"),
+        renderHTML: (attributes) => {
+          if (!attributes.lang) return {};
+          return { lang: attributes.lang };
+        },
+      },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: "span[lang]" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["span", HTMLAttributes, 0];
+  },
+});
+
 function TipTapEditor({
   initialContent,
   initialTitle,
   onContentChange,
   onTitleChange,
+  lang,
   bgColor,
   setBgColor,
 }) {
@@ -163,6 +191,7 @@ function TipTapEditor({
       Placeholder.configure({
         placeholder: "Enter content here...",
       }),
+      LanguageMark,
     ],
     content: initialContent,
     editorProps: {
@@ -176,25 +205,21 @@ function TipTapEditor({
       onContentChange(editor.getHTML());
     },
   });
-  const titleEditor = useEditor({
-    extensions: [
-      StarterKit,
-      Placeholder.configure({
-        placeholder: "Enter title here...",
-      }),
-    ],
-    content: initialTitle,
-    editorProps: {
-      attributes: {
-        // style: `background-color: ${bgColor}; border-radius: 0.25rem;`,
-        style: `border-radius: 0.375rem;`,
-        class: "p-4 mt-2 h-12 border w-full",
-      },
-    },
-    onUpdate({ editor }) {
-      onTitleChange(editor.getHTML());
-    },
-  });
+
+  useEffect(() => {
+    if (contentEditor && lang) {
+      contentEditor.setOptions({
+        editorProps: {
+          attributes: {
+            lang: lang || "en",
+            style: `background-color: #fff; border-radius: 0.375rem;`,
+            class:
+              "font-poetry p-4 mt-2 border rounded-md w-full min-h-[25rem]",
+          },
+        },
+      });
+    }
+  }, [lang, contentEditor]);
 
   return (
     <div className="mx-2 md:mx-0">

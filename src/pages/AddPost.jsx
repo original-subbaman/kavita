@@ -23,24 +23,33 @@ import TipTapEditor from "../components/PromptSection/TipTapEditor";
 import { LanguageScripts } from "../utils/Constants";
 
 const DEFAULT_THEME_ID = "24b7e05f-c018-4f03-855f-c5d8deb6d111"; // General
+const DRAFT_KEY = "394f3dcf-ed0c-4adb-9aa2-fefd1f4eebe7";
+const getInitialDraft = () => {
+  try {
+    const savedDraft = localStorage.getItem(DRAFT_KEY);
+    if (savedDraft) {
+      return JSON.parse(savedDraft);
+    }
+  } catch {
+    // Invalid JSON in storage
+  }
+  return null;
+};
 
-const AddPost = ({
-  postId,
-  userId,
-  content,
-  title,
-  mutation,
-  isEdit = false,
-}) => {
+const AddPost = ({ postId, userId, mutation, isEdit = false }) => {
   const minCharLength = 15;
   const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [postTitle, setPostTitle] = useState(title || "");
-  const [postContent, setPostContent] = useState(content || "");
+
+  const initialDraft = getInitialDraft();
+  const [postTitle, setPostTitle] = useState(initialDraft?.title || "");
+  const [postContent, setPostContent] = useState(initialDraft?.content || "");
   const [isPosting, setIsPosting] = useState(false);
   const [script, setScript] = useState("Latin");
-  const [selectedTheme, setSelectedTheme] = useState(DEFAULT_THEME_ID);
+  const [selectedTheme, setSelectedTheme] = useState(
+    initialDraft?.themeId || DEFAULT_THEME_ID,
+  );
   const [isPreview, setIsPreview] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -60,6 +69,7 @@ const AddPost = ({
     setTimeout(() => {
       navigate("/", { state: { showPostSection: true } });
     }, 3000);
+    localStorage.removeItem(DRAFT_KEY);
     reset();
   };
 
@@ -156,7 +166,19 @@ const AddPost = ({
     }
   };
 
-  const handleSaveDraft = () => {};
+  const handleSaveDraft = () => {
+    const draft = {
+      title: postTitle,
+      content: postContent,
+      themeId: selectedTheme,
+    };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    setSnackbar({
+      open: true,
+      message: "Draft saved locally",
+      severity: "success",
+    });
+  };
 
   const sanitizePostContent = DOMPurify.sanitize(postContent);
 
@@ -200,7 +222,7 @@ const AddPost = ({
             </div>
 
             {/* Language */}
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label className="text-foreground font-medium">Script</Label>
               <Select value={script} onValueChange={setScript}>
                 <SelectTrigger className="bg-card border-border">
@@ -214,7 +236,7 @@ const AddPost = ({
                   ))}
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
             {/* Select Theme */}
             <div className="space-y-2">
@@ -246,13 +268,6 @@ const AddPost = ({
                 Your Poem
               </Label>
 
-              {/* <Textarea
-                id="content"
-                placeholder="Let your words flow..."
-                value={postContent}
-                onChange={(e) => setPostContent(e.target.value)}
-                className="min-h-[350px] font-poetry text-lg leading-relaxed bg-card border-border resize-none"
-              /> */}
               <TipTapEditor
                 initialContent={postContent}
                 initialTitle={postTitle}
@@ -311,7 +326,7 @@ const AddPost = ({
                     __html:
                       sanitizePostContent || "Your poem will appear here...",
                   }}
-                  className="font-poetry text-lg leading-relaxed text-foreground whitespace-pre-line"
+                  className="font-poetry text-lg leading-relaxed text-foreground whitespace-pre-line [&_p:empty]:min-h-[1.5em] [&_p]:my-0"
                 ></div>
               </div>
             ) : (
@@ -335,7 +350,8 @@ const AddPost = ({
             <li>
               • Use the language selector to indicate your poem's language
             </li>
-            <li>• Your drafts are automatically saved locally</li>
+            <li>• Your drafts can be saved locally</li>
+            <li>• You can keep only one local draft at a time</li>
           </ul>
         </div>
       </div>
