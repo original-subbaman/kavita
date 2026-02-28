@@ -1,15 +1,17 @@
-import quill from "../assets/quill.png";
+import logo from "../assets/logo.png";
 
 const AppLogo = () => {
   return (
     <div
-      className="cursor-pointer hover:bg-transparent 
-        hover:shadow-none md:flex md:items-center 
-        md:gap-1 font-primary text-radix-green 
-        text-2xl font-bold"
+      className="
+        flex flex-col
+        cursor-pointer hover:bg-transparent 
+        hover:shadow-none font-primary"
     >
-      Kavita
-      <img src={quill} className="w-6 h-6" />
+      <span className="font-display text-2xl font-semibold text-primary mb-0">
+        कविता
+      </span>
+      {/* <img src={logo} className="w-10" /> */}
     </div>
   );
 };

@@ -59,7 +59,7 @@ function PopupMenu({ name, theme }) {
           <PopoverClose>
             <Button
               variant="ghost"
-              className="hover:bg-accent py-1 px-2 rounded-md flex items-center gap-2"
+              className="hover:bg-accent py-1 px-2 rounded-md flex items-center justify-start gap-2"
               style={{ minWidth: 110 }}
               onClick={() => navigate("/profile")}
             >
@@ -70,7 +70,7 @@ function PopupMenu({ name, theme }) {
           <PopoverClose>
             <Button
               variant="ghost"
-              className="hover:bg-accent py-1 px-2 rounded-md flex items-center gap-2"
+              className="hover:bg-accent py-1 px-2 rounded-md flex items-center justify-start gap-2"
               style={{ minWidth: 110 }}
               onClick={handleLogout}
             >
